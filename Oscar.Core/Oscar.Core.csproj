@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FuzzySharp" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="5.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Z.Expressions.Eval" Version="4.0.87" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Z.Expressions.Eval" />
+    <None Remove="Z.EntityFramework.Extensions.EFCore" />
+    <None Remove="Z.EntityFramework.Extensions" />
+    <None Remove="CsvHelper" />
+    <None Remove="Extensions\" />
+  </ItemGroup>
+</Project>

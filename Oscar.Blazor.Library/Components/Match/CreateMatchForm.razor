@@ -1,0 +1,162 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudOverlay Visible="_processing" DarkBackground="false">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
+                <MudText Align="Align.Center" Typo="Typo.h6">Uploading Match Request...</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
+</MudOverlay>
+
+<MudCard>
+    <MudForm Model="@model" @ref="@form" Validation="@(orderValidator.ValidateValue)" ValidationDelay="0">
+        <MudCardContent>
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6">@Title</MudText>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="model.RequestedBy"
+                                  For="@(() => model.RequestedBy)"
+                                  Immediate="true"
+                                  Label="Requested By"/>
+                </MudItem>
+
+                <MudDivider/>
+
+                <MudItem xs="12">
+                    <div class="d-flex">
+                        <InputFile for="@(() => model.MatchFile)" id="fileInput"  OnChange="UploadFiles" hidden/>
+
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Filled.CloudUpload"
+                                   for="fileInput">
+                            Upload Match File
+                        </MudButton>
+
+                        @if (model.MatchFile != null)
+                        {
+                            <MudText>File: @model.MatchFile.Name <code>@model.MatchFile.Size bytes</code></MudText>
+                        }
+                    </div>
+                </MudItem>
+
+                <MudDivider/>
+
+                <MudItem xs="12">
+                    <MudExpansionPanels>
+                        <MudExpansionPanel Text="Matching Rules">
+                            @foreach (var rule in Rules)
+                            {
+                                @if (rule.Name == "None")
+                                {
+                                    <MudItem xs="12">
+                                        <MudSwitch T="bool" @bind-checked="@rule.Selected" Label="Default" ReadOnly="true" Color="Color.Success"/>
+                                    </MudItem>
+                                }
+                                else if (rule.Name == "IgnoreCharactersFollowing")
+                                {
+                                    <MudItem xs="12">
+                                        <MudSwitch T="bool" @bind-checked="@rule.Selected" Label="@rule.FriendlyName" Color="Color.Success"/>
+                                    </MudItem>
+                                    if (rule.Selected)
+                                    {
+                                        <MudItem xs="12">
+                                            <MudTextField Type="string" @bind-Value="@model.IgnoreCharactersAfter" Label="Ignore After" For="@(() => model.IgnoreCharactersAfter)"
+                                                          Variant="Variant.Text" InputType="InputType.Text" MaxLength="200">
+                                            </MudTextField>
+                                        </MudItem>
+                                    }
+                                }
+                                else if (rule.Name == "RightsYears")
+                                {
+                                    <MudItem xs="12">
+                                        <MudSwitch T="bool" @bind-checked="@rule.Selected" Label="@rule.FriendlyName" Color="Color.Success"/>
+                                    </MudItem>
+                                    if (rule.Selected)
+                                    {
+                                        <MudItem xs="12">
+                                            <MudAutocomplete T="int?" Label="Rights From Year" SearchFunc="@SearchYears" OpenIcon="@Icons.Material.Filled.DateRange"
+                                                             ResetValueOnEmptyText="true"
+                                                             CoerceText="true" CoerceValue="true" @bind-Value="model.RightsFromYear"
+                                                             For="@(() => model.RightsFromYear)"/>
+                                        </MudItem>
+                                        <MudItem xs="12">
+                                            <MudAutocomplete T="int?" Label="Rights To Year" SearchFunc="@SearchYears" OpenIcon="@Icons.Material.Filled.DateRange"
+                                                             ResetValueOnEmptyText="true"
+                                                             CoerceText="true" CoerceValue="true" @bind-Value="model.RightsToYear"
+                                                             For="@(() => model.RightsToYear)"/>
+                                        </MudItem>
+                                    }
+                                }
+                                else if (rule.Name == "RightsType")
+                                {
+                                    <MudItem xs="12">
+                                        <MudSwitch T="bool" @bind-checked="@rule.Selected" Label="@rule.FriendlyName" Color="Color.Success"/>
+                                    </MudItem>
+                                    if (rule.Selected)
+                                    {
+                                        <MudItem xs="12">
+                                            <MudAutocomplete T="RightsTypeDto" Label="Rights" SearchFunc="@SearchRightsTypes" OpenIcon="@Icons.Material.Filled.Landscape"
+                                                             ResetValueOnEmptyText="true" ToStringFunc="dto => dto?.Description"
+                                                             CoerceText="true" CoerceValue="false" @bind-Value="model.RightsType"
+                                                             For="@(() => model.RightsType)"/>
+                                        </MudItem>
+                                    }
+                                }
+                                else if (rule.Name == "RightsCountry")
+                                {
+                                    <MudItem xs="12">
+                                        <MudSwitch T="bool" @bind-checked="@rule.Selected" Label="@rule.FriendlyName" Color="Color.Success"/>
+                                    </MudItem>
+                                    if (rule.Selected)
+                                    {
+                                        <MudItem xs="12">
+                                            <MudAutocomplete T="CountryDto" Label="Rights Country" SearchFunc="@SearchCountries" OpenIcon="@Icons.Material.Filled.Landscape"
+                                                             ResetValueOnEmptyText="true" ToStringFunc="dto => dto?.Description"
+                                                             CoerceText="true" CoerceValue="false" @bind-Value="model.Country"
+                                                             For="@(() => model.Country)"/>
+                                        </MudItem>
+                                    }
+                                }
+                                else
+                                {
+                                    <MudItem xs="12">
+                                        <MudSwitch T="bool" @bind-checked="@rule.Selected" Label="@rule.FriendlyName" Color="Color.Success"/>
+                                    </MudItem>
+                                }
+                            }
+                        </MudExpansionPanel>
+                    </MudExpansionPanels>
+                </MudItem>
+                @*            <MudAutocomplete T="ClientBasicDto" Label="Clients" SearchFunc="@SearchClients" OpenIcon="@Icons.Material.Filled.People"
+                                 ResetValueOnEmptyText="true" ToStringFunc="dto => dto?.ClientName"
+                                 CoerceText="true" CoerceValue="false" @bind-Value="model.Client"
+                                 For="@(() => model.Client)"/>*@
+            </MudGrid>
+
+        </MudCardContent>
+    </MudForm>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Create Match Request</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code
+{
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        if (e.File.ContentType != "text/csv")
+        {
+            Snackbar.Add("File must be in csv format", Severity.Error);
+            return;
+        }
+        model.MatchFile = e.File;
+    }
+}

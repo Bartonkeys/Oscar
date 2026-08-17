@@ -1,0 +1,40 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    @Header
+    <MudPaper Class="d-flex flex-row mb-2" Elevation="0">
+        <MudAutocomplete T="PersonDto" Label="@ListLabel" @bind-Value="_person" For="@(() => _person)" Required="false"
+                         SearchFunc="@Search" ToStringFunc="@ListItemString" @onblur="onChange"
+                         Dense="true" Margin="Margin.Dense">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="@AddPerson">Add</MudButton>
+    </MudPaper>
+
+    <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2" Dense="true" >
+        <RowTemplate>
+            <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+                @ListItemString(context)
+            </MudTd>
+            <MudTd Style="width: 10%;" Class="grey lighten-3 pa-0 pl-2">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemovePerson(context))"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudExpansionPanels>
+        <MudExpansionPanel Text="@CreateLabel">
+            <MudPaper Class="d-flex flex-row" Elevation="0">
+                @if (type != PersonType.Distributor)
+                {
+                    <MudTextField T="String" @bind-Value="_firstName" For="@(() => _firstName)" Label="First Name" Variant="Variant.Text" Class="pl-4 pr-4"></MudTextField>
+                }
+                <MudTextField T="String" @bind-Value="_lastName" For="@(() => _lastName)" Label="@_lastNameLabel" Variant="Variant.Text" Class="pl-4 pr-4"></MudTextField>
+            </MudPaper>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="width:100%" Class="mt-2" OnClick="@CreatePerson">Create and add to list</MudButton>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+    
+</MudCard>

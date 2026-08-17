@@ -1,0 +1,17 @@
+﻿@inherits EventConsoleComponent
+
+<MudExpansionPanels class="flex-row mt-4">
+    <MudExpansionPanel Text="@Title">
+        @foreach (var message in Messages)
+        {
+            <MudText Style="font-family: Consolas" Align="Align.Left">[@message.Date.ToString("G")] : @message.Text</MudText>
+        }
+        @if (HasMessages)
+        {
+            <div class="d-flex">
+                <MudSpacer />
+                <MudButton Class="mt-3" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="OnClearClick">Clear events</MudButton>
+            </div>
+        }
+    </MudExpansionPanel>
+</MudExpansionPanels>

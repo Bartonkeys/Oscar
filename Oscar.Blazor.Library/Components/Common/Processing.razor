@@ -1,0 +1,16 @@
+﻿    <MudOverlay Visible="IsProcessing" DarkBackground="false">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+                    <MudText Align="Align.Center" Typo="Typo.h6">Processing...</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+        </MudCard>
+    </MudOverlay>
+
+@code {
+
+    [Parameter]
+    public bool IsProcessing { get; set; }
+}

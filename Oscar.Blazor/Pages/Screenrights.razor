@@ -1,0 +1,66 @@
+﻿@page "/screenrights"
+
+@using Oscar.Blazor.Library.Components.Screenrights
+@inject IMediator  Mediator
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+
+<PageTitle>Screenrights Works Reference Imports</PageTitle>
+
+<MudDrawer @bind-Open="@openScreenrightsCreate" Height="100%" Width="50%" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <CreateScreenrightsForm OnSubmit="@Refresh" Title="Create Screenrights"></CreateScreenrightsForm>
+</MudDrawer>
+
+<MudGrid>
+    <MudItem xs="6">
+        <MudButton OnClick="@OpenScreenrightsCreate" Variant="Variant.Filled" Color="Color.Primary">Create Screenrights Works Reference Import</MudButton>
+    </MudItem>
+    <MudItem xs="6">
+    </MudItem>
+    <MudItem xs="12">
+        <MudTable Dense="true" ServerData="@(new Func<TableState, Task<TableData<ScreenrightsRequestDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Screenrights Works Reference Imports</MudText>
+                <MudSpacer />
+                <MudTextField T="string" ValueChanged="@(OnSearch)" Placeholder="Search" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Id</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Requested By</MudTh>
+                <MudTh>Filename</MudTh>
+                <MudTh>Link</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Id">@context.RequestID</MudTd>
+                <MudTd DataLabel="Status">
+                    <MudChip Label="true" Color="@GetColour(context.ScreenrightsRequestStatus)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.ScreenrightsRequestStatus.ToName()</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Requested By">@context.RequestedBy</MudTd>
+                <MudTd DataLabel="Filename">@context.FileName</MudTd>
+                <MudTd DataLabel="Link">
+                    @if (context.ScreenrightsRequestStatus == ScreenrightsRequestStatus.Processed)
+                    {
+                        <MudLink Href="@context.Url">
+                            @if (!string.IsNullOrEmpty(context.Url))
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Download" Color="Color.Primary" />
+                            }
+                        </MudLink>
+                    }
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+</MudGrid>
+

@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/oscar-live/databases/oscar-live",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:OscarConnection"
+    },
+    "storage1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/oscarstoragelive",
+      "type": "storage.azure",
+      "connectionId": "oscarstorage"
+    }
+  }
+}

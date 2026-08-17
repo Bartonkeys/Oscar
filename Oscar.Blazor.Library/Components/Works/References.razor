@@ -1,0 +1,22 @@
+﻿@using System.Linq
+@inherits Oscar.Blazor.Library.Common.WorksComponentBase
+
+<MudExpansionPanel Text="References">
+    <MudExpansionPanel Text="Society References" IsExpanded=true>
+        <SocietyReferences Value="Works.SocietyReferences" WorksId="Works.Id" SocietyReferencesChanged="SocietyReferencesChanged"></SocietyReferences>
+    </MudExpansionPanel>
+
+    <MudTextField @bind-Value="Works.AgicoaWorksReference" For="@(() => Works.AgicoaWorksReference)" Label="Agicoa Works Reference" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+
+    @if (Works.ClientReferences != null && Works.ClientReferences.Any())
+    {
+        <MudTextField @bind-Value="Works.ClientReferences.First().AgicoaDeclarationNumber" For="@(() => Works.ClientReferences.First().AgicoaDeclarationNumber)" Label="Agicoa Declaration Number" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+        <MudTextField ReadOnly="true" @bind-Value="Works.ClientReferences.First().RHId" For="@(() => Works.ClientReferences.First().RHId)" Label="RHID (CMC Works Ref)" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+    }`
+    <MudTextField @bind-Value="Works.AS400RefNo" For="@(() => Works.AS400RefNo)" Label="AS400 Ref No" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+    <MudTextField @bind-Value="Works.Isan" For="@(() => Works.Isan)" Label="Isan" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+    <MudTextField ReadOnly="true" @bind-Value="Works.CompactRef" For="@(() => Works.CompactRef)" Label="CompactRef" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+    <MudTextField @bind-Value="Works.CavcoCode" For="@(() => Works.CavcoCode)" Label="CavcoCode" Variant="Variant.Text" Class="pl-4 pt-2 pr-4" MaxLength="15"></MudTextField>
+    <MudTextField @bind-Value="Works.CrtcCode" For="@(() => Works.CrtcCode)" Label="CrtcCode" Variant="Variant.Text" Class="pl-4 pt-2 pr-4" MaxLength="10"></MudTextField>
+
+</MudExpansionPanel>

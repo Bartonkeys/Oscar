@@ -1,0 +1,122 @@
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Core.Enums
+@using Oscar.Infrastructure.Features.Series.Queries
+@using Oscar.Blazor.Library.Components.Common
+
+@if (Rights != null && Rights.Any())
+{
+    <MudTable Items="@Rights" Dense="true" Hover="true" ReadOnly="false" CanCancelEdit="true"
+              @bind-SelectedItem="selectedItem1" SortLabel="Sort By" CommitEditTooltip="Commit Edit"
+              OnCommitEditClick="@(() => Snackbar.Add("Rights grid updated. Changes will not persist until Bulk Amend Rights clicked!"))" RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
+              RowEditCommit="ItemHasBeenCommitted" IsEditRowSwitchingBlocked="true" ApplyButtonPosition="TableApplyButtonPosition.StartAndEnd" 
+              EditTrigger="TableEditTrigger.EditButton">
+        <HeaderContent>
+            <MudTh>Rights Type</MudTh>
+            <MudTh>Percentage</MudTh>
+            <MudTh>Dates</MudTh>
+            <MudTh>Validity</MudTh>
+            <MudTh Class="editSelectCell">Countries</MudTh>
+            <MudTh>Channels</MudTh>
+            <MudTh>Languages</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="RightsType">@context.Type?.Name - @context.Type?.Description</MudTd>
+            <MudTd DataLabel="Percentage">@context.Percentage %</MudTd>
+            <MudTd DataLabel="RightsDate">
+                @context.StartOfRight.ToShortDateString() to
+                @if (context.RightsPerpetuity)
+                {
+                    <span>Perpetuity</span>
+                }
+                else
+                {
+                    <span>@context.EndOfRight.ToShortDateString()</span>
+                }
+            </MudTd>
+            <MudTd DataLabel="Validity">
+                @context.StartOfValidity.ToShortDateString() to
+                @if (context.ValidityPerpetuity)
+                {
+                    <span>Perpetuity</span>
+                }
+                else
+                {
+                    <span>@context.EndOfValidity.ToShortDateString()</span>
+                }
+            </MudTd>
+            @if (context.Countries.Any())
+            {
+                <MudTd DataLabel="Country">
+                    @foreach (var country in context.Countries)
+                    {
+                        <div>@country.Description</div>
+                    }
+                </MudTd>
+            }
+            else
+            {
+                <MudTd DataLabel="Country">Not set</MudTd>
+            }
+            @if (context.ChannelRights.Any())
+            {
+                <MudTd DataLabel="Channel">
+                    @foreach (var channelRight in context.ChannelRights)
+                    {
+                        <div>@channelRight.Channel.Description</div>
+                    }
+                </MudTd>
+            }
+            else
+            {
+                <MudTd DataLabel="Channel">Not set</MudTd>
+            }
+            @if (context.LanguageRights.Any())
+            {
+                <MudTd DataLabel="Language">
+                    @foreach (var languageRights in context.LanguageRights)
+                    {
+                        <div>@languageRights.Language.Description</div>
+                    }
+                </MudTd>
+            }
+            else
+            {
+                <MudTd DataLabel="Language">Not set</MudTd>
+            }
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="RightsType">@context.Type?.Name - @context.Type?.Description</MudTd>
+            <MudTd DataLabel="Percentage">
+                <MudTextField @bind-Value="@context.Percentage" Required/>
+            </MudTd>
+            <MudTd DataLabel="RightsDate">
+                <MudDatePicker Label="Start of Rights" @bind-Date="@_startOfRight" DateFormat="dd/MM/yyyy"></MudDatePicker>
+                <MudSwitch @bind-Checked="@_rightsPerpetuity" Label="Perpetuity" Color="Color.Success"></MudSwitch>
+                @if (!_rightsPerpetuity)
+                {
+                    <MudDatePicker Label="End of Rights" @bind-Date="@_endOfRight" DateFormat="dd-MMM-yyyy"></MudDatePicker>
+                }
+            </MudTd>
+            <MudTd DataLabel="ValidityDate">
+                <MudDatePicker Label="Start of Validity" @bind-Date="@_startOfValidity" DateFormat="dd/MM/yyyy"></MudDatePicker>
+                <MudSwitch @bind-Checked="@_rightsValidityPerpetuity" Label="Perpetuity" Color="Color.Success"></MudSwitch>
+                @if (!_rightsValidityPerpetuity)
+                {
+                    <MudDatePicker Label="End of Validity" @bind-Date="@_endOfValidity" DateFormat="dd-MMM-yyyy"></MudDatePicker>
+                }
+            </MudTd>
+            <MudTd DataLabel="Countries">
+                <CountrySelect @bind-Value="@context.Countries" _countries="@Countries" Style="width: 300px"></CountrySelect>
+            </MudTd>
+            <MudTd DataLabel="Channels">
+                <Channels @bind-Value="@context.ChannelRights" Style="width: 300px" ></Channels>
+            </MudTd>
+            <MudTd DataLabel="Languages">
+                <RightsLanguages @bind-Value="@context.LanguageRights"  Style="width: 300px"></RightsLanguages>
+            </MudTd>
+        </RowEditingTemplate>
+        <EditButtonContent Context="button">
+            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled"/>
+        </EditButtonContent>
+    </MudTable>
+}

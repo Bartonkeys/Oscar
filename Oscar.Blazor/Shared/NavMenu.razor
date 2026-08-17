@@ -1,0 +1,36 @@
+﻿<MudNavMenu>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Home</MudNavLink>
+    <MudNavLink Href="clients" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.People">Clients</MudNavLink>
+    <MudNavLink Href="societies" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Groups">Societies</MudNavLink>
+    @*    <MudNavLink Href="search" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Search">Search</MudNavLink>*@
+    <MudNavLink Href="works" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Works</MudNavLink>
+    <MudNavLink Href="match" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Map">Match</MudNavLink>
+    <MudNavGroup Icon="@Icons.Material.Filled.ListAlt" Title="Reports">
+        @* <MudNavLink Href="clientDetailsReport" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Client Details</MudNavLink> *@
+        <MudNavLink Href="clientDetailReport" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Client Details</MudNavLink>
+        <MudNavLink Href="productionCountriesReport" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Production Countries</MudNavLink>
+        <MudNavLink Href="worksListReport" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Works List</MudNavLink>
+        <MudNavLink Href="worksListOfRightsReport" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Works List of Rights</MudNavLink>
+        <MudNavGroup Icon="@Icons.Material.Filled.ListAlt" Title="Client Registrations KPI">
+            <MudNavLink Href="clientRegKpiReport" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Report by Created Year</MudNavLink>
+            <MudNavLink Href="clientsRegReportByYear" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Report by Production Year</MudNavLink>
+        </MudNavGroup>
+        <MudNavLink Href="reportSearch" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.TextSnippet">User Defined</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Icon="@Icons.Material.Filled.ListAlt" Title="Royalty">
+        <MudNavLink Href="maestroPreProcessor" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Maestro Pre Procesor</MudNavLink>
+        <MudNavLink Href="merlinSocietyList" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ReceiptLong">Merlin Societies</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Icon="@Icons.Material.Filled.AppRegistration" Title="Registrations">
+        <MudNavLink Icon="@Icons.Material.Filled.Create" Href="registrationBatchView">Create</MudNavLink>
+        <MudNavLink Icon="@Icons.Material.Filled.GraphicEq" Href="equivalence">Equivalence</MudNavLink>
+        <MudNavLink Icon="@Icons.Material.Filled.Receipt" Href="screenrights">Screen Rights</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Icon="@Icons.Material.Filled.BatchPrediction" Title="Bulk Commands">
+        <MudNavLink Icon="@Icons.Material.Filled.Work" Href="ImportRequest">New Works Import</MudNavLink>
+        <MudNavLink Icon="@Icons.Material.Filled.Theaters" Href="ImportEpisode">Episode Import</MudNavLink>
+        <MudNavLink Icon="@Icons.Material.Filled.List" Href="RightsBulkUpdate">Update Rights</MudNavLink>
+        <MudNavLink Icon="@Icons.Material.Filled.Update" Href="RightsBulkAmend">Amend Rights</MudNavLink>
+    </MudNavGroup>
+    <MudNavLink Href="settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Settings">Settings</MudNavLink>
+</MudNavMenu>

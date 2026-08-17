@@ -1,0 +1,52 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    @Header
+    @if (AllowAddOrCreateCSM())
+    {
+        <MudPaper Class="d-flex flex-row mb-2" Elevation="0" >
+            <MudAutocomplete T="OperatorDto" Label="@ListLabel" @bind-Value="_operator" For="@(() => _operator)" Required="false"
+                             SearchFunc="@Search" ToStringFunc="@ListItemString" @onblur="onChange"
+                             Dense="true" Margin="Margin.Dense">
+                <MoreItemsTemplate>
+                    <MudText Align="Align.Center" Class="px-4 py-1">
+                        Only the first 10 items are shown
+                    </MudText>
+                </MoreItemsTemplate>
+            </MudAutocomplete>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="@AddCustomServiceManager">Add</MudButton>
+        </MudPaper>
+    }
+
+    <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2" Dense="true" >
+        <RowTemplate>
+            <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+                @ListItemString(context)
+            </MudTd>
+            @if(@context.IsActive)
+                {
+                    <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">Current</MudTd>
+                }
+                else
+                {
+                    <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">Previous</MudTd>
+                }
+          
+            <MudTd Style="width: 10%;" Class="grey lighten-3 pa-0 pl-2">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveCustomServiceManager(context))"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+
+@*    @if (AllowAddOrCreateCSM())
+    {
+        <MudExpansionPanels >
+            <MudExpansionPanel Text="Add new operator">
+                <MudPaper Class="d-flex flex-row" Elevation="0">
+                    <MudTextField T="String" @bind-Value="_fullName" For="@(() => _fullName)" Label="Full Name" Variant="Variant.Text" Class="pl-4 pr-4"></MudTextField>
+                </MudPaper>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="width:100%" Class="mt-2" OnClick="@CreateOperator">Create and add to list</MudButton>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    }*@
+
+</MudCard>

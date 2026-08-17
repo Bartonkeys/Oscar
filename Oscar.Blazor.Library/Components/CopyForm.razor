@@ -1,0 +1,113 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+@if (WorksToCopy != null)
+{
+    <MudCard>
+        <MudCardContent>
+           <MudTable Items="WorksToCopy"  @ref="table" RowsPerPage="100" Dense="true" >
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Works to Copy/Move</MudText>
+                    <MudSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Type</MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<WorksDto, object>(x => x.Titles.Select(t => t.Title))">Title</MudTableSortLabel></MudTh>
+                    <MudTh>Production Year</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Id">
+                        @switch (context.Discriminator)
+                        {
+                            case "StandAlone":
+                                <MudIcon Color="Color.Primary"  Icon="@Icons.Material.Filled.Man" Title="StandAlone" />
+                                break;
+                            case "Episode":
+                                <MudIcon  Color="Color.Warning" Icon="@Icons.Material.Filled.Theaters" Title="Episode" />
+                                break;
+                            case "Season":
+                                <MudIcon Color="Color.Success"  Icon="@Icons.Material.Filled.WbSunny" Title="Season" />
+                                break;
+                            case "Series":
+                                <MudIcon  Color="Color.Secondary"  Icon="@Icons.Material.Filled.AutoAwesomeMotion" Title="Series" />
+                                break;
+                            default:
+                                <span> @context.Discriminator</span>
+                                break;
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="Title">@(context.Titles?.FirstOrDefault()?.Title ?? string.Empty)</MudTd>
+                    <MudTd DataLabel="ProductionYear">@context.ProductionYear</MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText>No matching records found</MudText>
+                </NoRecordsContent>
+                <LoadingContent>
+                    <MudText>Loading...</MudText>
+                </LoadingContent>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        </MudCardContent>
+    </MudCard>
+    <br/>
+    <MudCard>
+        <MudAutocomplete T="ClientDto" Label="Client to Copy/Move to" @bind-Value="selectedClient"  Required="true"
+                         SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e.ClientName} ({e.Status})")"  @onblur ="onClientChange">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+        <MudAutocomplete T="CatalogueDto" Label="Catalogue to Copy/Move to" @bind-Value="selectedCatalogue"
+                     SearchFunc="@SearchCat" ToStringFunc="@(e=> e==null?null : $"{e.Name}")" @onblur="onCatalogueChange">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+
+        @if (IsSeriesVisible())
+        {
+            <MudAutocomplete T="WorksTitleDto" Label="Series to Copy/Move to" @bind-Value="selectedSeries"
+                         SearchFunc="@SearchSeries" ToStringFunc="@(e=> e==null?null : $"{e.Title}")" @onblur="onSeasonChange">
+                <MoreItemsTemplate>
+                    <MudText Align="Align.Center" Class="px-4 py-1">
+                        Only the first 10 items are shown
+                    </MudText>
+                </MoreItemsTemplate>
+            </MudAutocomplete>
+        }
+
+        @if (IsSeasonsVisible())
+        {
+            <MudAutocomplete T="WorksTitleDto" Label="Season to Copy/Move to" @bind-Value="selectedSeason"
+                         SearchFunc="@SearchSeason" ToStringFunc="@(e=> e==null?null : $"{e.Title}")">
+                <MoreItemsTemplate>
+                    <MudText Align="Align.Center" Class="px-4 py-1">
+                        Only the first 10 items are shown
+                    </MudText>
+                </MoreItemsTemplate>
+            </MudAutocomplete>
+        }
+    </MudCard>
+    <br/><br/>
+
+    @if (WorksToCopy?.FirstOrDefault()?.Discriminator != Discriminator.Episode.ToString())
+    {
+        <MudCheckBox T="bool" Label="Copy Or Move Underlying Works" @ref="copyOrMoveUnderlyingWorks" Checked="true"></MudCheckBox>
+        <br /><br />
+    }
+    
+    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@((e) => MoveWorks(false))" Disabled = "DisableCopyMove()">Copy</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@((e) => MoveWorks(true))" Disabled="DisableCopyMove()">Move (Relinquish)</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="cancelOnClick">Cancel</MudButton>
+    </MudButtonGroup>
+}
+else
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+}

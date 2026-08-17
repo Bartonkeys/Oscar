@@ -1,0 +1,26 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudPaper Class="d-flex flex-row mb-2" Elevation="0">
+    <MudAutocomplete T="SocietyDto" @bind-Value="_society" For="@(() => _society)" Required="false"
+                     SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+                     Dense="true" Margin="Margin.Dense" DebounceInterval="500">
+        <MoreItemsTemplate>
+            <MudText Align="Align.Center" Class="px-4 py-1">
+                Only the first 10 items are shown
+            </MudText>
+        </MoreItemsTemplate>
+    </MudAutocomplete>
+    <MudButton StartIcon="@Icons.Material.Filled.PlaylistAddCircle" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="@AddSociety">Add</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.PlaylistAddCheckCircle" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="@AddAllSocieties">Add All</MudButton>
+    <MudIconButton Icon="@Icons.Material.Filled.SortByAlpha" Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Class="mt-2 mb-2" OnClick="@SortSocieties" Title="Sort" />
+</MudPaper>
+
+<MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2" Dense="true">
+    <RowTemplate>
+        <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+            @context.Name
+        </MudTd>
+        <MudTd Style="width: 10%;" Class="grey lighten-3 pa-0 pl-2">
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveSociety(context))"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>

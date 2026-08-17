@@ -1,0 +1,107 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Core.Enums
+@using Oscar.Blazor.Library.Components.Common
+
+@if (Right != null)
+{
+    <div Class="d-flex flex-row pb-2">
+        <MudIcon Color="Color.Secondary" Icon="@Icons.Material.Filled.List" Title="Right" Class="mr-2" />
+        @if (Right.Id < 1)
+        {
+            <MudText> Add Right</MudText>
+        }
+        else
+        {
+            <MudText> Edit Right</MudText>
+        }
+    </div>
+    <MudCard Height="90%" Class="overflow-auto pb-4">
+
+        <MudCardActions Height="5%">
+            <MudItem xs="6">
+                <MudButton Disabled="@_processing" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await Submit())">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">SAVING</MudText>
+                    }
+                    else
+                    {
+                        <MudText>SAVE RIGHT</MudText>
+                    }
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto" OnClick="@Cancel">
+                    <MudText>Cancel</MudText>
+                </MudButton>
+            </MudItem>
+        </MudCardActions>
+
+        <MudForm Model="@Right" @ref="@form" Validation="@(rightValidator.ValidateValue)" ValidationDelay="0" OnInvalidSubmit="@HandleInvalidSubmit()">
+            <MudSelect Class="pl-4 pt-2 pr-4" T="int" @bind-Value="Right.TypeId" For="@(() => Right.TypeId)" Label="Type" Dense="true" Margin="Margin.Dense">
+                @foreach (RightsTypeDto rightsType in RightsType)
+                {
+                    int rightsTypeId = rightsType.Id;
+                    <MudSelectItem Value="@rightsTypeId">@rightsType.Description (@rightsType.Name)</MudSelectItem>
+                }
+            </MudSelect>
+            @if (Right.TypeId == 99)
+            {
+                <MudCheckBox @bind-Checked="_allRightsType" Label="Same Rights For All Types Matching With Rights Dates, Percentage And Countries?"></MudCheckBox>
+            }
+            <MudDatePicker Class="pl-4 pt-2 pr-4" Date="@_startOfRight" DateChanged="@((DateTime? d) => StartDateChanged(d))" For="@(() => _startOfRight)" DateFormat="dd-MMM-yyyy" Label="Start Right"></MudDatePicker>
+            <MudText Class="pl-4 pt-2" Style="font-size: small">End Right</MudText>
+            <MudPaper Class="d-flex align-start flex-grow-1 pl-4 pt-2 pr-4" Elevation="0">
+                <MudButtonGroup OverrideStyles="false">
+                    <MudButton Size="Size.Small" Color="Color.Primary" Variant="GetVariant(_endOfRightPerpetuity)" OnClick="@(() => ToggleEndDatePerpetuity(true))">Perpetuity</MudButton>
+                    <MudButton Size="Size.Small" Color="Color.Primary" Variant="GetVariant(!_endOfRightPerpetuity)" OnClick="@(() => ToggleEndDatePerpetuity(false))">Select Date</MudButton>
+                </MudButtonGroup>
+                @if (!_endOfRightPerpetuity)
+                {
+                    <MudDatePicker Class="d-flex flex-1 pl-5 mt-n5" Date="@_endOfRight" DateChanged="@((DateTime? d) => EndDateChanged(d))" For="@(() => _endOfRight)" DateFormat="dd-MMM-yyyy"></MudDatePicker>
+                }
+            </MudPaper>
+            <MudDatePicker Class="pl-4 pt-2 pr-4" Date="@_startOfValidity" DateChanged="@((DateTime? d) => StartValidityChanged(d))" For="@(() => _startOfValidity)" DateFormat="dd-MMM-yyyy" Label="Start Validity"></MudDatePicker>
+            <MudText Class="pl-4 pt-2" Style="font-size: small">End Validity</MudText>
+            <MudPaper Class="d-flex align-start flex-grow-1 pl-4 pt-2 pr-4" Elevation="0">
+                <MudButtonGroup OverrideStyles="false">
+                    <MudButton Size="Size.Small" Color="Color.Primary" Variant="GetVariant(_endOfValidityPerpetuity)" OnClick="@(() => ToggleEndValidityPerpetuity(true))">Perpetuity</MudButton>
+                    <MudButton Size="Size.Small" Color="Color.Primary" Variant="GetVariant(!_endOfValidityPerpetuity)" OnClick="@(() => ToggleEndValidityPerpetuity(false))">Select Date</MudButton>
+                </MudButtonGroup>
+                @if (!_endOfValidityPerpetuity)
+                {
+                    <MudDatePicker Class="d-flex flex-1 pl-5 mt-n5" Date="@_endOfValidity" DateChanged="@((DateTime? d) => EndValidityChanged(d))" For="@(() => _endOfValidity)" DateFormat="dd-MMM-yyyy"></MudDatePicker>
+                }
+            </MudPaper>
+            <MudTextField Class="pl-4 pt-2 pr-4" T="string" @bind-Value="Right.Notations" For="@(() => Right.Notations)" Lines="4" Label="Notations"></MudTextField>
+            <MudNumericField Class="pl-4 pt-2 pr-4" T="decimal?" @bind-Value="Right.Percentage" For="@(() => Right.Percentage)" Label="Percentage"></MudNumericField>
+            <Channels @bind-Value="Right.ChannelRights" Header="Channels" ListLabel="Add Channel"></Channels>
+            <RightsLanguages @bind-Value="Right.LanguageRights" Header="Languages" ListLabel="Add Language"></RightsLanguages>
+            <MudItem xs="12">
+                <CountryGroupSelectTree Header="Countries" CountriesGroups="Right?.CountriesGroups?.ToHashSet()" Countries="Right?.Countries"></CountryGroupSelectTree>
+            </MudItem>
+        </MudForm>
+
+        <MudCardActions Height="5%">
+            <MudItem xs="6">
+                <MudButton Disabled="@_processing" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await Submit())">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">SAVING</MudText>
+                    }
+                    else
+                    {
+                        <MudText>SAVE RIGHT</MudText>
+                    }
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto" OnClick="@Cancel">
+                    <MudText>Cancel</MudText>
+                </MudButton>
+            </MudItem>
+        </MudCardActions>
+    </MudCard>
+}
+else
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+}

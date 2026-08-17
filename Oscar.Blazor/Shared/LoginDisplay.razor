@@ -1,0 +1,55 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization
+
+<AuthorizeView>
+    <Authorized>
+        <MudMenu Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Color="@Color.Info">
+            <ActivatorContent>
+                <MudChip Icon="@contextUser.Avatar" Color="@Color.Secondary">@contextUser.DisplayName</MudChip>
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem Icon="@Icons.Material.Rounded.Logout" Href="MicrosoftIdentity/Account/SignOut" Target="_self">Sign Out</MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+    </Authorized>
+    <NotAuthorized>
+        <MudIconButton Icon="@Icons.Material.Rounded.Login" Color="Color.Inherit" Href="MicrosoftIdentity/Account/SignIn" Target="_self" />
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private OscarUser contextUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        contextUser = new OscarUser(authState.User);
+        StateHasChanged();
+    }
+
+    public class OscarUser
+    {
+        public string DisplayName { get; set; }
+        public string EmailAddress { get; set; }
+        public string Name { get; set; } = "Anonymous";
+        public string Avatar { get; set; }
+
+        public OscarUser(ClaimsPrincipal contextUser)
+        {
+            Name = contextUser.Identity?.Name;
+            DisplayName = contextUser.FindFirstValue(ClaimTypes.Name);
+            EmailAddress = contextUser.FindFirstValue(ClaimTypes.Email);
+            
+            if (string.IsNullOrWhiteSpace(DisplayName))
+                DisplayName = contextUser.FindFirstValue("name");
+            if (string.IsNullOrWhiteSpace(EmailAddress))
+                EmailAddress = contextUser.FindFirstValue("preferred_username");
+            if (string.IsNullOrWhiteSpace(DisplayName)) DisplayName = Name;
+
+            var avatarClaim = contextUser.FindFirst(c => c.Type == "picture" || c.Type == "avatar");
+            Avatar = avatarClaim != null ? avatarClaim.Value : @Icons.Material.Filled.AccountCircle;
+        }
+    }
+}

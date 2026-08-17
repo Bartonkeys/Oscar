@@ -1,0 +1,26 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudPaper Class="d-flex flex-row mb-2" Elevation="0">
+    <MudTextField @bind-Value="_newName" For="@(() => _newName)" Label="Add alternative name" Variant="Variant.Text"></MudTextField>
+    <MudSelect @bind-Value="@_newAltNameType" For="@(() => _newAltNameType)" Label="Type" Dense="true" Margin="Margin.Dense">
+        @foreach (AltNameType altNameType in Enum.GetValues(typeof(AltNameType)))
+        {
+            <MudSelectItem T="AltNameType?" Value="@altNameType">@altNameType</MudSelectItem>
+        }
+    </MudSelect>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="@AddClientAltName">Add</MudButton>
+</MudPaper>
+
+<MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2" Dense="true">
+    <RowTemplate>
+        <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+            @context.AltName
+        </MudTd>
+        <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+            @context.AltNameType.ToString()
+        </MudTd>
+        <MudTd Style="width: 10%;" Class="grey lighten-3 pa-0 pl-2">
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveClientAltName(context))"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>

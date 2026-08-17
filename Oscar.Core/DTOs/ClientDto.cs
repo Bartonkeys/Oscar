@@ -1,0 +1,58 @@
+﻿using Oscar.Core.Enums;
+
+namespace Oscar.Core.DTOs
+{
+    public record ClientDto: IDto
+    {
+        public int Id { get; set; }
+        public int? ClientReference { get; set; }
+        public string? ClientName { get; set; }
+        public Status? Status { get; set; }
+        public AddressDto? Address { get; set; }
+        public ClientGrade? ClientGrade { get; set; }
+        public ClientType? ClientType { get; set; }
+        public string? IMaestroClientCode { get; set; }
+        public string? IMaestroGroupPayeeCode { get; set; }
+        public string? IMaestroGroupPayeeName { get; set; }
+        public string? Email { get; set; }
+        public string? GeneralNotes { get; set; }
+        public ContractDto? Contract { get; set; }
+        public ICollection<CatalogueDto> Catalogues { get; set; }
+        public ICollection<SocietyDto> Societies { get; set; }
+        public ICollection<DocumentDto> Documents { get; set; }
+        public ICollection<ClientAltNameDto> ClientAltNames { get; set; }
+        public ICollection<ContactDto> Contacts { get; set; }
+        public ICollection<CustomerServiceManagerDto> CustomerServiceManagers { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime? LastModified { get; set; }
+        public string? CCCClientsId { get; set; }
+        public string? CRCClientsId { get; set; }
+        public string? ScreenRightsPortfolioId { get; set; }
+        public string? MPAAClaimantsId { get; set; }
+        public string? AgicoaClientRef { get; set; }
+
+        public string CustomerServiceManagersFullNames
+        {
+            get
+            {
+                var result = CustomerServiceManagers.Where(csm => csm.IsActive).FirstOrDefault()?.Operator?.FullName;
+                return result;
+            }
+        }
+
+        public bool FilterBy(string searchText)
+        {
+            return (string.IsNullOrWhiteSpace(searchText) ||
+                    (!string.IsNullOrEmpty(ClientName) && ClientName.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1) ||
+                    (!string.IsNullOrEmpty(Email) && Email.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1) ||
+                    (!string.IsNullOrEmpty(ClientGrade.ToString()) && ClientGrade.ToString().IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1) ||
+                    (!string.IsNullOrEmpty(Status.ToString()) && Status.ToString().IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1) ||
+                    (!string.IsNullOrEmpty(IMaestroClientCode) && IMaestroClientCode.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1) ||
+                    (ClientAltNames.Any(a => a.AltName.Contains(searchText, StringComparison.OrdinalIgnoreCase))) ||
+                    (Id > 0 && Id.ToString().IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1) ||
+                    (ClientReference > 0 && ClientReference?.ToString().IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1)
+                );
+        }
+
+    }
+}

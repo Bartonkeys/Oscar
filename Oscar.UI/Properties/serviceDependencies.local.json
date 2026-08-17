@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "type": "secrets.user"
+    },
+    "mssql1": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/oscar-dev/databases/Oscar",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:OscarConnection"
+    },
+    "identityapp1": {
+      "secretStore": "LocalSecretsFile",
+      "type": "identityapp.aad",
+      "connectionId": "AzureAD:ClientSecret"
+    },
+    "storage1": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/compactdatastorage",
+      "type": "storage.azure",
+      "connectionId": "oscarstorage"
+    }
+  }
+}

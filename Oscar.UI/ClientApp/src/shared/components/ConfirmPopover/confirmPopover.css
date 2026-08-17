@@ -1,0 +1,11 @@
+.modalArea {
+    width: 400px;
+    margin: auto;
+    height: auto;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-radius: 8px;
+    z-index:100;
+}

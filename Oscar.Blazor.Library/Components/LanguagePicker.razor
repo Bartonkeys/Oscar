@@ -1,0 +1,17 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@if (_languages != null)
+{
+    <MudSelect @bind-Value="LanguageCode" For="@For" Label="@Label" Class="@Class">
+        @if (_languages != null)
+        {
+            @foreach (LanguageDto lang in _languages)
+            {
+                <MudSelectItem Value="@lang.Name.ToUpper()">@lang.Description</MudSelectItem>
+            }
+        }
+    </MudSelect>
+}
+else
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+}

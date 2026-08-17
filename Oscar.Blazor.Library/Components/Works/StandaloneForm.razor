@@ -1,0 +1,111 @@
+﻿@inherits Oscar.Blazor.Library.Common.WorksComponentBase
+@using Core.Enums
+@using Oscar.Blazor.Library.Components.Common
+@using Oscar.Blazor.Library.Components.Rights
+
+
+@if (_works != null)
+{
+    <div Class="d-flex flex-row pb-2">
+        <MudIcon Color="Color.Secondary" Icon="@Icons.Material.Filled.Man" Title="StandAlone" Class="mr-2" />
+        @if (_works.Id == 0)
+        {
+            <MudText> Add StandAlone</MudText>
+        }
+        else
+        {
+            <MudText> Select StandAlone</MudText>
+        }
+    </div>
+    <MudCard Height="90%" Class="overflow-auto pb-4">
+
+        <MudForm Model="@_works" @ref="@form" Validation="@(worksValidator.ValidateValue)" ValidationDelay="0" OnInvalidSubmit="@HandleInvalidSubmit()">
+            <StatusPicker Value="@_works.WorksStatus" Label="Status" Class="pl-4 pt-2 pr-4" InvalidStatuses="@(new List<WorksStatus>() {WorksStatus.Any})" StatusChanged="WorkStatusChanged"></StatusPicker>
+            @if (_works.WorksStatus == WorksStatus.Uncontrolled)
+            {
+                <MudTextField @bind-Value="_works.UncontrolledReason" For="@(() => _works.UncontrolledReason)" Label="Reason" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            }
+            <CommissionedWorkStatusPicker @bind-Value="_works.CommissionedWorkStatus" For="@(() => _works.CommissionedWorkStatus)" Label="Commissioned Work Status" Class="pl-4 pt-2 pr-4"></CommissionedWorkStatusPicker>
+            <Titles @bind-Value="_works.Titles"></Titles>
+            <YearPicker Label="Production Year" @bind-Value="_works.ProductionYear" For="@(() => _works.ProductionYear)" Class="pl-4 pt-2 pr-4"></YearPicker>
+            <YearPicker Label="First Broadcast Year" @bind-Value="_works.FirstBroadcastYear" For="@(() => _works.FirstBroadcastYear)" Class="pl-4 pt-2 pr-4"></YearPicker>
+            <MudNumericField @bind-Value="_works.DurationMinutes" For="@(() => _works.DurationMinutes)" Label="Duration(mins)" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudNumericField>
+            <WorksTypePicker @bind-Value="_works.WorksTypeId" For="@(() => _works.WorksTypeId)" Label="Type" Class="pl-4 pt-2 pr-4"></WorksTypePicker>
+            <GenrePicker @bind-Value="_works.GenreId" For="@(() => _works.GenreId)" Label="Genre" Class="pl-4 pt-2 pr-4"></GenrePicker>
+            <WorksSubTypePicker @bind-Value="_works.WorksSubTypeId" For="@(() => _works.WorksSubTypeId)" Label="Work Sub-type" Class="pl-4 pt-2 pr-4"></WorksSubTypePicker>
+            <CountrySelect @bind-Value="_works.Countries" Header="Production Countries" ListLabel="Add Country" CreateLabel="Create New Country" _countries="@_countries"></CountrySelect>
+            <LanguagesAutoComplete @bind-ExistingLanguages="_works.Languages"></LanguagesAutoComplete>
+            <ClientAndCatPicker ClientIds="@clientIds" Catalogues="@_works.Catalogues" IsReadOnly="@IsReadOnlyClientAndCatPicker"></ClientAndCatPicker>
+            <Persons @bind-Value="_works.Directors" type="@PersonType.Director" Header="Directors" ListLabel="Add Director" CreateLabel="Create New Director"/>
+            @if (_works.Id > 0)
+            {
+                <Persons @bind-Value="_works.Actors" type="@PersonType.Actor" Header="Actors" ListLabel="Add Actor" CreateLabel="Create New Actor" />
+                <Persons @bind-Value="_works.Producers" type="@PersonType.Producer" Header="Producers" ListLabel="Add Producer" CreateLabel="Create New Producer" />
+            }
+            <Companies @bind-Value="_works.Companies" Header="Production Companies" ListLabel="Add Company" CreateLabel="Create New Company"></Companies>
+            @if (_works.Id > 0)
+            {
+                <Persons @bind-Value="_works.Distributors" type="@PersonType.Distributor" Header="Distributors" ListLabel="Add Distributor" CreateLabel="Create New Distributor" />
+            }
+            <MudTextField @bind-Value="_works.GeneralNotes" For="@(() => _works.GeneralNotes)" Label="General Notes" Lines="3" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+
+            @if (_works.Id > 0)
+            {
+                <References Works="_works"></References>
+
+                <MudExpansionPanel Text="Documents">
+                    <DocumentSelect @bind-Value="_works.Documents" DocumentType="DocumentType.Works" OwnerId="@_works.Id"></DocumentSelect>
+                </MudExpansionPanel>
+
+                <MudExpansionPanel Text="Rights">
+                    <RightsGrid Id="@_works.Id" Works="true" Open="@Open" WorksProductionYear="@_works.ProductionYear" RightsSource="@RightsSource.Works" SuppressCatalogueDropdown="true" RightsType="@RightsType" Countries="@Countries"></RightsGrid>
+                </MudExpansionPanel>
+
+                <MudExpansionPanel Text="Conflicts">
+                    <Conflicts Value="@_works.Conflicts" WorksId="@_works.Id" ConflictsChanged="ConflictsChanged"></Conflicts>
+                    <StatusPicker Value="@_works.WorksStatus" Label="Status" Class="pl-4 pt-2 pr-4" InvalidStatuses="@(new List<WorksStatus>() {WorksStatus.Any})" StatusChanged="WorkStatusChanged"></StatusPicker>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Registrations">
+                    <Registrations Value="@_works.Registrations" WorksId="@_works.Id" ClientId="@_works?.Clients?.FirstOrDefault()?.Id"></Registrations>
+                </MudExpansionPanel>
+
+                <MudExpansionPanel Text="ReRegistrations">
+                    <ReRegistrations @bind-Values="_works.ReRegistrations" ListLabel="Add ReRegistrations"></ReRegistrations>
+                </MudExpansionPanel>
+
+            }
+            <MudExpansionPanel Text="Mandates" MaxHeight="600" IsExpanded="@_showMandatesPanel" IsExpandedChanged="@showHideMandatesPanel">
+                <Mandates MandateTypes="@_mandateTypes"></Mandates>
+            </MudExpansionPanel>
+            @if (_works.Id > 0)
+            {
+                <MudTextField ReadOnly="true" @bind-Value="_works.CreationDate" For="@(() => _works.CreationDate)" Label="Creation Date" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+                <MudTextField ReadOnly="true" @bind-Value="_works.LastModified" For="@(() => _works.LastModified)" Label="Last Modified Date" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            }
+        </MudForm>
+        <MudCardActions Height="5%">
+            <MudButton Disabled="@_processing" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await Submit())">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">SAVING</MudText>
+                }
+                else
+                {
+                    <MudText>SAVE WORK</MudText>
+                }
+            </MudButton>
+            @if (IsPage == false)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@Cancel">
+                    <MudText>Cancel</MudText>
+                </MudButton>
+            }
+        </MudCardActions>
+    </MudCard>
+    
+}
+else
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+}

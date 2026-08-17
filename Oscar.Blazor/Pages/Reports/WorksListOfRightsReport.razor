@@ -1,0 +1,92 @@
+﻿@page "/worksListOfRightsReport"
+@inherits OscarReportComponent
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Oscar.Core.Entities
+@using Oscar.Blazor.Components
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+<PageTitle>@ReportTitle</PageTitle>
+
+<Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.Cube" SpinnerText="@StatusText" />
+
+<MudCard Elevation="1">
+    <MudCardHeader>
+        <MudText Typo="Typo.h5">@ReportTitle</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="6" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="ClientDto" Placeholder="Search Client" @bind-Value="@SelectedClient"
+                                 SearchFunc="@ClientSearch" ToStringFunc="@ClientDisplayFormat" @ref="_clientSelect" Required="true"
+                                 ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                 Clearable="true" ShowProgressIndicator="true" Label="Client" RequiredError="Client is required!"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                    <NoItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Please enter your search text
+                        </MudText>
+                    </NoItemsTemplate>
+                </MudAutocomplete>
+            </MudItem>
+            @if (SelectedClient != null)
+            {
+                <MudItem xs="6" Class="mt-0 mb-0 pt-0 pb-0">
+                    <MudSelect T="CatalogueDto" @bind-Value="_selectedCatalogue" Label="Catalogue" Placeholder="Client Catalogues">
+                        <MudSelectItem T="CatalogueDto">All</MudSelectItem>
+                        @foreach (var item in SelectedClient.Catalogues)
+                        {
+                            <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudCardContent>
+    <MudCardActions>
+        <div class="d-flex align-content-start justify-center flex-wrap flex-grow-1 gap-4">
+            <MudButton StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Disabled="IsBusy" OnClick="OnRunReportClick">Search</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Clear" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small" OnClick="OnResetClick">Reset</MudButton>
+        </div>
+    </MudCardActions>
+</MudCard>
+<MudSpacer />
+<MudDivider />
+
+<MudDataGrid T="ClientWorkRightItem" Items="@_gridItems" @ref="_dataGrid" ShowFilterIcons="false" ShowMenuIcon="true" ColumnResizeMode="ResizeMode.Column" GroupExpanded="true"
+             DragDropColumnReordering="true" ColumnsPanelReordering="true" Hideable="true" Filterable="false" Groupable="true" FilterMode="DataGridFilterMode.Simple">
+    <ToolBarContent>
+        <MudMenu StartIcon="@Icons.Material.Filled.FileDownload" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                 ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight"
+                 Label="Export" Color="Color.Tertiary" Variant="Variant.Filled" Size="Size.Small" Dense="true">
+            <MudMenuItem Icon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Success" IconSize="Size.Small" OnClick="OnExportToExcelClick">Excel File</MudMenuItem>
+            <MudMenuItem Icon="@Icons.Custom.FileFormats.FileDocument" IconColor="Color.Inherit" IconSize="Size.Small" OnClick="OnExportToCsvClick">CSV File</MudMenuItem>
+        </MudMenu>
+        <MudSpacer />
+        @* <MudTextField @bind-Value="SearchText" Placeholder="Search" Label="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0" /> *@
+    </ToolBarContent>
+
+    <Columns>
+        <PropertyColumn Property="x => x.ClientName" Title="Client" Hideable="true" Hidden="true"/>
+        <PropertyColumn Property="x => x.CatalogueName" Title="Catalogue" Grouping="true" HideSmall="true" />
+        <PropertyColumn Property="x => x.Discriminator" Title="Type" />
+        <PropertyColumn Property="x => x.Titles" Title="Titles" />
+        <PropertyColumn Property="x => x.AlternateTitles" Title="Alternate Titles" />
+        <PropertyColumn Property="x => x.ProductionYear" Title="Production Year" />
+        <PropertyColumn Property="x => x.CompactRef" Title="Compact Ref" />
+        <PropertyColumn Property="x => x.RightsType" Title="Rights Type" />
+        <PropertyColumn Property="x => x.Percentage" Title="Percent %" />
+        <PropertyColumn Property="x => x.Country" Title="Country" />
+        <PropertyColumn Property="x => x.Language" Title="Language" />
+        <PropertyColumn Property="x => x.Channel" Title="Channel" />
+        <PropertyColumn Property="x => x.Released" Title="Released" />
+        <PropertyColumn Property="x => x.StartDate" Title="Start Date" />
+        <PropertyColumn Property="x => x.EndDate" Title="End Date" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="ClientWorkRightItem" PageSizeOptions="@PageSizeOptions" />
+    </PagerContent>
+</MudDataGrid>
+
+<EventConsole @ref="Console" />
+
+

@@ -1,0 +1,54 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Height="90%" Class="overflow-auto pb-4">
+    <MudText>Bulk add episodes for <strong>@ParentTitle?.Title</strong> </MudText>
+    <MudTable Items="@_titles" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true">
+        <RowTemplate>
+            <MudTd>
+                <MudForm Model="@context">
+                    <MudTextField @bind-Value="context.EpisodeNumber" For="@(() => context.EpisodeNumber)" Label="Episode No." Variant="Variant.Text"></MudTextField>
+                </MudForm>
+            </MudTd>
+            <MudTd>
+                <MudForm Model="@context">
+                    <MudTextField @bind-Value="context.Title" For="@(() => context.Title)" Label="Title" Variant="Variant.Text"></MudTextField>
+                </MudForm>
+            </MudTd>
+            <MudTd>
+                <MudAutocomplete T="LanguageDto"
+                                 Placeholder="Language"
+                                 @bind-Value="context.Language"
+                                 SearchFunc="@Search"
+                                 ToStringFunc="@(e=> e==null?null : $"{e.Description}")"
+                                 For="@(() => context.Language)" Dense="true" Margin="Margin.Dense">
+
+                    <MoreItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Only the first 10 items are shown
+                        </MudText>
+                    </MoreItemsTemplate>
+                </MudAutocomplete>
+            </MudTd>
+            <MudTd DataLabel="Name">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@(async () => removeTitle(context))"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="@(async () => addTitle())">Add Episode</MudButton>
+    <MudCardActions Height="5%">
+        <MudButton Disabled="@_processing" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">SAVING</MudText>
+            }
+            else
+            {
+                <MudText>ADD EPISODE(S)</MudText>
+            }
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@Cancel">
+            <MudText>Cancel</MudText>
+        </MudButton>
+    </MudCardActions>
+</MudCard>

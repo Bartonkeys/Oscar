@@ -1,0 +1,49 @@
+﻿@typeparam TItem
+
+<div>
+    <MudAutocomplete T="TItem" Label="@Placeholder" @bind-Value="SelectedItem" 
+                     SearchFunc="@HandleSearch" ToStringFunc="@DisplayFormatFunc"
+                     Clearable="true" ShowProgressIndicator="true"
+                     ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"/>
+</div>
+
+@code {
+
+    [Parameter] public string Placeholder { get; set; } = "Search ...";
+    [Parameter] public TItem SelectedItem { get; set; }
+    [Parameter] public Func<string, Task<IEnumerable<TItem>>> OnSearch { get; set; }
+    [Parameter] public Func<TItem, string> DisplayFormatFunc { get; set; }
+
+    private string _searchTerm = "";
+    private bool _isBusy;
+
+    private async Task HandleIntervalElapsed(string arg)
+    {
+        _isBusy = true;
+        _searchTerm = arg;
+        if (_searchTerm.Length >= 3)
+        {
+            if (OnSearch != null)
+                await OnSearch.Invoke(_searchTerm);
+        }
+        _isBusy = false;
+    }
+
+    private Task<IEnumerable<TItem>> HandleSearch(string arg)
+    {
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(arg) || arg.Length < 3) return null!;
+
+        _isBusy = true;
+        try
+        {
+            _searchTerm = arg;
+            return OnSearch.Invoke(_searchTerm);
+        }
+        finally
+        {
+            _isBusy = false;
+        }
+    }
+}

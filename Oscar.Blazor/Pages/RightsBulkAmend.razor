@@ -1,0 +1,65 @@
+﻿@page "/rightsBulkAmend"
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@inject ISnackbar Snackbar
+@using Oscar.Blazor.Library.Components.Rights
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudAlert Severity="Severity.Warning">Changes to Start Dates will only affect dates in the past. Changes to End Dates will only affect dates in the future.</MudAlert>
+    </MudItem>
+    <MudItem xs="12">
+        <MudAutocomplete T="ClientDto"
+                         Placeholder="Client"
+                         SearchFunc="@SearchClients"
+                         ToStringFunc="@(e => e == null ? null : $"{e.ClientName} ({e.Status})")"
+                         ValueChanged="ClientChange"
+                         Clearable="true"
+                         @ref="clientSelect">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+        <MudSelect T="CatalogueDto"
+                   Placeholder="Catalogue"
+                   ValueChanged="CatalogueChange"
+                   @ref="catalogueSelect">
+            @if (_selectedClient != null)
+            {
+                @foreach (var item in _selectedClient.Catalogues)
+                {
+                    <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                }
+            }
+        </MudSelect>
+
+        <MudDatePicker Label="Start of Rights" @bind-Date="@_startOfRight" DateFormat="dd/MM/yyyy"></MudDatePicker>
+        <MudSwitch @bind-Checked="@_rightsPerpetuity" Label="Perpetuity" Color="Color.Success"></MudSwitch>
+        @if (!_rightsPerpetuity)
+        {
+            <MudDatePicker Label="End of Rights" @bind-Date="@_endOfRight" DateFormat="dd-MMM-yyyy"></MudDatePicker>
+        }
+
+        <MudDatePicker Label="Start of Validity" @bind-Date="@_startOfValidity" DateFormat="dd/MM/yyyy"></MudDatePicker>
+        <MudSwitch @bind-Checked="@_rightsValidityPerpetuity" Label="Perpetuity" Color="Color.Success"></MudSwitch>
+        @if (!_rightsValidityPerpetuity)
+        {
+            <MudDatePicker Label="End of Validity" @bind-Date="@_endOfValidity" DateFormat="dd-MMM-yyyy"></MudDatePicker>
+        }
+
+        <MudButton Variant="Variant.Filled" Color="Color.Success" FullWidth="true" Size="Size.Small" Class="ml-auto mt-2" OnClick="BulkAmendRights">Bulk Amend Rights</MudButton>
+
+    </MudItem>
+</MudGrid>
+
+<MudOverlay Visible="_processing" DarkBackground="false">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
+                <MudText Align="Align.Center" Typo="Typo.h6">Bulk updating rights. This process may take some time...</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
+</MudOverlay>

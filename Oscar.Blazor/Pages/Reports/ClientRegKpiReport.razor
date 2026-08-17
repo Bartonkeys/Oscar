@@ -1,0 +1,87 @@
+﻿@page "/clientRegKpiReport"
+@inherits OscarReportComponent
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using MudBlazor.Extensions
+@using Oscar.Blazor.Components
+@using Oscar.Blazor.Library.Services
+@using Oscar.Core.Entities
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+<PageTitle>@ReportTitle</PageTitle>
+
+<Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.Cube" SpinnerText="@StatusText" />
+
+<MudCard Elevation="1">
+    <MudCardHeader>
+        <MudText Typo="Typo.h5" Elevated="true">@ReportTitle</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="ClientDto" Placeholder="Search Client" @bind-Value="@SelectedClient"
+                                 SearchFunc="@ClientSearch" ToStringFunc="@ClientDisplayFormat" @ref="_clientSelect"
+                                 ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                 Clearable="true" ShowProgressIndicator="true" Label="Client"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                    <NoItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Please enter your search text
+                        </MudText>
+                    </NoItemsTemplate>
+                </MudAutocomplete>
+            </MudItem>
+            
+            <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudTooltip Text="This report shows/export previous three years of data including selected year" Color="Color.Info" Arrow="true" Placement="Placement.Top">
+                    <MudTextField Mask="@(new DateMask("YYYY", 'Y'))" Label="Created Year" Placeholder="Select a Year" @bind-Value="@SelectedYear" Variant="@Variant.Text" Required="true" RequiredError="Created Year is required!"/>
+                </MudTooltip>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+    <MudCardActions>
+        <div class="d-flex align-content-start justify-center flex-wrap flex-grow-1 gap-4">
+            <MudButton StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Disabled="IsBusy" OnClick="OnRunReportClick">Search</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Clear" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small" OnClick="OnResetClick">Reset</MudButton>
+        </div>
+    </MudCardActions>
+</MudCard>
+<MudSpacer />
+<MudDivider />
+@* <MudItem xs="12">
+    <MudPopover Open="@ShowInfoBanner" OverflowBehavior="OverflowBehavior.FlipAlways" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Paper="false">
+        <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center" ShowCloseIcon="true" CloseIconClicked="(() => CloseInfoBanner(true))">
+            Information Message
+        </MudAlert>
+    </MudPopover>
+</MudItem> *@
+<MudDataGrid T="ClientWorkStatItem" Items="@_gridItems" @ref="_dataGrid" @bind-SelectedItem="@_selectedItem" GroupExpanded="true" QuickFilter="@GridFilterFunc"
+             ShowFilterIcons="false" ShowMenuIcon="true" ColumnResizeMode="ResizeMode.Container" FilterMode="DataGridFilterMode.Simple"
+             DragDropColumnReordering="true" ColumnsPanelReordering="true" Hideable="true" Filterable="false" Groupable="true">
+    <ToolBarContent>
+        <MudMenu StartIcon="@Icons.Material.Filled.FileDownload" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                 ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight"
+                 Label="Export" Color="Color.Tertiary" Variant="Variant.Filled" Size="Size.Small" Dense="true">
+            <MudMenuItem Icon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Success" IconSize="Size.Small" OnClick="OnExportToExcelClick">Excel File</MudMenuItem>
+            <MudMenuItem Icon="@Icons.Custom.FileFormats.FileDocument" IconColor="Color.Inherit" IconSize="Size.Small" OnClick="OnExportToCsvClick">CSV File</MudMenuItem>
+        </MudMenu>
+        <MudSpacer />
+        <MudTextField @bind-Value="SearchText" Placeholder="Search" Label="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0" Immediate="true" Clearable="true" DebounceInterval="500"/>
+    </ToolBarContent>
+
+    <Columns>
+        <PropertyColumn Property="x => x.ClientName" Title="Client" Grouping="true" />
+        <PropertyColumn Property="x => x.ClientGrade" Title="Grade" />
+        <PropertyColumn Property="x => x.ClientStatus" Title="Status" />
+        <PropertyColumn Property="x => x.AccountManager" Title="CSM" />
+        <PropertyColumn Property="x => x.CreatedYear" Title="Created Year"/>
+        <PropertyColumn Property="x => x.Episodes" Title="Episodes" />
+        <PropertyColumn Property="x => x.Seasons" Title="Seasons" />
+        <PropertyColumn Property="x => x.Series" Title="Series" />
+        <PropertyColumn Property="x => x.StandAlones" Title="Titles" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="ClientWorkStatItem" PageSizeOptions="@PageSizeOptions" />
+    </PagerContent>
+</MudDataGrid>
+
+<EventConsole @ref="Console" />

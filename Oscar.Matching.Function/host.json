@@ -1,0 +1,15 @@
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    },
+    "logLevel": {
+      "Oscar.Function": "Information"
+    }
+  },
+  "functionTimeout": "00:59:00"
+}

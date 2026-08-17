@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<IncludeReferencedProjects>true</IncludeReferencedProjects>
+		<Version>1.0.36</Version>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="AutoMapper" Version="13.0.1" />
+	  <PackageReference Include="bartonkeys-functional" Version="1.0.0" />
+	  <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" Version="6.0.3.1" />
+	  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+	  <PackageReference Include="Humanizer" Version="2.14.1" />
+	  <PackageReference Include="MediatR" Version="10.0.1" />
+	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="C:\Users\graha\.nuget\packages\automapper\13.0.1\lib\net6.0\AutoMapper.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\bartonkeys-functional\1.0.0\lib\net5.0\bartonkeys-functional.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\fluentvalidation\11.10.0\lib\net6.0\FluentValidation.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\mediatr\10.0.1\lib\netstandard2.1\MediatR.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\mediatr.extensions.microsoft.dependencyinjection\10.0.1\lib\netstandard2.1\MediatR.Extensions.Microsoft.DependencyInjection.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\microsoft.entityframeworkcore\6.0.8\lib\net6.0\Microsoft.EntityFrameworkCore.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\microsoft.entityframeworkcore.relational\6.0.8\lib\net6.0\Microsoft.EntityFrameworkCore.Relational.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\entityframeworkcore.exceptions.sqlserver\6.0.3.1\lib\net6.0\EntityFramework.Exceptions.SqlServer.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\microsoft.entityframeworkcore.inmemory\6.0.8\lib\net6.0\Microsoft.EntityFrameworkCore.InMemory.dll" Pack="true" PackagePath="lib\net6.0" />
+		<None Include="C:\Users\graha\.nuget\packages\microsoft.entityframeworkcore.sqlserver\6.0.8\lib\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll" Pack="true" PackagePath="lib\net6.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Oscar.Core\Oscar.Core.csproj" PrivateAssets="All" />
+	  <ProjectReference Include="..\Oscar.Data\Oscar.Data.csproj" PrivateAssets="All" />
+	  <ProjectReference Include="..\Oscar.MRIT.Core\Oscar.MRIT.Core.csproj" PrivateAssets="All" />
+	  <ProjectReference Include="..\Oscar.Mrit\Oscar.Mrit.csproj" PrivateAssets="All" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+	</PropertyGroup>
+
+	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+		<ItemGroup>
+			<!-- Filter out unnecessary files -->
+			<_ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
+		</ItemGroup>
+
+		<!-- Print batches for debug purposes -->
+		<Message Text="Batch for .nupkg: ReferenceCopyLocalPaths = @(_ReferenceCopyLocalPaths), ReferenceCopyLocalPaths.DestinationSubDirectory = %(_ReferenceCopyLocalPaths.DestinationSubDirectory) Filename = %(_ReferenceCopyLocalPaths.Filename) Extension = %(_ReferenceCopyLocalPaths.Extension)" Importance="High" Condition="'@(_ReferenceCopyLocalPaths)' != ''" />
+
+		<ItemGroup>
+			<!-- Add file to package with consideration of sub folder. If empty, the root folder is chosen. -->
+			<BuildOutputInPackage Include="@(_ReferenceCopyLocalPaths)" TargetPath="%(_ReferenceCopyLocalPaths.DestinationSubDirectory)" />
+		</ItemGroup>
+	</Target>
+
+</Project>

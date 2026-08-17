@@ -1,0 +1,73 @@
+﻿namespace Oscar.Core.Entities
+{
+    public class MerlinSociety : BaseEntity
+    {
+        public int MerlinId { get; set; }
+        public string? Merlin_Code { get; set; }
+        public string? Merlin_ChannelName { get; set; }
+        public string? MRIT_Code { get; set; }
+        public string? MRIT_ChannelName { get; set; }
+        public string? AGICOA_Code { get; set; }
+        public string? AGICOA_ChannelName { get; set; }
+        public string? AGICOAGmbh_Code { get; set; }
+        public string? AGICOAGmbh_ChannelName { get; set; }
+        public string? ROVI_Code { get; set; }
+        public string? ROVI_Name { get; set; }
+        public string? TVCountry { get; set; }
+        public string? Countries_CR { get; set; }
+        public string? Countries_BT { get; set; }
+        public string? Countries_EC { get; set; }
+        public string? FilmJus_Code { get; set; }
+        public string? FilmJus_ChannelName { get; set; }
+        public string? ScreenRights_Code { get; set; }
+        public string? ScreenRights_ChannelName { get; set; }
+        public string? PROCIBEL_Code { get; set; }
+        public string? PROCIBEL_ChannelName { get; set; }
+        public string? EGEDA_Code { get; set; }
+        public string? EGEDA_ChannelName { get; set; }
+        public string? FILMKOPI_Code { get; set; }
+        public string? FILMKOPI_ChannelName { get; set; }
+        public string? FRF_Code { get; set; }
+        public string? FRF_ChannelName { get; set; }
+        public string? PROCIREP_Code { get; set; }
+        public string? PROCIREP_ChannelName { get; set; }
+        public string? SIAE_Code { get; set; }
+        public string? SIAE_ChannelName { get; set; }
+        public string? SACEM_Code { get; set; }
+        public string? SACEM_ChannelName { get; set; }
+        public string? SEKAM_Code { get; set; }
+        public string? SEKAM_ChannelName { get; set; }
+        public string? SUISSIMAGE_Code { get; set; }
+        public string? SUISSIMAGE_ChannelName { get; set; }
+        public string? VAM_Code { get; set; }
+        public string? VAM_ChannelName { get; set; }
+        public string? VGF_Code { get; set; }
+        public string? VGF_ChannelName { get; set; }
+        public string? VFF_Code { get; set; }
+        public string? VFF_ChannelName { get; set; }
+        public string? GWFF_Code { get; set; }
+        public string? GWFF_ChannelName { get; set; }
+        public string? ZAPA_Code { get; set; }
+        public string? ZAPA_ChannelName { get; set; }
+        public string? NORWACO_Code { get; set; }
+        public string? NORWACO_ChannelName { get; set; }
+        public string? VIDEMA_Code { get; set; }
+        public string? VIDEMA_ChannelName { get; set; }
+        public string? ANGOA_Code { get; set; }
+        public string? ANGOA_ChannelName { get; set; }
+        public string? Gedipe_Code { get; set; }
+        public string? Gedipe_ChannelName { get; set; }
+        public string? APA_Code { get; set; }
+        public string? APA_ChannelName { get; set; }
+        public string? Conductor_Code { get; set; }
+        public string? Conductor_ChannelName { get; set; }
+        public string? UPFAR_ARGOA_Code { get; set; }
+        public string? UPFAR_ARGOA_ChannelName { get; set; }
+        public string? PRD_Code { get; set; }
+        public string? PRD_ChannelName { get; set; }
+        public string? LITA_Code { get; set; }
+        public string? LITA_ChannelName { get; set; }
+        public string? CMC_Code { get; set; }
+        public string? CMC_ChannelName { get; set; }
+    }
+}

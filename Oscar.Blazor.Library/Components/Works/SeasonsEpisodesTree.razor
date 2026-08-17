@@ -1,0 +1,45 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Infrastructure.Features.Series.Queries
+<MudDrawer @bind-Open="@_openWorksDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Persistent" ClipMode="DrawerClipMode.Docked">
+    @switch (_discriminator)
+    {
+        case Discriminator.Season:
+            <SeasonForm Id="@_selectedId" ExistingSeasons="@Seasons" SeriesId="@SeriesId" ParentSeries="@ParentSeries" Open="_openWorksDrawer" RefreshParent="@refreshParent" OpenParent="@OpenParent" toggleWorksDrawer="@ToggleWorksDrawer"></SeasonForm>
+            break;
+        case Discriminator.Episode:
+            <EpisodeForm Id="@_selectedId" SeasonId="@_seasonId" SeriesId="@SeriesId" Open="_openWorksDrawer" RefreshParent="@refreshParent" OpenParent="@OpenParent" toggleWorksDrawer="@ToggleWorksDrawer"></EpisodeForm>
+            break;
+        default:
+            <span>blah</span>
+            break;
+    }
+</MudDrawer>
+<MudDrawer @bind-Open="@openCopyDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <CopyForm WorksToCopy="@selectedItems" WorksSource="WorksSource.WorksDetail" CopyFormComplete="CopyFormComplete"></CopyForm>
+</MudDrawer>
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    <MudText>Seasons and Episodes</MudText>
+    <MudText><b>Client</b>: @OwningClient</MudText>
+    <MudText><b>Catalogue</b>: @OwningCatalogue</MudText>
+    @if (@_loading == false)
+    {
+        <MudTreeView Items="@_treeItems" Dense="true">
+            <ItemTemplate>
+                <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.TreeItems" Value="@context">
+                    <Content>
+                        <MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
+                        <MudText>@context.Title</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" Style="@(context.Discriminator == Discriminator.All ? "display:none;" : null)" aria-label="edit" OnClick="@(async () => OpenWorksDrawer(context))"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Size="Size.Small" Color="Color.Error" Style="@(context.Discriminator == Discriminator.All ? "display:none;" : null)" aria-label="delete" OnClick="@(async () => removeItem(context))"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Color="Color.Primary" Style="@(context.Discriminator == Discriminator.All ? "display:none;" : null)"  aria-label="copy" OnClick="@(async () => OpenCopyDrawer(context))"></MudIconButton>
+                    </Content>
+                </MudTreeViewItem>
+            </ItemTemplate>
+        </MudTreeView>
+    }
+    else
+    {
+        <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+    }
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="@(async () => OpenWorksDrawer(null))">Add Season</MudButton>
+</MudCard>

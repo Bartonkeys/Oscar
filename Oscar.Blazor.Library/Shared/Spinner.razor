@@ -1,0 +1,20 @@
+﻿<style>
+    .spinner-container {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        z-index: 999;
+        top: 50%;
+        left: 50%;
+    }
+</style>
+@if (IsVisible)
+{
+    <MudItem xs="12" sm="6" style="place-content:center">
+        <MudOverlay Visible="IsVisible" Absolute="true" LightBackground="true">
+            <div class="spinner-container">
+                <SpinnerControl SpinnerStyle="@SpinnerStyle" SpinnerText="@SpinnerText" />
+            </div>
+        </MudOverlay>
+    </MudItem>
+}

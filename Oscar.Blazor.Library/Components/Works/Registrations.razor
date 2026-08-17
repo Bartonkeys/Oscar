@@ -1,0 +1,45 @@
+﻿@using Oscar.Blazor.Library.Components.Rights
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudDrawer @bind-Open="@_openRegistrationsDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Persistent" ClipMode="DrawerClipMode.Docked">
+    <RegistrationsForm RegistrationDisplayDto="@_registration" WorksId="@WorksId" ClientId="@ClientId"
+                RefreshParent="@RefreshRegistrations" 
+                toggleDrawer="@ToggleDrawer"></RegistrationsForm>
+</MudDrawer>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="() => OpenDrawer(null)">Create Registration</MudButton>
+<MudCardContent Class="@Class">
+    @if (@Value != null && Value.Count() > 0)
+    {
+        <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true">
+            <HeaderContent>
+                <MudTh>Society Name</MudTh>
+                <MudTh>Last Registration Date</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <MudText>@context.SocietyName</MudText>
+                </MudTd>
+                <MudTd>
+                    <MudText>@context?.DateRegistered?.ToLongDateString()</MudText>
+                </MudTd>
+                <MudTd DataLabel="Edit">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenDrawer(context)"></MudIconButton>
+                </MudTd>
+                <MudTd DataLabel="Delete">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="() => DeleteRegistrationAsync(context)"></MudIconButton>
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Typo="Typo.h6">No Data</MudText>
+    }
+</MudCardContent>

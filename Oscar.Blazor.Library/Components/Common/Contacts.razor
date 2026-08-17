@@ -1,0 +1,92 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Blazor.Library.Components.Common
+
+<MudCard>
+    <MudCardHeader>Contacts</MudCardHeader>
+    <MudCardContent>
+        <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true" >
+            <RowTemplate>
+                <MudTd Style="width: 70%;">
+                    @context.FirstName @context.LastName
+                </MudTd>
+                <MudTd Style="width: 30%;">
+                    <MudIconButton Icon="@Icons.Material.Filled.ViewHeadline" Color="Color.Primary" Size="Size.Small" aria-label="delete" OnClick="@((e) => ViewContact(context))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="delete" OnClick="@((e) => EditContact(context))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveContact(context))"></MudIconButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="width:100%" Class="ml-auto mt-2" OnClick="() => openCreateContactDrawer = true">Add Contact</MudButton>
+    </MudCardContent>
+</MudCard>
+
+<MudDrawer @bind-Open="@openContactDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <MudText Typo="Typo.h6" Height="5%">Edit Contact</MudText>
+    <MudTextField T="string" @bind-Value="contact.Title" For="@(() => contact.Title)" Label="Title" Variant="Variant.Text"></MudTextField>
+    <MudTextField T="string" @bind-Value="contact.Salutation" For="@(() => contact.Salutation)" Label="Salutation" Variant="Variant.Text"></MudTextField>
+    <MudTextField T="string" @bind-Value="contact.FirstName" For="@(() => contact.FirstName)" Label="First Name" Variant="Variant.Text"></MudTextField>
+    <MudTextField T="string" @bind-Value="contact.LastName" For="@(() => contact.LastName)" Label="Last Name" Variant="Variant.Text"></MudTextField>
+    <MudTextField T="string" @bind-Value="contact.Phone" For="@(() => contact.Phone)" Label="Phone" Variant="Variant.Text"></MudTextField>
+    <MudTextField T="string" @bind-Value="contact.Mobile" For="@(() => contact.Mobile)" Label="Mobile" Variant="Variant.Text"></MudTextField>
+    <MudTextField T="string" @bind-Value="contact.Email" For="@(() => contact.Email)" Label="Email" Variant="Variant.Text" Class="removeUpperCasing"></MudTextField>
+    <MudTextField T="string" @bind-Value="contact.JobTitle" For="@(() => contact.JobTitle)" Label="JobTitle" Variant="Variant.Text"></MudTextField>
+    <MudTextField T="string" @bind-Value="contact.Comments" For="@(() => contact.Comments)" Label="Comment" Variant="Variant.Text"></MudTextField>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="width: 100%" Class="ml-auto mt-2" OnClick="@UpdateContact">Update</MudButton>
+</MudDrawer>
+
+<MudDrawer @bind-Open="@openCreateContactDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <MudText Typo="Typo.h6" Height="5%">Add Contact</MudText>
+
+    @*<MudPaper Class="d-flex flex-row" Elevation="0">
+        <MudAutocomplete T="ContactDto" Label="Existing Contact" @bind-Value="contact" For="@(() => contact)" Required="false"
+                         SearchFunc="@SearchContact" ToStringFunc="@(e=> e==null?null : $"{e.FirstName} {e.LastName}")"
+                         Dense="true" Margin="Margin.Dense">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-2 mt-2" OnClick="@AddContact">Add</MudButton>
+    </MudPaper>*@
+    
+    @if (openCreateContactDrawer)
+    {
+        <MudForm @ref="@contactForm" ValidationDelay="0" OnInvalidSubmit="@HandleInvalidSubmit()">
+            <MudTextField T="string" @bind-Value="newContact.Title" For="@(() => newContact.Title)" Label="Title" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" @bind-Value="newContact.Salutation" For="@(() => newContact.Salutation)" Label="Salutation" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" @bind-Value="newContact.FirstName" For="@(() => newContact.FirstName)" Label="First Name" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" @bind-Value="newContact.LastName" For="@(() => newContact.LastName)" Label="Last Name" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" @bind-Value="newContact.Phone" For="@(() => newContact.Phone)" Label="Phone" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" @bind-Value="newContact.Mobile" For="@(() => newContact.Mobile)" Label="Mobile" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" @bind-Value="newContact.Email" For="@(() => newContact.Email)" Label="Email" Variant="Variant.Text" Class="removeUpperCasing"></MudTextField>
+            <MudTextField T="string" @bind-Value="newContact.JobTitle" For="@(() => newContact.JobTitle)" Label="JobTitle" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" @bind-Value="newContact.Comments" For="@(() => newContact.Comments)" Label="Comment" Variant="Variant.Text"></MudTextField>
+
+        </MudForm>
+    }
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="width: 100%" Class="ml-auto mt-2" OnClick="@CreateContact">Create</MudButton>
+</MudDrawer>
+
+<MudDrawer @bind-Open="@openViewDrawer" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <MudCard Outlined="true">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">@contact.Title @contact.FirstName @contact.LastName</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText>Title: @contact.Title</MudText>
+            <MudText>Salutation: @contact.Salutation</MudText>
+            <MudText>FirstName: @contact.FirstName</MudText>
+            <MudText>LastName: @contact.LastName</MudText>
+            <MudText>Phone: @contact.Phone</MudText>
+            <MudText>Mobile @contact.Mobile</MudText>
+            <MudText>Email: @contact.Email" </MudText>
+            <MudText>Job Title: @contact.JobTitle</MudText>
+            <MudText>Comments: @contact.Comments</MudText>
+        </MudCardContent>
+    </MudCard>
+</MudDrawer>
+
+<Processing IsProcessing="_processing"></Processing>

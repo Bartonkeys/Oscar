@@ -1,0 +1,106 @@
+.tableArea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    flex: 1 0 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.tableBody {
+    display: block;
+    overflow-y: auto;
+    flex: 1 0 0;
+    height: 0;    
+}
+
+.tableBody.scrollBar {
+    width: calc(100% + 15px);
+}
+
+.tableRow {    
+    width: 100%;
+    display: flex;
+    overflow: clip;
+}
+
+.tableRow.border {
+    border-bottom: 1px solid rgb(50,50,50);
+}
+
+.titleRow {
+    border-bottom: 1px solid rgb(50,50,50);
+    width: 100%;
+    display: flex;
+    background-color: rgb(50,50,50);
+}
+
+.tableRow:hover {
+    background-color: rgb(220, 220, 220);
+    cursor: pointer;
+}
+
+.tableRow.selected {
+    background-color: rgb(200, 200, 200);
+}
+
+.titleCell {
+    font-weight: bold;
+    text-align: start;
+    color: rgb(220, 220, 220);
+    padding: 5px;
+}
+
+.bodyCell {
+    text-align: start;
+    color: rgb(100,100,100);
+    padding: 5px;
+    padding-top: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.movingPanel {
+    position: absolute;
+    top: 0;
+    height: calc(100% - 60px);
+    width: calc(100% - 60px);
+    transition: left 500ms, width 500ms;
+}
+
+.loaderIcon {
+    margin-top: 30px;
+}
+
+.selectButton {
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(50,50,50);
+}
+
+.clearButton {
+    cursor: pointer;
+    color: #f50057;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.sortIcons {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    justify-content: center;
+}
+
+.sortIcons svg {
+    margin: -3px;
+}
+
+.clickable {
+    cursor: pointer;
+}

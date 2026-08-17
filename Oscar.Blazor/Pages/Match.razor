@@ -1,0 +1,65 @@
+﻿@page "/match"
+@using Oscar.Blazor.Library.Components.Match;
+
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<PageTitle>Matching</PageTitle>
+
+<CreateMatchDrawer OpenMatchDrawer="@openMatchCreate" Clients="@_clients" OnSubmit="Refresh" Countries="@_countries" 
+                   Rules="@_matchRules" Title="Create Match Request" RightsTypes="@_rightsTypes"/>
+
+<Spinner @ref="@SpinnerControl" SpinnerText="@StatusText" />
+
+<MudGrid Spacing="2">
+    <MudItem xs="6">
+        <MudButton OnClick="@OpenMatchCreate" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Create Match Request</MudButton>
+    </MudItem>
+    <MudItem xs="6">
+    </MudItem>
+    <MudItem xs="12">
+        <MudTable Dense="true" ServerData="@(new Func<TableState, Task<TableData<MatchRequestDto>>>(ServerReload))" 
+                  Hover="true" @ref="table" Loading="@IsBusy"
+                  Filter="new Func<MatchRequestDto, bool>(Filter)">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Match Requests</MudText>
+                <MudSpacer/>
+                <MudTextField T="string" Placeholder="Search" Adornment="Adornment.Start"
+                              @bind-Value="_searchString" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Reference</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Rules</MudTh>
+                <MudTh>Requested By</MudTh>
+                <MudTh>Created</MudTh>
+                <MudTh>Modified</MudTh>
+                <MudTh>Link</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Id">@context.Reference</MudTd>
+                <MudTd DataLabel="Status">
+                    <MudChip Label="true" Color="@GetColour(context.Status)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.Status.ToString()</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Rules">@context.Rules.ToString()</MudTd>
+                <MudTd DataLabel="RequestBy">@context.RequestedBy</MudTd>
+                <MudTd DataLabel="CreationDate">@context.CreationDate</MudTd>
+                <MudTd DataLabel="LastModified">@context.LastModified</MudTd>
+                <MudTd DataLabel="Link"><MudLink Href="@context.MatchingResultPublicUrl">
+                    @if (!string.IsNullOrEmpty(context.MatchingResultPublicUrl))
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Download" Color="Color.Primary" Size="Size.Small"/>
+                    }
+                </MudLink></MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager/>
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+</MudGrid>

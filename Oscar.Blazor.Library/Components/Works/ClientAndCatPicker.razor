@@ -1,0 +1,52 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    Owning Client
+    <MudPaper Class="d-flex flex-row mb-2" Elevation="0">
+        <MudAutocomplete T="ClientBasicDto" Label="Add Owning Client" @bind-Value="_client" For="@(() => _client)" Required="false"
+                         SearchFunc="@SearchClients" ToStringFunc="dto => dto?.ClientName" Dense="true" Margin="Margin.Dense" Disabled="@IsReadOnly">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="@AddClient" Disabled="@IsReadOnly">Add</MudButton>
+    </MudPaper>
+
+    <MudTable Items="@ClientIds" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2" Dense="true">
+        <RowTemplate>
+            <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+                @_clients.Where(c => c.Id == context).First().ClientName
+            </MudTd>
+            <MudTd Style="width: 10%;" Class="grey lighten-3 pa-0 pl-2">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveClient(context))" Disabled="@IsReadOnly"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudCard>
+
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    Owning Catalogue
+    <MudPaper Class="d-flex flex-row mb-2" Elevation="0">
+        <MudAutocomplete T="CatalogueDto" Label="Add Owning Catalogue" @bind-Value="_catalogue" For="@(() => _catalogue)" Required="false"
+                         SearchFunc="@SearchCatalogues" ToStringFunc="dto => dto?.Name" Dense="true" Margin="Margin.Dense" Disabled="@IsReadOnly">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="@AddCatalogue" Disabled="@IsReadOnly">Add</MudButton>
+    </MudPaper>
+
+    <MudTable Items="@Catalogues" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2" Dense="true">
+        <RowTemplate>
+            <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+                @context.Name
+            </MudTd>
+            <MudTd Style="width: 10%;" Class="grey lighten-3 pa-0 pl-2">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveCatalogue(context))" Disabled="@IsReadOnly"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudCard>

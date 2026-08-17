@@ -1,0 +1,88 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <UserSecretsId>2fb3a780-eb11-44a0-9c71-6214bb31d3fe</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Pages\Search.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\Search.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="bartonkeys-functional" Version="1.0.0" />
+    <PackageReference Include="EasyCaching.InMemory" Version="1.6.1" />
+    <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="3.6.3" />
+    <PackageReference Include="EntityFrameworkCore.NCache" Version="5.3.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.1" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="0.1.0-alpha.22324.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="0.1.0-alpha.22324.2" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.18.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Azure" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.2" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.8" />
+    <PackageReference Include="MudBlazor" Version="6.4.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Texnomic.Blazor.JsonViewer" Version="0.1.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.111" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Oscar.Blazor.Library\Oscar.Blazor.Library.csproj" />
+    <ProjectReference Include="..\Oscar.Core\Oscar.Core.csproj" />
+    <ProjectReference Include="..\Oscar.DI\Oscar.DI.csproj" />
+    <ProjectReference Include="..\Oscar.Infrastructure\Oscar.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="CsvHelper" />
+    <None Remove="Pages\Royalty\Templates\MaestroGenericInterfaceTemplate.xlsx" />
+    <None Remove="Pages\Royalty\Templates\MerlinSocietyChannelListTemplate.xlsx" />
+    <None Remove="Texnomic.Blazor.JsonViewer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\Royalty\Templates\MaestroGenericInterfaceTemplate.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Royalty\Templates\MerlinSocietyChannelListTemplate.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="client.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="config.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="tls.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Reports\ClientsRegReportByYear.razor" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Reports\ClientsRegReportByYear.razor" />
+  </ItemGroup>
+
+</Project>

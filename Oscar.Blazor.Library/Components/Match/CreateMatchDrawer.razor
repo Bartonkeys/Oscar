@@ -1,0 +1,5 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudDrawer @bind-Open="@OpenMatchDrawer" Height="100%" Width="25%" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <CreateMatchForm Title="@Title"  OnSubmit="@OnSubmit" Clients="@Clients" Countries="@Countries" Rules="@Rules" RightsTypes="@RightsTypes"></CreateMatchForm>
+</MudDrawer>

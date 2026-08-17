@@ -1,0 +1,221 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Core.Enums
+@using Oscar.Infrastructure.Features.Series.Queries
+@using Oscar.Blazor.Library.Shared
+
+    @if (_isInheritedRights)
+    {
+        <h5 style="color:#F00">INHERITED @_inheritedFrom RIGHTS BEING SHOWN</h5>
+    }
+
+    <MudDrawer @bind-Open="@_openRightsDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Persistent" ClipMode="DrawerClipMode.Docked">
+        <RightsForm Right="@_right" CatalogueId="@_catalogueId" ClientId="@_clientId" 
+                    WorksId="@_worksId"
+                    WorksProductionYear="@WorksProductionYear"
+                    RefreshParent="@LoadRights" 
+                    RightsSource="@RightsSource"
+                    RightsType="@RightsType" Countries="@Countries" toggleDrawer="@ToggleDrawer"></RightsForm>
+    </MudDrawer>
+    <MudCard>
+        @if (Loading)
+        {
+            <Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.ThreeDots" SpinnerText="@StatusText" />
+        }
+        @if (_selectedCatalogue != null && !SuppressCatalogueDropdown)
+        {
+            <MudSelect T="int" Value="_selectedCatalogue.Id" Label="Select catalogue" ValueChanged="LoadForClients"
+                       OpenIcon="@Icons.Material.Filled.Book" AdornmentColor="Color.Primary" Dense="true" Margin="Margin.Dense"
+                       Disabled="@DisableCatalogSelection">
+                @foreach (var item in _catalogues)
+                {
+                    @if (item != null)
+                    {
+                        <MudSelectItem T="int" Value="@item.Id">@item.Name</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+        }
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="() => OpenRightsDrawer(null)">Create Right</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ml-auto mt-2" OnClick="DeleteAllRights" Disabled="_isInheritedRights">
+            Delete Rights at this level
+            @if (_isDeletingAtThisLevel)
+            {
+                <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Inherit"/>
+            }
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="ml-auto mt-2" OnClick="UpdateRightsFromHeader" 
+                   Disabled="_isInheritedRights || RightsSource != RightsSource.Works || (_discriminator != Discriminator.Season && _discriminator != Discriminator.Series)">
+        @switch (_discriminator)
+        {
+            case Discriminator.Series:
+                <div>Update Rights for Seasons and Episodes</div>
+                break;
+            case Discriminator.Season:
+                <div>Update Rights for Episodes</div>
+                break;
+        }
+        @if (_isUpdateRightsFromHeader)
+        {
+            <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Inherit" />
+        }
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Size="Size.Small" Class="ml-auto mt-2" OnClick="DeleteAllInheritedRights" 
+                   Disabled="_isInheritedRights || RightsSource != RightsSource.Works || (_discriminator != Discriminator.Season && _discriminator != Discriminator.Series)">
+            @switch (_discriminator)
+            {
+                case Discriminator.Series:
+                    <div>Delete all Rights for Seasons and Episodes</div>
+                    break;
+                case Discriminator.Season:
+                    <div>Delete all Rights for Episodes</div>
+                    break;
+            }
+            @if (_isDeletingAtAllLevels)
+            {
+                <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Inherit"/>
+            }
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Loading="@_isProcessingRights" Color="Color.Info" Size="Size.Small" Class="ml-auto mt-2" OnClick="UseCatalogueRights" Disabled="RightsSource != RightsSource.Works">
+            Use Catalogue Rights
+            @if (_isProcessingRights)
+            {
+                <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Inherit"/>
+            }
+        </MudButton>
+
+        @if (_rights != null && _rights.Count() > 0)
+        {
+            <MudTable Items="_rights.OrderBy(r => r.Type.Name)" Hover="true" SortLabel="Sort By" Elevation="0" Loading="@Loading" Filter="new Func<RightDto, bool>(Filter)" @bind-SelectedItem="_selectedItem" Dense="true">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Rights</MudText>
+                    <MudSpacer />
+                    <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Client</MudTh>
+                    <MudTh>Catalogue</MudTh>
+                    <MudTh>Rights Type</MudTh>
+                    <MudTh>Percentage</MudTh>
+                    <MudTh>Dates</MudTh>
+                    <MudTh>Validity</MudTh>
+                    <MudTh>Countries</MudTh>
+                    <MudTh>Channels</MudTh>
+                    <MudTh>Languages</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Client">@context.Catalogue?.Client?.ClientName</MudTd>
+                    <MudTd DataLabel="Catalogue">@context.Catalogue?.Name</MudTd>
+                    <MudTd DataLabel="RightsType">@context.Type?.Name - @context.Type?.Description</MudTd>
+                    <MudTd DataLabel="Percentage">@context.Percentage %</MudTd>
+                    <MudTd DataLabel="RightsDate">
+                        @context.StartOfRight.ToString("dd/MM/yyyy") to
+                        @if (context.RightsPerpetuity)
+                        {
+                            <span>Perpetuity</span>
+                        }
+                        else
+                        {
+                            <span>@context.EndOfRight.ToString("dd/MM/yyyy")</span>
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="Validity">
+                        @context.StartOfValidity.ToString("dd/MM/yyyy") to
+                        @if (context.ValidityPerpetuity)
+                        {
+                            <span>Perpetuity</span>
+                        }
+                        else
+                        {
+                            <span>@context.EndOfValidity.ToString("dd/MM/yyyy")</span>
+                        }
+                    </MudTd>
+                    @if (context.CountryCountryGroup.Any())
+                    {
+                        <MudTd DataLabel="Country">
+                            @foreach (var countryCountryGroupName in context.CountryCountryGroup)
+                            {
+                                <div>@countryCountryGroupName</div>
+                            }
+                        </MudTd>
+                    }
+                    else if(context.Id != 0)
+                    {
+                        <MudTd DataLabel="Country">WORLD</MudTd>
+                    }
+                    else
+                    {
+                        <MudTd DataLabel="Country">NOT SET</MudTd>
+                    }
+                    @if (context.ChannelRights.Any())
+                    {
+                        <MudTd DataLabel="Channel">
+                            @foreach (var channelRight in context.ChannelRights)
+                            {
+                                <div>@channelRight.Channel.Description</div>
+                            }
+                        </MudTd>
+                    }
+                    else if(context.Id != 0)
+                    {
+                        <MudTd DataLabel="Channel">ALL TV CHANNELS</MudTd>
+                    }
+                    else
+                    {
+                        <MudTd DataLabel="Channel">NOT SET</MudTd>
+                    }
+                    @if (context.LanguageRights.Any())
+                    {
+                        <MudTd DataLabel="Language">
+                            @foreach (var languageRights in context.LanguageRights)
+                            {
+                                <div>@languageRights.Language.Description</div>
+                            }
+                        </MudTd>
+                    }
+                    else if (context.Id != 0)
+                    {
+                        <MudTd DataLabel="Language">ALL LANGUAGES</MudTd>
+                    }
+                    else
+                    {
+                        <MudTd DataLabel="Language">NOT SET</MudTd>
+                    }
+
+                    <MudTd DataLabel="Edit">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" Disabled="!IsEditable || _isInheritedRights" OnClick="() => OpenRightsDrawer(context)"></MudIconButton>
+                    </MudTd>
+                    <MudTd DataLabel="Delete">
+                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" Disabled="!IsEditable || _isInheritedRights" OnClick="() => DeleteRight(context)"></MudIconButton>
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText>No matching records found</MudText>
+                </NoRecordsContent>
+                <LoadingContent>
+                    <MudText>Loading...</MudText>
+                </LoadingContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="@PageSizeOptions" />
+                </PagerContent>
+            </MudTable>
+        }
+        else
+        {
+            @if (_isProcessingRights)
+            {
+                <MudText Typo="Typo.h6">Processing...</MudText>
+            }
+            else if (Loading)
+            {
+                <MudText Typo="Typo.h6">Loading...</MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.h6">No Data</MudText>
+            }
+        }
+    </MudCard>
+
+

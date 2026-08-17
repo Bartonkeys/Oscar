@@ -1,0 +1,45 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    <MudPaper Elevation="0">
+        <MudTextField T="string" @bind-Value="searchValue" Label="Search"></MudTextField>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@Search">Search</MudButton>
+        <MudCheckBox T="bool" Label="Select All" CheckedChanged="@((isChecked) => SetIsChecked(isChecked))"></MudCheckBox>
+    </MudPaper>
+
+    <MudPaper Elevation="0">
+        <MudTreeView @bind-Items="RegistrationWorks" Height="400px" @ref=_registrationWorksTreeView>
+            <ItemTemplate>
+                <MudTreeViewItem @bind-Items="@context.Children" @bind-Expanded="@context.IsExpanded">
+                    <Content>
+                        <MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
+                        <MudCheckBox T="bool?" Checked="@context.IsChecked" CheckedChanged="@((e) => TreeItemCheckedChanged(context))"></MudCheckBox>
+                        <MudIcon Icon="@(
+                                            context?.Discriminator switch
+                                            {
+                                                Discriminator.StandAlone => Icons.Material.Filled.Man,
+                                                Discriminator.Episode => Icons.Material.Filled.Theaters,
+                                                Discriminator.Season => Icons.Material.Filled.WbSunny,
+                                                Discriminator.Series => Icons.Material.Filled.AutoAwesomeMotion,
+                                                _ => context?.Discriminator.ToString()
+                                            }
+                                         )"
+                                 Color="@(
+                                            context?.Discriminator switch
+                                            {
+                                                Discriminator.StandAlone => Color.Primary,
+                                                Discriminator.Episode => Color.Warning,
+                                                Discriminator.Season => Color.Success,
+                                                Discriminator.Series => Color.Secondary,
+                                                _ => Color.Default
+                                            }
+                                            )">
+                        </MudIcon>
+                        <MudText>@($"{context?.CompactRef} {context?.Title}")</MudText>
+                    </Content>
+                </MudTreeViewItem>
+            </ItemTemplate>
+        </MudTreeView>
+    </MudPaper>
+
+    <MudText Typo="@Typo.subtitle1">@(SelectedValues?.Count() > 0 ? $"Number of selected items: {SelectedValues?.Count()}" : "")</MudText>
+    </MudCard>

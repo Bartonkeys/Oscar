@@ -1,0 +1,53 @@
+﻿@page "/societies"
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Blazor.Library.Components.Societies
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+<PageTitle>Societies</PageTitle>
+
+<Spinner @ref="@SpinnerControl" SpinnerText="@StatusText" />
+
+<MudDrawer @bind-Open="@openSocietyDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <SocietyForm Id="@societyId" Open="@openSocietyDrawer" onSuccess="@SuccessCallback"></SocietyForm>
+</MudDrawer>
+<MudDrawer @bind-Open="@openRightsDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <SocietyRightsGrid Id="@societyId" Open="@openRightsDrawer" Loading="true" onSuccess="@SuccessRightsCallback" RightsSource="@RightsSource.Society"></SocietyRightsGrid>
+</MudDrawer>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="@(async () => OpenSocietyForm(0))">Create Society</MudButton>
+
+<MudTable Items="_societies" Hover="true" SortLabel="Sort By" Elevation="0" Loading="@IsBusy" @ref="_table"
+          Filter="new Func<SocietyDto, bool>(Filter)" @bind-SelectedItem="_selectedItem" Dense="true"
+          RowsPerPageChanged="UpdateRowsPerPageInSession">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Societies</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<SocietyDto, object>(x => x.Name)">Name</MudTableSortLabel></MudTh>
+        <MudTh>Details</MudTh>
+        <MudTh>Rights</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Details">
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenSocietyForm(context.Id)"></MudIconButton>
+        </MudTd>
+        <MudTd DataLabel="Details">
+            <MudIconButton Icon="@Icons.Material.Filled.List" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenRightsForm(context.Id)"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="@PageSizeOptions" />
+    </PagerContent>
+</MudTable>

@@ -1,0 +1,5 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudDrawer @bind-Open="@OpenRegistrationDrawer" Height="100%" Width="80%" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <CreateRegistrationForm Title="@Title"  OnSubmit="@OnSubmit" Clients="@Clients" Societies="@Societies" @ref="_createRegistrationForm"></CreateRegistrationForm>
+</MudDrawer>

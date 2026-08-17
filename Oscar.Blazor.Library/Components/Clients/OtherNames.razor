@@ -1,0 +1,19 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCardContent Class="@Class">
+    <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true">
+        <RowTemplate>
+            <MudTd>
+                <MudForm Model="@context">
+                    <MudTextField @bind-Value="context.Name" For="@(() => context.Name)" Label="Name" Variant="Variant.Text"></MudTextField>
+                </MudForm>
+            </MudTd>
+            <MudTd>
+                <OtherNameTypePicker @bind-Value="context.Type" For="@(() => context.Type)" Label="Type" Class="pl-4 pt-2 pr-4"></OtherNameTypePicker>
+            </MudTd>
+            <MudTd DataLabel="Name">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@(async () => removeOtherName(context))"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="@(async () => addOtherName())">Add Other Name</MudButton>
+</MudCardContent>

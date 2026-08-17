@@ -1,0 +1,27 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    Languages
+    <MudPaper Class="d-flex flex-row mb-2" Elevation="0">
+        <MudAutocomplete T="LanguageDto" Label="Languages" @bind-Value="_selectedLanguage" For="@(() => _selectedLanguage)" Required="false"
+                         SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e.Description}")" @onblur="onChange" Dense="true" Margin="Margin.Dense">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ma-2" OnClick="@AddLanguage" Size="Size.Small">Add</MudButton>
+    </MudPaper>
+
+    <MudTable Items="@ExistingLanguages" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2" Dense="true" >
+        <RowTemplate>
+            <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+                @context.Description
+            </MudTd>
+            <MudTd Style="width: 10%;" Class="grey lighten-3 pa-0 pl-2">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveLanguage(context))"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    
+</MudCard>

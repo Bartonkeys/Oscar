@@ -1,0 +1,113 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudOverlay Visible="_processing" DarkBackground="false">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
+                <MudText Align="Align.Center" Typo="Typo.h6">Uploading Registration Request...</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
+</MudOverlay>
+
+<MudOverlay Visible="_loading" DarkBackground="true">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
+                <MudText Align="Align.Center" Typo="Typo.h6">Retrieving Works...</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
+</MudOverlay>
+
+<MudCard>
+        <MudCardContent>
+
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6">Create Registration</MudText>
+                    <MudGrid>
+                        <MudItem xs="4">
+                            <MudAutocomplete T="ClientBasicDto" Label="Clients" SearchFunc="@SearchClients" OpenIcon="@Icons.Material.Filled.People"
+                                             ResetValueOnEmptyText="true" ToStringFunc="dto => dto?.ClientName" Disabled="@_allClients"
+                                             CoerceText="true" CoerceValue="false" @bind-Value="_client" @ref="_clientAutoComplete"
+                                             For="@(() => _client)" />
+                        </MudItem>
+                        
+                        @if (_client != null)
+                        {
+                            <MudItem xs="4">
+                                <MudSelect T="CatalogueDto" @bind-Value="_catalogue" HelperText="Optional"
+                                           For="@(() => _catalogue)" Label="Select catalogue" OpenIcon="@Icons.Material.Filled.Book" AdornmentColor="Color.Primary">
+                                    @foreach (var item in _client.Catalogues)
+                                    {
+                                        <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                        }
+                        else
+                        {
+                            <MudItem xs="4"><MudSpacer /></MudItem>
+                        }
+                        <MudItem xs="4"><MudSpacer /></MudItem>
+                        <MudItem xs="4">
+                            <MudAutocomplete T="SocietyDto" Label="Societies" SearchFunc="@SearchSocieties" OpenIcon="@Icons.Material.Filled.People"
+                                             ResetValueOnEmptyText="true" ToStringFunc="dto => dto?.Name"
+                                             CoerceText="true" CoerceValue="false" @bind-Value="_society"
+                                             For="@(() => _society)" MaxItems="20"/>
+                        </MudItem>
+                        <MudItem xs="8"><MudSpacer /></MudItem>
+                        <MudItem xs="12">
+                            <MudSwitch @bind-Checked="@_allClients" Label="Select all clients" Color="Color.Primary" Disabled="_client != null" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudSwitch @bind-Checked="@_includeAlreadyRegistered" Label="Include previously registered" Color="Color.Primary" />
+                        </MudItem>
+                        @if (_includeAlreadyRegistered && _society?.Name != "UPFAR ARGOA")
+                        {
+                            <MudItem xs="4">
+                                <MudDatePicker Class="pl-4 pt-2 pr-4" @bind-Date="_fromPreviousRegistration" For="@(() => _fromPreviousRegistration)" DateFormat="dd-MMM-yyyy" Label="From Previous Registration"></MudDatePicker>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudDatePicker Class="pl-4 pt-2 pr-4" @bind-Date="_toPreviousRegistration" For="@(() => _fromPreviousRegistration)" DateFormat="dd-MMM-yyyy" Label="To Previous Registration"></MudDatePicker>
+                            </MudItem>
+                        }
+                        else
+                        {
+                            <MudItem xs="8"><MudSpacer /></MudItem>
+                        }
+
+                        <MudItem xs="12">
+                        <MudSwitch @bind-Checked="@_doNotRegister" Label="Do not register" Color="Color.Primary" />
+                        </MudItem>
+                        @if (_society != null && _society.Name == "AGICOA" && !_allClients)
+                        {
+                            <MudItem xs="12">
+                            <MudSwitch @bind-Checked="@_includeEpisodes" Label="Include Episodes" Color="Color.Primary" />
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="ShowAll">Select Works</MudButton>
+                            </MudItem>
+
+                            @if (_registrationWorks != null && _registrationWorks.Count > 0)
+                            {
+                                <MudItem xs="12">
+                                    <ViewRegistrationTree RegistrationWorks="@_registrationWorks" SelectedValues="_selectedRegistrationItems"></ViewRegistrationTree>
+                                </MudItem>
+                            }
+                        }
+                        
+                        <MudItem xs="4">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="onFilterClear">Clear Filter</MudButton>
+                        </MudItem>
+
+                        <MudItem xs="8">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="SubmitRegistration">Submit Registration</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+</MudCard>

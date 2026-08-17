@@ -1,0 +1,17 @@
+﻿
+<MudItem xs="12" sm="6">
+    <MudOverlay Visible="IsActive" Absolute="true" LightBackground="true">
+        <div class="d-flex">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="@IsActive" />
+            <MudText Typo="Typo.body1" Color="Color.Inherit" Align="Align.Center">@Message</MudText>
+        </div>
+    </MudOverlay>
+</MudItem>
+@code
+{
+    [Parameter]
+    public bool IsActive { get; set; } = true;
+
+    [Parameter]
+    public string Message { get; set; } = "Please Wait ...";
+}

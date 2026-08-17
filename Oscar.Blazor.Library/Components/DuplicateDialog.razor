@@ -1,0 +1,27 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Duplicate Series detected - are you sure?
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTable Items="@Duplicates" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true" >
+            <HeaderContent>
+                <MudTh>Title</MudTh>
+                <MudTh>Client</MudTh>
+                <MudTh>Catalogue</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Title">@context.Title</MudTd>
+                <MudTd DataLabel="Client">@context.Client</MudTd>
+                <MudTd DataLabel="Catalogue">@context.Catalogue</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Ok">OK</MudButton>
+    </DialogActions>
+</MudDialog>

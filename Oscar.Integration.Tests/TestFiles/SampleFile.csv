@@ -1,0 +1,4 @@
+Guid,Title1,Title2,Title3,SeasonNo,EpisodeNo,Duration,ShareAvailable,ProductionCountry,Director1,Director2,ProductionType,Channel,BroadcastDate,ClientReference,OscarTitle,OscarClient,ClientEndDate,ClientStatus,OscarDirector,OscarProductionYear,MatchingIssue
+13e586c52-7789-40e8-815a-3651e04176e2,test title 1,test title 2,test title 3,1,4,90,Y,GB;France;Spain,dave,sarah,Short,RTE,28/06/1976,101,,,,,,,
+70ca3be6-6711-400c-a94c-004b0fc9c5f9,test title 4,test title 5,,2,5,120,N,Germany;HK;Australia,Bob,Janet,Series,Ch4,06/14/2002,102,,,,,,,
+74c55989-e9d0-40be-90ab-478dea0c70d1,test title 6,,,3,6,180,Y,USA,Arthur,Shaniqua,Film,BBC,08/14/1977,103,,,,,,,

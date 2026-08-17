@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk;Microsoft.NET.Sdk.Publish">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Properties\" />
+    <None Remove="Registration" />
+    <None Remove="Microsoft.Azure.WebJobs.Extensions" />
+    <None Remove="Microsoft.Extensions.Logging.Console" />
+    <None Remove="Microsoft.Extensions.Configuration.UserSecrets" />
+    <None Remove="Microsoft.Azure.WebJobs.Extensions.Storage" />
+    <None Remove="Microsoft.Azure.WebJobs" />
+    <None Remove="Microsoft.Web.WebJobs.Publish" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="client.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="config.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Settings.job">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="tls.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Oscar.Core\Oscar.Core.csproj" />
+    <ProjectReference Include="..\Oscar.Data\Oscar.Data.csproj" />
+    <ProjectReference Include="..\Oscar.DI\Oscar.DI.csproj" />
+    <ProjectReference Include="..\Oscar.Infrastructure\Oscar.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Azure.WebJobs" Version="3.0.33" />
+    <PackageReference Include="Microsoft.Web.WebJobs.Publish" Version="17.1.361" />
+  </ItemGroup>
+</Project>

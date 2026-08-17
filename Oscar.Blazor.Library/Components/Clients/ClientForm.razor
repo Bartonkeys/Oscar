@@ -1,0 +1,98 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Core.Enums
+@using Oscar.Blazor.Library.Components.Clients
+@using Oscar.Blazor.Library.Components.Common
+@using System.Linq
+
+
+@if (_client != null)
+{
+    <MudGrid Spacing="1">
+        <MudItem xs="6">
+            <MudText Typo="Typo.h6" Height="5%">
+                <MudIcon Color="Color.Primary" Icon="@Icons.Material.Filled.Man" Title="@_formCaption" />
+                @_formCaption
+            </MudText>
+        </MudItem>
+        <MudItem xs="6" Class="d-flex justify-content-md-end">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">@_buttonCaption</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Default" Class="ml-auto" OnClick="@Cancel">Cancel</MudButton>
+        </MudItem>
+    </MudGrid>
+    <MudCard Height="90%" Class="overflow-auto pb-4">
+        <MudForm Model="@_client" @ref="@form" Validation="@(clientValidator.ValidateValue)" ValidationDelay="0" OnInvalidSubmit="@HandleInvalidSubmit()">
+
+            <MudTextField @bind-Value="_client.ClientName" For="@(() => _client.ClientName)" Label="Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            @*<MudTextField @bind-Value="_client.ClientReference" For="@(() => _client.ClientReference)" Label="Reference (auto assigned)" Variant="Variant.Text" Class="pl-4 pt-2 pr-4" Disabled="false" Style="background: white; color: black;"></MudTextField>*@
+            <ClientTypePicker @bind-Value="_client.ClientType" For="@(() => _client.ClientType)" Label="Type" Class="pl-4 pt-2 pr-4"></ClientTypePicker>
+            <ClientStatusPicker @bind-Value="_client.Status" For="@(() => _client.Status)" Label="Status" Class="pl-4 pt-2 pr-4"></ClientStatusPicker>
+            <ClientGradePicker @bind-Value="_client.ClientGrade" For="@(() => _client.ClientGrade)" Label="Grade" Class="pl-4 pt-2 pr-4"></ClientGradePicker>
+            <MudTextField @bind-Value="_client.IMaestroClientCode" For="@(() => _client.IMaestroClientCode)" Label="iMaestro Client Code" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            <MudTextField @bind-Value="_client.IMaestroGroupPayeeCode" For="@(() => _client.IMaestroGroupPayeeCode)" Label="iMaestro Client Payee Code" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            <MudTextField @bind-Value="_client.IMaestroGroupPayeeName" For="@(() => _client.IMaestroGroupPayeeName)" Label="iMaestro Client Payee Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            <MudTextField @bind-Value="_client.GeneralNotes" For="@(() => _client.GeneralNotes)" Label="General Notes" Lines="5" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+
+            <MudExpansionPanels MultiExpansion="true">
+                <MudExpansionPanel Text="Address">
+                    <MudTextField @bind-Value="_client.Address.AddressLine1" For="@(() => _client.Address.AddressLine1)" Label="Address Line 1" Variant="Variant.Text" Class="pl-4 pr-4 removeUpperCasing"></MudTextField>
+                    <MudTextField @bind-Value="_client.Address.AddressLine2" For="@(() => _client.Address.AddressLine2)" Label="Address Line 2" Variant="Variant.Text" Class="pl-4 pr-4 removeUpperCasing"></MudTextField>
+                    <MudTextField @bind-Value="_client.Address.AddressLine3" For="@(() => _client.Address.AddressLine3)" Label="Address Line 3" Variant="Variant.Text" Class="pl-4 pr-4 removeUpperCasing"></MudTextField>
+                    <MudTextField @bind-Value="_client.Address.AddressLine4" For="@(() => _client.Address.AddressLine4)" Label="Address Line 4" Variant="Variant.Text" Class="pl-4 pr-4 removeUpperCasing"></MudTextField>
+                    <MudTextField @bind-Value="_client.Address.Website" For="@(() => _client.Address.Website)" Label="Web Site" Variant="Variant.Text" Class="pl-4 pr-4"></MudTextField>
+                    <MudTextField @bind-Value="_client.Address.PostZipCode" For="@(() => _client.Address.PostZipCode)" Label="Post/Zip Code" Variant="Variant.Text" Class="pl-4 pr-4"></MudTextField>
+                    <MudTextField @bind-Value="_client.Address.Email" For="@(() => _client.Address.Email)" Label="Email" Variant="Variant.Text" Class="pl-4 pr-4 removeUpperCasing"></MudTextField>
+                    <CountryPicker @bind-Value="_client.Address.Country" For="@(() => _client.Address.Country)" Label="Country" Class="pl-4 pt-2 pr-4"></CountryPicker>
+                </MudExpansionPanel>
+                <ClientReferences Client="_client"></ClientReferences>
+                <MudExpansionPanel Text="Societies">
+                    <Societies @bind-Value="_client.Societies"></Societies>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Contract">
+                    <Contract @bind-Value="_client" For="@(() => _client)"></Contract>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Alternative Names">
+                    <ClientAltNames @bind-Value="_client.ClientAltNames"></ClientAltNames>
+                </MudExpansionPanel>
+
+                @if (_client.Id > 0)
+                {
+                    <MudExpansionPanel Text="Documents">
+                        <Oscar.Blazor.Library.Components.Common.DocumentSelect @bind-Value="_client.Documents" DocumentType="DocumentType.Client" OwnerId="@_client.Id"></Oscar.Blazor.Library.Components.Common.DocumentSelect>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="Catalogues">
+                        <Catalogues _clientId="_client.Id"></Catalogues>
+                    </MudExpansionPanel>
+                }
+
+                <MudExpansionPanel Text="Customer Service Managers">
+                    <CustomerServiceManagers @bind-Value="_client.CustomerServiceManagers" Header="Customer Service Managers" ListLabel="Add Customer Service Manager" CreateLabel="Create New Customer Service Manager"></CustomerServiceManagers>
+                </MudExpansionPanel>
+
+                <MudExpansionPanel Text="Contacts">
+                    <Contacts Value="_client.Contacts"></Contacts>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+
+        </MudForm>
+        <MudCardActions Height="5%">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">
+                @if (_client != null && _client.Id == 0)
+                {
+                    <MudText> Add Client</MudText>
+                }
+                else
+                {
+                    <MudText> Update Client</MudText>
+                }
+            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Default" Class="ml-auto" OnClick="@Cancel">
+                <MudText>Cancel</MudText>
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+else
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+}
+

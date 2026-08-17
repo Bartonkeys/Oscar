@@ -1,0 +1,38 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Core.Enums
+
+<MudCard>
+    <MudTable Items="_rights" Hover="true" SortLabel="Sort By" Elevation="0" Loading="@_loading" Filter="new Func<RightDto, bool>(Filter)"  @bind-SelectedItem="_selectedItem" Dense="true" >
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Rights</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Rights Type</MudTh>
+            <MudTh>Start Right</MudTh>
+            <MudTh>End Right</MudTh>
+            <MudTh>Start Validity</MudTh>
+            <MudTh>End Validity</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="RightsType">@context.Type.Name - @context.Type.Description</MudTd>
+            <MudTd DataLabel="StartOfRight">@context.StartOfRight.ToShortDateString()</MudTd>
+            <MudTd DataLabel="EndOfRight">@context.EndOfRight.ToShortDateString()</MudTd>
+            <MudTd DataLabel="StartOfValidity">@context.StartOfValidity.ToShortDateString()</MudTd>
+            <MudTd DataLabel="EndOfValidity">@context.EndOfValidity.ToShortDateString()</MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MudCard>
+

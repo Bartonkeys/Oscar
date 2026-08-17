@@ -1,0 +1,79 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Oscar.Infrastructure.Features.WorksImport.Commands
+@using BartonKeys.Functional
+@using Microsoft.AspNetCore.Components.Forms
+@using FluentValidation
+@using Severity = MudBlazor.Severity
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+
+
+<MudText Typo="Typo.h6">@Title</MudText>
+
+<MudOverlay Visible="_processing" DarkBackground="false">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+                <MudText Align="Align.Center" Typo="Typo.h6">Uploading Works...</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
+</MudOverlay>
+
+<MudCard>
+    <MudForm Model="@model" @ref="@form" Validation="@(orderValidator.ValidateValue)" ValidationDelay="0">
+        <MudCardContent>
+            <MudTextField @bind-Value="model.RequestedBy"
+                          For="@(() => model.RequestedBy)"
+                          Immediate="true"
+                          Label="Requested By"
+                          disabled="@_isUserNameKnown" />
+
+
+            <MudAutocomplete T="ClientBasicDto" Label="Clients" SearchFunc="@SearchClients" OpenIcon="@Icons.Material.Filled.People"
+                             ResetValueOnEmptyText="true" ToStringFunc="dto => dto?.ClientName"
+                             CoerceText="true" CoerceValue="false" @bind-Value="model.Client"
+                             For="@(() => model.Client)" Dense="true" Margin="Margin.Dense" />
+
+            @if (model.Client != null)
+            {
+                <MudSelect T="CatalogueDto" @bind-Value="model.Catalogue" HelperText="Optional"
+                           For="@(() => model.Catalogue)" Label="Select catalogue" OpenIcon="@Icons.Material.Filled.Book" AdornmentColor="Color.Primary"
+                           Dense="true" Margin="Margin.Dense">
+                    @foreach (var item in model.Client.Catalogues)
+                    {
+                        <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            }
+
+            <div class="d-flex">
+                <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Small"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="fileInput"> 
+                    Upload Import File
+                </MudButton>
+
+                @if (model.ImportFile != null)
+                {
+                    <MudText>File: @model.ImportFile.Name <code>@model.ImportFile.Size bytes</code></MudText>
+                }
+            </div>
+            @if (model.ImportFile == null)
+            {
+                <MudTextField @bind-Value="model.ImportFile" For="@(() => model.ImportFile)" ReadOnly="true"/>
+            }
+
+        </MudCardContent>
+    </MudForm>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await Submit())">Create Import</MudButton>
+    </MudCardActions>
+</MudCard>

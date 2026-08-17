@@ -1,0 +1,26 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+	@Header
+	<MudPaper Elevation="0">
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@ClearAll">Clear All</MudButton>
+		<MudCheckBox T="bool" Label="Show Selected" @ref = "showSelected" CheckedChanged="@((isChecked) => ShowSelected(isChecked))"></MudCheckBox>
+		
+		<MudPaper Elevation="0">
+			<MudTextField T="string" @bind-Value="searchValue" Label="Search"></MudTextField>
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@Search">Search</MudButton>
+		</MudPaper>
+
+		<MudTreeView @bind-Items="CountriesGroups" @ref="countriesGroupsTreeView" Height="400px">
+			<ItemTemplate>
+					<MudTreeViewItem @bind-Expanded="@context.IsExpanded" @bind-Items="@context.Children" Activated="true">
+					<Content>
+						<MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
+						<MudCheckBox T="bool?" Checked="@(context.HasPartialChildSelected() ? null : context.IsChecked)" CheckedChanged="@((e) => TreeItemCheckedChanged(context))"></MudCheckBox>
+						<MudText>@context.Name</MudText>
+					</Content>
+				</MudTreeViewItem>
+			</ItemTemplate>
+		</MudTreeView>
+	</MudPaper>
+</MudCard>
+

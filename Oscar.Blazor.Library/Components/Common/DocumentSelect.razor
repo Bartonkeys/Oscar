@@ -1,0 +1,58 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Microsoft.AspNetCore.Http
+@using Oscar.Infrastructure.Features.WorksImport.Commands
+@using BartonKeys.Functional
+@using Microsoft.AspNetCore.Components.Forms
+@using FluentValidation
+@using Severity = MudBlazor.Severity
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+
+<MudTable Items="@_documents" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true">
+    <RowTemplate>
+        <MudTd Style="width: 70%;">
+            @context.DisplayName
+        </MudTd>
+        <MudTd DataLabel="Link">
+            <MudLink Href="@context.PublicUrl">
+                @if (!string.IsNullOrEmpty(context.PublicUrl))
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.Download" aria-label="download" Color="Color.Primary" Size="Size.Small" />
+                }
+            </MudLink>
+        </MudTd>
+        <MudTd Style="width: 30%;">
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveDocument(context))"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+<MudExpansionPanels>
+    <MudExpansionPanel Text="Upload Document" IsExpanded="@_showCreatePanel" IsExpandedChanged="@showHideCreateForm">
+        <MudPaper Elevation="0" Class="d-flex" MaxHeight="30px">
+
+            <InputFile id="fileInput" OnChange="ChooseFile" hidden />
+
+            <MudButton HtmlTag="label"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       StartIcon="@Icons.Filled.CloudUpload"
+                       for="fileInput">
+                Choose File
+            </MudButton>
+            @if (!String.IsNullOrWhiteSpace(@FileName))
+                {
+                    <MudTextField T="String" @bind-Value="DisplayName" For="@(() => DisplayName)" Variant="Variant.Text" Class="mt-n3 ml-2" Label="Name"></MudTextField>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-2" OnClick="@UploadDocument">Upload</MudButton>
+                }
+        </MudPaper>
+        <MudPaper Elevation="0" Class="d-flex" MaxHeight="30px">
+            @if (!String.IsNullOrWhiteSpace(@FileName))
+            {
+                <MudText Style="color:red; font-family:Courier New, Courier, monospace">@DocumentInfo</MudText>
+            }
+        </MudPaper>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+

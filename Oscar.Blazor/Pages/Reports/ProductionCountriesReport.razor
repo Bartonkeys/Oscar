@@ -1,0 +1,145 @@
+﻿@page "/productionCountriesReport"
+@inherits OscarReportComponent
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Oscar.Core.Entities
+@using Oscar.Blazor.Components
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+<PageTitle>@ReportTitle</PageTitle>
+
+<Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.Cube" SpinnerText="@StatusText" />
+
+<MudCard Elevation="1">
+    <MudCardHeader>
+        <MudText Typo="Typo.h5">@ReportTitle</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="6" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="ClientDto" Placeholder="Select Client" @bind-Value="@SelectedClient"
+                                 SearchFunc="@ClientSearch" ToStringFunc="@ClientDisplayFormat" @ref="_clientSelect" Required="true"
+                                 ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                 Clearable="true" ShowProgressIndicator="true" Label="Client" RequiredError="Client is required!"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                    <NoItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Please enter your search text
+                        </MudText>
+                    </NoItemsTemplate>
+                </MudAutocomplete>
+            </MudItem>
+            @if (SelectedClient != null)
+            {
+                <MudItem xs="6" Class="mt-0 mb-0 pt-0 pb-0">
+                    <MudSelect T="CatalogueDto" @bind-Value="_selectedCatalogue" Label="Catalogue" Placeholder="Client Catalogues">
+                        <MudSelectItem T="CatalogueDto">ALL</MudSelectItem>
+                        @foreach (var item in SelectedClient.Catalogues)
+                        {
+                            <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            }
+            @*<MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudAutocomplete T="CountryDto" @ref="_countrySelect" @bind-Value="SelectedCountry" 
+                                 SearchFunc="@CountrySearch" ToStringFunc="@CountryDisplayFormat" Clearable="true" ShowProgressIndicator="true"
+                                 ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500" HelperText="Default: All Countries included"
+                                 Placeholder="ALL COUNTRIES" Label="Country" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                    <NoItemsTemplate>
+                        <MudText Color="Color.Info" Align="Align.Center" Class="px-4 py-1">
+                            Please enter your search text
+                        </MudText>
+                    </NoItemsTemplate>
+                </MudAutocomplete>
+                <MudChipSet AllClosable="true" OnClose="RemoveSelectedCountry">
+                    @foreach (var val in _selectedCountries)
+                    {
+                        <MudChip Color="Color.Default" Size=Size.Small @key="@GetCountryId(val)" Text="@GetCountryName(val)" />
+                    }
+                </MudChipSet>
+            </MudItem> *@
+            <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudSelect T="string" @bind-Value="_selectedCountryName" @bind-SelectedValues="_selectedCountryNames"
+                           Label="Countries" HelperText="Select Production Countries" MultiSelection="true" Dense="true"
+                           SelectAll="true" SelectAllText="All Countries" Clearable="true">
+                @foreach (var item in _countries)
+                {
+                    <MudSelectItem T="string" Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+            </MudItem>
+            <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudSelect T="string" MultiSelection="true" @bind-SelectedValues="_selectedDiscriminators"
+                           Label="Type" Placeholder="Please Select" Dense="true" HelperText="Default: All Types included" Clearable="true"
+                           SelectAll="true" SelectAllText="ALL">
+                    @foreach (var item in _discriminators)
+                    {
+                        <MudSelectItem T="string" Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudSelect T="string" MultiSelection="true" @bind-SelectedValues="_selectedWorksStatuses"
+                           Label="Work Status" Placeholder="Please Select" Dense="true" HelperText="Default: All Statuses included" Clearable="true"
+                           SelectAll="true" SelectAllText="ALL">
+                    @foreach (var item in _workStatuses)
+                    {
+                        <MudSelectItem T="string" Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+    <MudCardActions>
+        <div class="d-flex align-content-start justify-center flex-wrap flex-grow-1 gap-4">
+            <MudButton StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Disabled="IsBusy" OnClick="OnRunReportClick">Search</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Clear" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small" OnClick="OnResetClick">Reset</MudButton>
+        </div>
+    </MudCardActions>
+</MudCard>
+<MudSpacer />
+<MudDivider />
+
+<MudTable @ref="_dataGrid" Items="@_gridItems" T="ProductionCountryItem" @bind-SelectedItem="_selectedItem"
+          Filter="@GridFilterFunc" class="mt-4" SortLabel="Sort By" Virtualize="true" Breakpoint="Breakpoint.Sm"
+          RowClass="cursor-pointer" Dense="true" Bordered="true" Hover="true" Striped="true">
+    <ToolBarContent>
+        <MudMenu StartIcon="@Icons.Material.Filled.FileDownload" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                 ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight"
+                 Label="Export" Color="Color.Tertiary" Variant="Variant.Filled" Size="Size.Small" Dense="true">
+            <MudMenuItem Icon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Success" IconSize="Size.Small" OnClick="OnExportToExcelClick">Excel File</MudMenuItem>
+            <MudMenuItem Icon="@Icons.Custom.FileFormats.FileDocument" IconColor="Color.Inherit" IconSize="Size.Small" OnClick="OnExportToCsvClick">CSV File</MudMenuItem>
+        </MudMenu>
+        <MudSpacer />
+        @* <MudTextField @bind-Value="SearchText" Placeholder="Search" Label="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0" /> *@
+    </ToolBarContent>
+
+    <HeaderContent>
+        <MudTh>Client Name</MudTh>
+        <MudTh>Catalogue Name</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Title</MudTh>
+        <MudTh>Alternate Title</MudTh>
+        <MudTh>Compact Ref</MudTh>
+        <MudTh>Countries</MudTh>
+        <MudTh>Status</MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+        <MudTd DataLabel="ClientName">@context.ClientName</MudTd>
+        <MudTd DataLabel="CatalogueName">@context.CatalogueName</MudTd>
+        <MudTd DataLabel="Discriminator">@context.Discriminator</MudTd>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd DataLabel="Alternate Title">@context.AlternateTitle</MudTd>
+        <MudTd DataLabel="CompactRef">@context.CompactRef</MudTd>
+        <MudTd DataLabel="Countries">@context.CountriesOfProduction</MudTd>
+        <MudTd DataLabel="WorksStatus">@context.WorksStatus</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="PageSizeOptions" />
+    </PagerContent>
+</MudTable>
+
+<EventConsole @ref="Console" />
+
+

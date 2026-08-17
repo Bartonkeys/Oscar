@@ -1,0 +1,83 @@
+﻿@page "/registrationBatchView"
+
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+
+<PageTitle>Registration Batches</PageTitle>
+
+<Oscar.Blazor.Library.Components.Registration.CreateRegistrationDrawer OpenRegistrationDrawer="@openRegistrationCreate" Clients="@_clients" Societies="@_societies" OnSubmit="Refresh" Title="Create Registration Request" />
+
+<MudGrid>
+    <MudItem md="6">
+        <MudButton OnClick="@OpenRegistrationCreate" Variant="Variant.Filled" Color="Color.Primary">Create Registration Request</MudButton>
+    </MudItem>
+    <MudItem md="6">
+    </MudItem>
+    <MudItem md="12">
+        <MudTable Dense="true" ServerData="@(new Func<TableState, Task<TableData<RegistrationBatchDisplayDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Registration Batches</MudText>
+                <MudSpacer />
+                <MudTextField T="string" ValueChanged="@(OnSearch)" Placeholder="Search" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+
+                <MudTh>Id</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Notes</MudTh>
+                <MudTh>Client</MudTh>
+                <MudTh>Catalogue</MudTh>
+                <MudTh>Society</MudTh>
+                <MudTh>Number of registrations</MudTh>
+                <MudTh>Date Run</MudTh>
+                <MudTh>Reg?</MudTh>
+                <MudTh>Link</MudTh>
+
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Id">@context.BatchId</MudTd>
+                <MudTd DataLabel="Status">
+                    <MudChip Label="true" Color="@GetColour(context.RegisterStatus)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.RegisterStatus.ToName()</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Notes">@context.Notes</MudTd>
+                <MudTd DataLabel="Client">@context.ClientName</MudTd>
+                <MudTd DataLabel="Catalogue">@context.CatalogueName</MudTd>
+                <MudTd DataLabel="Society">@context.Society</MudTd>
+                <MudTd DataLabel="Count">@context.RegistrationCount</MudTd>
+                <MudTd DataLabel="Count">@context.DateRegistered.ToString("yyyy-MM-dd hh:mm:ss")</MudTd>
+                @if (context.DoNotRegister == true)
+                {
+                    <MudTd DataLabel="Registered">N</MudTd>
+                }
+                else
+                {
+                    <MudTd DataLabel="Registered">Y</MudTd>
+                }
+                <MudTd DataLabel="Link">
+                    @if (context.RegisterStatus == RegisterStatus.Batch_Export_Success)
+                    {
+                        <MudLink Href="@context.RegistrationBatchResultPublicUrl">
+                            @if (!string.IsNullOrEmpty(context.RegistrationBatchResultPublicUrl))
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Download" Color="Color.Primary" />
+                            }
+                        </MudLink>
+                    }
+
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+</MudGrid>
+

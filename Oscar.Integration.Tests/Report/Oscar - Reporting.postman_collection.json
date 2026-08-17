@@ -1,0 +1,238 @@
+{
+	"info": {
+		"_postman_id": "857084b9-a65f-4ff9-91d0-7001762f1150",
+		"name": "Oscar - Reporting",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1801829"
+	},
+	"item": [
+		{
+			"name": "Create new Report",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyIsImtpZCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyJ9.eyJhdWQiOiJhcGk6Ly9kMzc5NDQ1MC00Y2JiLTQ5NzQtYjNhYS0xMGY4NzQyZGMzN2IiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9hZmZjMTY4Ni01YmQ5LTRhMTYtODlhOC1jNzdlYzFlMDJkMzkvIiwiaWF0IjoxNjUxODc2NDIyLCJuYmYiOjE2NTE4NzY0MjIsImV4cCI6MTY1MTg4MTI3MiwiYWNyIjoiMSIsImFpbyI6IkFUUUF5LzhUQUFBQWNPUzZUTHJrcUFLak1xTk85QzliOXFvZkFUUGU2a0NFTW5wUC84MlEySUhiVlV1SmxFUWdtbGxUNTRVMHZ2MzEiLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiZDM3OTQ0NTAtNGNiYi00OTc0LWIzYWEtMTBmODc0MmRjMzdiIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJCYXJyIiwiZ2l2ZW5fbmFtZSI6Ik1pY2hhZWwiLCJpcGFkZHIiOiI4Ni4xNzUuMjQ2LjkxIiwibmFtZSI6Ik1pY2hhZWwgQmFyciIsIm9pZCI6IjVhMzA0NmJmLTJkMmQtNGEyYS05YjBjLTM2ZDZiYzlkYjBiNyIsInJoIjoiMC5BVWdBaGhiOHI5bGJGa3FKcU1kLXdlQXRPVkJFZWRPN1RIUkpzNm9RLUhRdHczdElBQTguIiwic2NwIjoiYWNjZXNzX29zY2FyX3VzZXIiLCJzdWIiOiJxOC1fQmx4R0VmMEQzT1pVUGNKTDVkUl95THozTmlNZzVXbHhYdzdoWDNVIiwidGlkIjoiYWZmYzE2ODYtNWJkOS00YTE2LTg5YTgtYzc3ZWMxZTAyZDM5IiwidW5pcXVlX25hbWUiOiJNaWNoYWVsLkJhcnJAb24tbXVzaWMudHYiLCJ1cG4iOiJNaWNoYWVsLkJhcnJAb24tbXVzaWMudHYiLCJ1dGkiOiJTMXVnSEFMVXVrZU1MUzFDd2NVbEFBIiwidmVyIjoiMS4wIn0.gC_VXDOZgsZ3ygrjw2W42gUe9Xu7YKpoPgRr5mE-4lxr5UK_q9di_kMpWRUpqlQvSEiblDMnxzBa_yTOshnLiRU88QoCH0__4sgOmsYuoH-xjC8rOOiPowDUL5f2OgQavwIgEpsWN0U2OEYRM0MTAKPjD1IsKtIQU7tnYjMywvEGF6MG7bZ6VbYp32KmELPBPvARZtdxfJo0wzjYJk8jWLGz6fXgSpHT6Vvu8Vj6Wqwhe3sQzTcHD317hMFs6MC3T2CvEpAbwmXS8NvYj25ykQSQRsjY3RtxDnO3et2_Okb7KW0zsofTHRJ7x8zqjeF_kkTtMuTOD1E503Fj9HLIfw",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"ReportName\" : \"test_mb_3\",\n            \"BaseEntityName\" : \"Client\",\n            \"ReportFields\" : [\n                {\n                    \"BaseEntityName\" : \"Client\",\n                     \"ReportFieldName\" : \"ClientName\"\n                },\n                {\n                    \"BaseEntityName\" : \"Client\",\n                     \"ReportFieldName\" : \"ClientReference\"\n                },\n                {\n                    \"BaseEntityName\" : \"Client\",\n                     \"ReportFieldName\" : \"Email\"\n                },\n                {\n                    \"BaseEntityName\" : \"Works\",\n                     \"ReportFieldName\" : \"Id\"\n                },\n                 {\n                    \"BaseEntityName\" : \"Works\",\n                     \"ReportFieldName\" : \"IMaestroWorkCode\"\n                },\n                {\n                    \"BaseEntityName\" : \"Works\",\n                     \"ReportFieldName\" : \"WorksStatus\"\n                }\n            ]\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5188/report/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5188",
+					"path": [
+						"report",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search all Reports",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyIsImtpZCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyJ9.eyJhdWQiOiJhcGk6Ly9kMzc5NDQ1MC00Y2JiLTQ5NzQtYjNhYS0xMGY4NzQyZGMzN2IiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9hZmZjMTY4Ni01YmQ5LTRhMTYtODlhOC1jNzdlYzFlMDJkMzkvIiwiaWF0IjoxNjUzMjg1MTg3LCJuYmYiOjE2NTMyODUxODcsImV4cCI6MTY1MzI4OTkyNywiYWNyIjoiMSIsImFpbyI6IkUyWmdZSEJhSVZZZHRGd3lTc3c1MG5WNjMrZDVDWUhQSnhxazhsVVovZlBNa0k1ZnpQbGdPVDliMXZUVnFVNnhISnY1blhPcUFBPT0iLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiZDM3OTQ0NTAtNGNiYi00OTc0LWIzYWEtMTBmODc0MmRjMzdiIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJCYXJyIiwiZ2l2ZW5fbmFtZSI6Ik1pY2hhZWwiLCJpcGFkZHIiOiI4Ni4xNzUuMjQ2LjkxIiwibmFtZSI6Ik1pY2hhZWwgQmFyciIsIm9pZCI6IjVhMzA0NmJmLTJkMmQtNGEyYS05YjBjLTM2ZDZiYzlkYjBiNyIsInJoIjoiMC5BVWdBaGhiOHI5bGJGa3FKcU1kLXdlQXRPVkJFZWRPN1RIUkpzNm9RLUhRdHczdElBQTguIiwic2NwIjoiYWNjZXNzX29zY2FyX3VzZXIiLCJzdWIiOiJxOC1fQmx4R0VmMEQzT1pVUGNKTDVkUl95THozTmlNZzVXbHhYdzdoWDNVIiwidGlkIjoiYWZmYzE2ODYtNWJkOS00YTE2LTg5YTgtYzc3ZWMxZTAyZDM5IiwidW5pcXVlX25hbWUiOiJNaWNoYWVsLkJhcnJAb24tbXVzaWMudHYiLCJ1cG4iOiJNaWNoYWVsLkJhcnJAb24tbXVzaWMudHYiLCJ1dGkiOiJ4SnhaSXhoSnlrU0hpUzl5MTJWcUFBIiwidmVyIjoiMS4wIn0.DPN34bunSfzPnbrVYYbRU77vt9jkIN4h575M1deUGMC6X9eAFOzZRWVLah4hQvVQvB95jLQjcKLkPhuJeA7Y7FOrhlO6w8SvvUR-eBDbeIAr7T0QZJFE9EzKk2rBAmDtCeptnSQKJz88JPbm_9O8OROVlR9CoO4N4FQuW4qhM7cJzcjWkUC0U2PVwuxja0peVPV2E9PAv85T0Yphw3_I8um1D_BkYbAkIOnIntyAwf-wQlCVSK0WEC1SZOKlDHx-zYeeRqGUlnRBYlf8QrlNX1hhmfZ8SY_tOzGLlvTiVCYT5CeJ_bikjcIL5-Vzb2AtOfbdlX2xSsoUID_4G2FO1A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5188/report/get",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5188",
+					"path": [
+						"report",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get data from Report",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyIsImtpZCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyJ9.eyJhdWQiOiJhcGk6Ly9kMzc5NDQ1MC00Y2JiLTQ5NzQtYjNhYS0xMGY4NzQyZGMzN2IiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9hZmZjMTY4Ni01YmQ5LTRhMTYtODlhOC1jNzdlYzFlMDJkMzkvIiwiaWF0IjoxNjUzMjQzMTE2LCJuYmYiOjE2NTMyNDMxMTYsImV4cCI6MTY1MzI0ODI4NiwiYWNyIjoiMSIsImFpbyI6IkFUUUF5LzhUQUFBQVZOLzRyY0EwN2MxWnN1YWdKQmpMUkZubEFDSmVwV21TRS91ck1vS3BCOWpKWVdUekNWV1Zsb1VkNU53Z2NWajkiLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiZDM3OTQ0NTAtNGNiYi00OTc0LWIzYWEtMTBmODc0MmRjMzdiIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJCYXJyIiwiZ2l2ZW5fbmFtZSI6Ik1pY2hhZWwiLCJpcGFkZHIiOiI4Ni4xNzUuMjQ2LjkxIiwibmFtZSI6Ik1pY2hhZWwgQmFyciIsIm9pZCI6IjVhMzA0NmJmLTJkMmQtNGEyYS05YjBjLTM2ZDZiYzlkYjBiNyIsInJoIjoiMC5BVWdBaGhiOHI5bGJGa3FKcU1kLXdlQXRPVkJFZWRPN1RIUkpzNm9RLUhRdHczdElBQTguIiwic2NwIjoiYWNjZXNzX29zY2FyX3VzZXIiLCJzdWIiOiJxOC1fQmx4R0VmMEQzT1pVUGNKTDVkUl95THozTmlNZzVXbHhYdzdoWDNVIiwidGlkIjoiYWZmYzE2ODYtNWJkOS00YTE2LTg5YTgtYzc3ZWMxZTAyZDM5IiwidW5pcXVlX25hbWUiOiJNaWNoYWVsLkJhcnJAb24tbXVzaWMudHYiLCJ1cG4iOiJNaWNoYWVsLkJhcnJAb24tbXVzaWMudHYiLCJ1dGkiOiIxb2ZVYlQ4VnlFYUY4bGhjd2d4ZkFBIiwidmVyIjoiMS4wIn0.r-Uj-QAkR21BWQthBvPpNaczRZcmrulUFliEQ357eDHJYpAfcmgmxjDISz2mN35kYJU-YpmDVHt_qcROlthdSeQJGTy_5xPhQ6hQTCT964fDa1ruivKoa44xoZyxWSMNJn9fsUyHlrGzP2_TdxSPN66pqfN-CwyMTlzJXEhj8Z9ZWlL6z4aX5eUjzgJCjSiytYFpOH9dEBH-UGCZXiub4rjEnjqbW58PE8lcNQl60eH1E7DDQawvC5EdqOm8kg8HkKIYII7sXLPn_PwA3sq_y4Qwheg0UCLSm9cGSOECdZ_3eE_vA__adRhA405uylNe7ZcKrXxfBjqu73iHylhTEA",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \n    \"searchObjects\": [\n        {\n            \"searchEntity\" : \"Clients\",\n            \"searchColumn\": \"Id\",\n            \"searchText\": \"3\",\n            \"searchColumnType\" : \"number\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5188/report/post/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5188",
+					"path": [
+						"report",
+						"post",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Report by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyIsImtpZCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyJ9.eyJhdWQiOiJhcGk6Ly9kMzc5NDQ1MC00Y2JiLTQ5NzQtYjNhYS0xMGY4NzQyZGMzN2IiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9hZmZjMTY4Ni01YmQ5LTRhMTYtODlhOC1jNzdlYzFlMDJkMzkvIiwiaWF0IjoxNjUzMjg1MTg3LCJuYmYiOjE2NTMyODUxODcsImV4cCI6MTY1MzI4OTkyNywiYWNyIjoiMSIsImFpbyI6IkUyWmdZSEJhSVZZZHRGd3lTc3c1MG5WNjMrZDVDWUhQSnhxazhsVVovZlBNa0k1ZnpQbGdPVDliMXZUVnFVNnhISnY1blhPcUFBPT0iLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiZDM3OTQ0NTAtNGNiYi00OTc0LWIzYWEtMTBmODc0MmRjMzdiIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJCYXJyIiwiZ2l2ZW5fbmFtZSI6Ik1pY2hhZWwiLCJpcGFkZHIiOiI4Ni4xNzUuMjQ2LjkxIiwibmFtZSI6Ik1pY2hhZWwgQmFyciIsIm9pZCI6IjVhMzA0NmJmLTJkMmQtNGEyYS05YjBjLTM2ZDZiYzlkYjBiNyIsInJoIjoiMC5BVWdBaGhiOHI5bGJGa3FKcU1kLXdlQXRPVkJFZWRPN1RIUkpzNm9RLUhRdHczdElBQTguIiwic2NwIjoiYWNjZXNzX29zY2FyX3VzZXIiLCJzdWIiOiJxOC1fQmx4R0VmMEQzT1pVUGNKTDVkUl95THozTmlNZzVXbHhYdzdoWDNVIiwidGlkIjoiYWZmYzE2ODYtNWJkOS00YTE2LTg5YTgtYzc3ZWMxZTAyZDM5IiwidW5pcXVlX25hbWUiOiJNaWNoYWVsLkJhcnJAb24tbXVzaWMudHYiLCJ1cG4iOiJNaWNoYWVsLkJhcnJAb24tbXVzaWMudHYiLCJ1dGkiOiJ4SnhaSXhoSnlrU0hpUzl5MTJWcUFBIiwidmVyIjoiMS4wIn0.DPN34bunSfzPnbrVYYbRU77vt9jkIN4h575M1deUGMC6X9eAFOzZRWVLah4hQvVQvB95jLQjcKLkPhuJeA7Y7FOrhlO6w8SvvUR-eBDbeIAr7T0QZJFE9EzKk2rBAmDtCeptnSQKJz88JPbm_9O8OROVlR9CoO4N4FQuW4qhM7cJzcjWkUC0U2PVwuxja0peVPV2E9PAv85T0Yphw3_I8um1D_BkYbAkIOnIntyAwf-wQlCVSK0WEC1SZOKlDHx-zYeeRqGUlnRBYlf8QrlNX1hhmfZ8SY_tOzGLlvTiVCYT5CeJ_bikjcIL5-Vzb2AtOfbdlX2xSsoUID_4G2FO1A",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5188/report/get/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5188",
+					"path": [
+						"report",
+						"get",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "tokenName",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{Oscar-ClientSecret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{Oscar-ClientID}}",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "http://localhost:5188/oauth2-redirect.html",
+				"type": "string"
+			},
+			{
+				"key": "useBrowser",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "scope",
+				"value": "api://d3794450-4cbb-4974-b3aa-10f8742dc37b/access_oscar_user",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://login.microsoftonline.com/affc1686-5bd9-4a16-89a8-c77ec1e02d39/oauth2/v2.0/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://login.microsoftonline.com/affc1686-5bd9-4a16-89a8-c77ec1e02d39/oauth2/v2.0/authorize",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Oscar-ClientID",
+			"value": "d3794450-4cbb-4974-b3aa-10f8742dc37b"
+		},
+		{
+			"key": "Oscar-ClientSecret",
+			"value": "27z8Q~2kq0L4LCUjKWr9R5WFHIQtHGKmhElv~c-C"
+		}
+	]
+}

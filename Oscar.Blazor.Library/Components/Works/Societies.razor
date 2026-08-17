@@ -1,0 +1,32 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    Society References
+            <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true" >
+                <RowTemplate>
+                    <MudTd>
+                        <MudAutocomplete T="SocietyReferenceDto"
+                                         Placeholder="Society"
+                                         Label="Society"
+                                         ValueChanged="@( (SocietyReferenceDto s) => changeSociety(s, context) )"
+                                         Value="@context"
+                                         For="@(() => @context)"
+                                         SearchFunc="@Search"
+                                         ToStringFunc="@(e=> e==null?null : $"{e.SocietyName}")">
+
+                            <MoreItemsTemplate>
+                                <MudText Align="Align.Center" Class="px-4 py-1">
+                                    Only the first 10 items are shown
+                                </MudText>
+                            </MoreItemsTemplate>
+                        </MudAutocomplete>
+                    </MudTd>
+                    <MudTd>
+                        <MudTextField Label="Screen Rights Reference" @bind-Value="@context.Reference" For="@(() => @context.Reference)" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+                    </MudTd>
+                    <MudTd DataLabel="Delete">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" aria-label="delete" OnClick="@(async () => removeSociety(context))"></MudIconButton>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="@(async () => addSociety())">Add Society Reference</MudButton>
+    </MudCard>

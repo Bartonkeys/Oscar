@@ -1,0 +1,29 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Core.Common;
+
+<MudDatePicker @bind-Date="@Value.Contract.FirstStartDate" DateFormat="dd/MM/yyyy" Label="Contract First Start Date" For="@(() => Value.Contract.FirstStartDate)" />
+<MudDatePicker @bind-Date="@Value.Contract.CurrentStartDate" DateFormat="dd/MM/yyyy" Label="Contract Current Start Date" For="@(() => Value.Contract.CurrentStartDate)" />
+<MudText Class="pt-2" Style="font-size:small">Contract End Date</MudText>
+<MudPaper Class="d-flex align-start flex-grow-1 pt-2" Elevation="0">
+    <MudButtonGroup OverrideStyles="false">
+        <MudButton Size="Size.Small" Color="Color.Primary" Variant="@GetVariant(Value.Contract.EndDate == Constants.Rights.Perpetuity)" OnClick="@(()=>ToggleEndDatePerpetuity(true))">Perpetuity</MudButton>
+        <MudButton Size="Size.Small" Color="Color.Primary" Variant="@GetVariant(Value.Contract.EndDate != Constants.Rights.Perpetuity)" OnClick="@(()=>ToggleEndDatePerpetuity(false))">Select Date</MudButton>
+    </MudButtonGroup>
+    @if (Value.Contract.EndDate != Constants.Rights.Perpetuity)
+    {
+        <MudDatePicker Class="d-flex flex-1 pl-5 mt-n5" @bind-Date="@Value.Contract.EndDate" For="@(() => Value.Contract.EndDate)" DateFormat="dd/MM/yyyy"></MudDatePicker>
+    }
+</MudPaper>
+<MudSelect T="string" @bind-Value="@Value.Contract.AccountingCurrency" For="@(() => Value.Contract.AccountingCurrency)" Label="Currency" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text">
+    <MudSelectItem Value="@("EUR")" />
+    <MudSelectItem Value="@("GBP")" />
+    <MudSelectItem Value="@("USD")" />
+    <MudSelectItem Value="@("AUD")" />
+</MudSelect>
+
+<MudCheckBox @bind-Checked="@Value.Contract.AutoRenew" Label="AutoRenew" Color="Color.Primary" UnCheckedColor="Color.Default" For="@(() => Value.Contract.AutoRenew)"></MudCheckBox>
+@*<MudCheckBox @bind-Checked="@Value.Contract.Terminated" Label="Terminated" Color="Color.Primary" UnCheckedColor="Color.Default" For="@(() => Value.Contract.Terminated)"></MudCheckBox>*@
+<MudTextField @bind-Value="@Value.Contract.Notes" For="@(() => Value.Contract.Notes)" Label="Contract Notes" Variant="Variant.Text" Lines="5"></MudTextField>
+<MudTextField @bind-Value="@Value.Contract.ParentCompany" For="@(() => Value.Contract.ParentCompany)" Label="Parent Company" Variant="Variant.Text"></MudTextField>
+<MudTextField @bind-Value="@Value.Contract.Email" For="@(() => Value.Contract.Email)" Label="Email" Variant="Variant.Text" Class="removeUpperCasing"></MudTextField>
+

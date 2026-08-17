@@ -1,0 +1,49 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- develop
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'Oscar.Integration.Tests/Oscar.Integration.Tests.csproj'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'Oscar.UI/Oscar.UI.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.BinariesDirectory)/$(Build.BuildId) /p:PublishProfile="OscarUI - Web Deploy.pubxml"'
+    modifyOutputPath: false
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.BinariesDirectory)/$(Build.BuildId)'
+    artifact: 'OscarUI'
+    publishLocation: 'pipeline'
+
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'publish'
+#     publishWebProjects: false
+#     projects: 'Oscar.Blazor/Oscar.Blazor.csproj'
+#     arguments: '--configuration $(buildConfiguration) --output $(Build.BinariesDirectory)/$(Build.BuildId) /p:PublishProfile="OscarBlazor - Web Deploy.pubxml"'
+#     modifyOutputPath: false
+
+
+# - task: PublishPipelineArtifact@1
+#   inputs:
+#     targetPath: '$(Build.BinariesDirectory)/$(Build.BuildId)'
+#     artifact: 'OscarBlazor'
+#     publishLocation: 'pipeline'

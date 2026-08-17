@@ -1,0 +1,34 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    Owning Client References
+            <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true" >
+                <RowTemplate>
+                    <MudTd>
+                        <MudAutocomplete T="ClientReferenceDto"
+                                         Placeholder="Client"
+                                         Label="Society"
+                                         ValueChanged="@( (ClientReferenceDto c) => changeClient(c, context) )"
+                                         Value="@context"
+                                         For="@(() => @context)"
+                                         SearchFunc="@Search"
+                                         ToStringFunc="@(e=> e==null?null : $"{e.ClientName}")"
+                                         Dense="true"
+                                         Margin="Margin.Dense">
+
+                            <MoreItemsTemplate>
+                                <MudText Align="Align.Center" Class="px-4 py-1">
+                                    Only the first 10 items are shown
+                                </MudText>
+                            </MoreItemsTemplate>
+                        </MudAutocomplete>
+                    </MudTd>
+                    <MudTd>
+                        <MudTextField Label="Agicoa Declaration No" @bind-Value="@context.AgicoaDeclarationNumber" For="@(() => @context.AgicoaDeclarationNumber)" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+                    </MudTd>
+                    <MudTd DataLabel="Delete">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@(async () => removeClient(context))"></MudIconButton>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="@(async () => addClient())">Add Client Reference</MudButton>
+    </MudCard>

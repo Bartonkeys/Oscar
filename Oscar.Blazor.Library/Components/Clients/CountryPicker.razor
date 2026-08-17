@@ -1,0 +1,12 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudAutocomplete T="String" Value="@Value" For="@(() => Value)" Required="false" Label="@Label" Class="@Class"
+                 SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e}")" ValueChanged="@( (string? s) => OnSelectChange(s) )"
+                 Dense="true" Margin="Margin.Dense" DebounceInterval="500">
+    <NoItemsTemplate>
+        <MudText Align="Align.Center" Class="px-4 py-1">
+            Please enter country to search
+        </MudText>
+    </NoItemsTemplate>
+</MudAutocomplete>
+

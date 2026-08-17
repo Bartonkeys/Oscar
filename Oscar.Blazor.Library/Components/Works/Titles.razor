@@ -1,0 +1,63 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCardContent Class="@Class">
+    <MudExpansionPanels MultiExpansion="true">
+        <MudExpansionPanel Text="Main Title" IsExpanded="true">
+            <MudTable Items="@Values.Where(t => t.TitleType == TitleType.Main || t.TitleType == TitleType.Episode)" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true">
+                <RowTemplate>
+                    <MudTd>
+                        <MudForm Model="@context" Validation=@(titleValidator.ValidateValue)>
+                            <MudTextField @bind-Value="context.Title" For="@(() => context.Title)" Label="Title" Variant="Variant.Text" @onblur="onTitleChange"></MudTextField>
+                        </MudForm>
+                    </MudTd>
+                    <MudTd>
+                        <MudAutocomplete T="LanguageDto" Placeholder="Language" @bind-Value="context.Language" TextChanged="languageDropdownTextChanged"
+                                            SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e.Description}")" @onblur="onChange"
+                                            For="@(() => context.Language)" Dense="true">
+
+                            <MoreItemsTemplate>
+                                <MudText Align="Align.Center" Class="px-4 py-1">
+                                    Only the first 10 items are shown
+                                </MudText>
+                            </MoreItemsTemplate>
+                        </MudAutocomplete>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+            @if (Values.All(t => t.TitleType != TitleType.Main && t.TitleType != TitleType.Episode))
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="@(async () => addTitle(IsEpisode ? TitleType.Episode : TitleType.Main))">Add Title</MudButton>
+            }
+        </MudExpansionPanel>
+        <MudExpansionPanel Text="Alternative Titles">
+            <MudTable Items="@Values.Where(t => t.TitleType == TitleType.MainAlternative || t.TitleType == TitleType.EpisodeAlternative)" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true">
+                <RowTemplate>
+                    <MudTd>
+                        <MudForm Model="@context" Validation=@(titleValidator.ValidateValue)>
+                            <MudTextField @bind-Value="context.Title" For="@(() => context.Title)" Label="Title" Variant="Variant.Text" @onblur="onTitleChange"></MudTextField>
+                        </MudForm>
+                    </MudTd>
+                    <MudTd>
+                        <MudAutocomplete T="LanguageDto" 
+                                         Placeholder="Language" 
+                                         @bind-Value="context.Language" 
+                                         TextChanged="languageDropdownTextChanged"
+                                         SearchFunc="@Search" 
+                                         ToStringFunc="@(e=> e==null?null : $"{e.Description}")" @onblur="onChange"
+                                         For="@(() => context.Language)" Dense="true" Margin="Margin.Dense">
+
+                            <MoreItemsTemplate>
+                                <MudText Align="Align.Center" Class="px-4 py-1">
+                                    Only the first 10 items are shown
+                                </MudText>
+                            </MoreItemsTemplate>
+                        </MudAutocomplete>
+                    </MudTd>
+                    <MudTd DataLabel="Name">
+                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@(async () => removeTitle(context))"></MudIconButton>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="@(async () => addTitle(IsEpisode ? TitleType.EpisodeAlternative : TitleType.MainAlternative))">Add Alternative Title</MudButton>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+</MudCardContent>

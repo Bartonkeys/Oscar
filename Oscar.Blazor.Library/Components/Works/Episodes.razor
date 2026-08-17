@@ -1,0 +1,26 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudDrawer @bind-Open="@_openWorksDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Persistent" ClipMode="DrawerClipMode.Docked">
+    <EpisodeForm Id="@_episodeId" ExistingEpisodes="@Value" ParentWork="@ParentWork" SeasonId="@SeasonId" SeriesId="@SeriesId" @bind-Open="_openWorksDrawer" RefreshParent="@refreshParent" OpenParent="@OpenParent" toggleWorksDrawer="@ToggleWorksDrawer"></EpisodeForm>
+</MudDrawer>
+<MudDrawer @bind-Open="@_openEpsBulkAddDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Persistent" ClipMode="DrawerClipMode.Docked">
+    <EpisodesBulkAdd ParentTitle="@ParentTitle" SeasonId="@SeasonId" SeriesId="@SeriesId" RefreshParent="@refreshParent" OpenParent="@OpenParent" toggleWorksDrawer="@ToggleEpsBulkAddDrawer"></EpisodesBulkAdd>
+</MudDrawer>
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    <MudText>Episodes</MudText>
+    <MudText><b>Client</b>: @OwningClient</MudText>
+    <MudText><b>Catalogue</b>: @OwningCatalogue</MudText>
+    <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2 mt-1" Dense="true">
+        <RowTemplate>
+            <MudTd Style="width: 70%;" Class="grey lighten-3 pa-2">
+                @context.Titles?.FirstOrDefault()?.Title
+            </MudTd>
+            <MudTd Style="width: 30%; text-align:right;" Class="grey lighten-3 pa-0 pl-2">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="delete" OnClick="@(async () => OpenWorksDrawer(context.Id))"></MudIconButton>
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@(async () => removeEpisode(context))"></MudIconButton>
+                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Primary" Size="Size.Small" aria-label="delete" OnClick="@(async () => copyEpisode(context))"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="@(async () => OpenWorksDrawer(0))">Add Episode</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="@(async () => OpenEpsBulkAddDrawer())">Bulk Add Episodes</MudButton>
+</MudCard>

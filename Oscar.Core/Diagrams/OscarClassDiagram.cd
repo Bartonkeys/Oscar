@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Oscar.Core.Entities.Client">
+    <Position X="5.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FAFAAAAEACQAAAAAAAEAIAAAARAAAAIAQACIAgAGAAA=</HashCode>
+      <FileName>Entities\Client.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Contract" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Addresses" />
+      <Property Name="CustomServiceManagers" />
+      <Property Name="Contacts" />
+      <Property Name="OtherNames" />
+      <Property Name="Rights" />
+      <Property Name="Societies" />
+      <Property Name="Catalogues" />
+      <Property Name="Works" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Address">
+    <Position X="2.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAgAAAAAAAAAIIAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Entities\Address.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Contact" Collapsed="true">
+    <Position X="8.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAEAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Contact.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Contract">
+    <Position X="11.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAQAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAEAABAA=</HashCode>
+      <FileName>Entities\Contract.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.CustomServiceManager" Collapsed="true">
+    <Position X="8.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\CustomServiceManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.OtherName">
+    <Position X="1" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAQ=</HashCode>
+      <FileName>Entities\OtherName.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Right">
+    <Position X="3.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQEAAAAAgAAQAAAAggIAgAAQCAAAEAAAQ=</HashCode>
+      <FileName>Entities\Right.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+      <Property Name="Client" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ChannelRights" />
+      <Property Name="LanguageRights" />
+      <Property Name="CountryGroups" />
+      <Property Name="Countries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Oscar.Core.Entities.RightsType" Collapsed="true">
+    <Position X="0.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Entities\RightsType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Works">
+    <Position X="17.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>GAAAABiIaAAAoEIAwGoIAQAQgRAyAAAIAAAAAAAAAQA=</HashCode>
+      <FileName>Entities\Works.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Conflicts" />
+      <Property Name="WorksSubTypes" />
+      <Property Name="Countries" />
+      <Property Name="Companies" />
+      <Property Name="AlternativeTitles" />
+      <Property Name="Directors" />
+      <Property Name="Actors" />
+      <Property Name="Distributors" />
+      <Property Name="ScreenWriters" />
+      <Property Name="WorksStatusHistory" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Catalogue">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAEAIAQQAAAAAAAAAAAAAAAGAAQ=</HashCode>
+      <FileName>Entities\Catalogue.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="OtherNames" />
+      <Property Name="Societies" />
+      <Property Name="Works" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Society">
+    <Position X="8.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAAAAAAAAAAAAACAAAAQAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Society.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Addresses" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Oscar.Core.Entities.WorksStatus" Collapsed="true">
+    <Position X="21" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\WorksStatus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Director" Collapsed="true">
+    <Position X="24.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\PersonEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.ScreenWriter" Collapsed="true">
+    <Position X="24.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\PersonEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.StandAlone" Collapsed="true">
+    <Position X="16.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\StandAlone.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Series">
+    <Position X="21.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Series.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Season">
+    <Position X="14.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Entities\Season.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Episode">
+    <Position X="18.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAIAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Entities\Episode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.WorksSubType" Collapsed="true">
+    <Position X="21.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\WorksSubType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.WorksStatusHistory" Collapsed="true">
+    <Position X="21.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIAAAAAAAAAAQAAAAgAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\WorksStatusHistory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Distributor" Collapsed="true">
+    <Position X="24.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\PersonEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Country">
+    <Position X="8.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAQAAACAEAAA=</HashCode>
+      <FileName>Entities\Country.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.AlternativeTitle" Collapsed="true">
+    <Position X="14.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\AlternativeTitle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Company">
+    <Position X="13.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAQAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Company.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Actor" Collapsed="true">
+    <Position X="24.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\PersonEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Conflict">
+    <Position X="21" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Conflict.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.ChannelRights">
+    <Position X="0.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAgAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Entities\Channel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Channel" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Oscar.Core.Entities.CountryGroup">
+    <Position X="6.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Entities\CountryGroup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Countries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Oscar.Core.Entities.LanguageRights">
+    <Position X="8" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAgAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Entities\LanguageRights.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Language" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Language">
+    <Position X="10" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Entities\Language.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Oscar.Core.Entities.Channel">
+    <Position X="2.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Entities\Channel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

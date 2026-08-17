@@ -1,0 +1,116 @@
+﻿@page "/worksListReport"
+@inherits OscarReportComponent
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Oscar.Core.Entities
+@using Oscar.Blazor.Components
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+<PageTitle>@ReportTitle</PageTitle>
+
+<Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.Cube" SpinnerText="@StatusText" />
+
+<MudCard Elevation="1">
+    <MudCardHeader>
+        <MudText Typo="Typo.h5">@ReportTitle</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="6" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="ClientDto" Placeholder="Search Client" @bind-Value="@SelectedClient"
+                                 SearchFunc="@ClientSearch" ToStringFunc="@ClientDisplayFormat" @ref="_clientSelect" Required="true"
+                                 ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                 Clearable="true" ShowProgressIndicator="true" Label="Client" RequiredError="Client is required!"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                    <NoItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Please enter your search text
+                        </MudText>
+                    </NoItemsTemplate>
+                </MudAutocomplete>
+            </MudItem>
+            @if (SelectedClient != null)
+            {
+                <MudItem xs="6" Class="mt-0 mb-0 pt-0 pb-0">
+                    <MudSelect T="CatalogueDto" @bind-Value="_selectedCatalogue" Label="Catalogue" Placeholder="Client Catalogues">
+                        <MudSelectItem T="CatalogueDto">All</MudSelectItem>
+                        @foreach (var item in SelectedClient.Catalogues)
+                        {
+                            <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            }
+
+            <MudItem xs="6" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudSelect T="string" MultiSelection="true" @bind-value="_selectedDiscriminator" @bind-SelectedValues="_selectedDiscriminators" SelectAll="true" SelectAllText="ALL"
+                           Label="Type" Placeholder="Please Select" Dense="true" HelperText="Optional (all included by default)" Clearable="true">
+                    @foreach (var item in _discriminators)
+                    {
+                        <MudSelectItem T="string" Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="6" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudSelect T="string" MultiSelection="true" @bind-value="_selectedWorkStatus" @bind-SelectedValues="_selectedWorksStatuses" SelectAll="true" SelectAllText="ALL"
+                           Label="Work Status" Placeholder="Please Select" Dense="true" HelperText="Optional (all included by default)" Clearable="true">
+                    @foreach (var item in _workStatuses)
+                    {
+                        <MudSelectItem T="string" Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+    <MudCardActions>
+        <div class="d-flex align-content-start justify-center flex-wrap flex-grow-1 gap-4">
+            <MudButton StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Disabled="IsBusy" OnClick="OnRunReportClick">Search</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Clear" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small" OnClick="OnResetClick">Reset</MudButton>
+        </div>
+    </MudCardActions>
+</MudCard>
+<MudSpacer />
+<MudDivider />
+
+<MudDataGrid @ref="_dataGrid" Items="@_gridItems" T="ClientWorkItem" @bind-SelectedItem="selectedItem"
+          QuickFilter="@FilterFunc" class="mt-4" Dense="true" Hover="true" Striped="true" Bordered="true" SortMode="SortMode.Single" Groupable="true" GroupExpanded="true" 
+          ColumnResizeMode="ResizeMode.Container" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" ColumnsPanelReordering="true" 
+          HorizontalScrollbar="true" ShowMenuIcon="true" RowClass="cursor-pointer">
+    <ToolBarContent>
+        <MudMenu StartIcon="@Icons.Material.Filled.FileDownload" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                 ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight"
+                 Label="Export" Color="Color.Tertiary" Variant="Variant.Filled" Size="Size.Small" Dense="true">
+            <MudMenuItem Icon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Success" IconSize="Size.Small" OnClick="OnExportToExcelClick">Excel File</MudMenuItem>
+            <MudMenuItem Icon="@Icons.Custom.FileFormats.FileDocument" IconColor="Color.Inherit" IconSize="Size.Small" OnClick="OnExportToCsvClick">CSV File</MudMenuItem>
+        </MudMenu>
+        <MudSpacer />
+        <MudTextField @bind-Value="SearchText" Placeholder="Search" Label="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" IconSize="Size.Small" Class="mt-0"/>
+    </ToolBarContent>
+
+    <Columns>
+        <PropertyColumn Title="Client" Property="x=> x.ClientName" Hideable="true"/>
+        <PropertyColumn Title="Catalogue" Property="x=> x.CatalogueName" Hideable="true" Groupable="true"/>
+        <PropertyColumn Title="Type" Property="x=> x.Discriminator" Hideable="true" Groupable="true"/>
+        <PropertyColumn Title="Title" Property="x=> x.Titles" Hideable="true" Groupable="true"/>
+        <PropertyColumn Title="Alt Titles" Property="x=> x.AlternateTitles" Hideable="true" />
+        <PropertyColumn Title="Season Title" Property="x=> x.SeasonTitle" Hideable="true" Groupable="true"/>
+        <PropertyColumn Title="Series Title" Property="x=> x.SeriesTitle" Hideable="true" Groupable="true" />
+        <PropertyColumn Title="Production Countries" Property="x=> x.CountriesOfProduction" Hideable="true" Groupable="true" />
+        <PropertyColumn Title="Companies" Property="x=> x.Companies" Hideable="true" Groupable="true" />
+        <PropertyColumn Title="Status" Property="x=> x.WorksStatus" Hideable="true" Groupable="true"/>
+        <PropertyColumn Title="Released" Property="x=> x.Released" Hideable="true" />
+        <PropertyColumn Title="Agicoa Works Reference" Property="x=> x.AgicoaWorksReference" Hideable="true" />
+        <PropertyColumn Title="Declaration Number" Property="x=> x.AgicoaDeclarationNumber" Hideable="true" />
+        <PropertyColumn Title="Compact Ref" Property="x=> x.CompactRef" Hideable="true" />
+        <PropertyColumn Title="AS400 RefNo" Property="x=> x.AS400RefNo" Hideable="true" />
+        <PropertyColumn Title="Production Year" Property="x=> x.ProductionYear" Hideable="true" />
+        <PropertyColumn Title="Created On" Property="x=> x.CreationDate" Hideable="true" />
+        <PropertyColumn Title="Modified On" Property="x=> x.LastModified" Hideable="true" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="ClientWorkItem" PageSizeOptions="PageSizeOptions" />
+    </PagerContent>
+</MudDataGrid>
+
+<EventConsole @ref="Console" />
+
+

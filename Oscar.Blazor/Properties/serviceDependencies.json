@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "storage1": {
+      "type": "storage",
+      "connectionId": "oscarstorage"
+    },
+    "identityapp1": {
+      "type": "identityapp"
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:OscarConnection"
+    },
+    "signalr1": {
+      "type": "signalr",
+      "connectionId": "Azure:SignalR:ConnectionString"
+    }
+  }
+}

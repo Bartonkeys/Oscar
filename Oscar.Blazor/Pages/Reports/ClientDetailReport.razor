@@ -1,0 +1,165 @@
+﻿@page "/clientDetailReport"
+@inherits OscarReportComponent
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using MudBlazor.Extensions
+@using Oscar.Blazor.Components
+@using Oscar.Core.Entities
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+<style>
+    .selected { background-color: #1E88E5 !important; }
+    .selected > td { color: white !important; }
+    .selected > td .mud-input {color: white !important;}
+</style>
+
+<PageTitle>@ReportTitle</PageTitle>
+
+<Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.Cube" SpinnerText="@StatusText" />
+
+<MudCard Elevation="1">
+    <MudCardHeader>
+        <MudText Typo="Typo.h5" Elevated="true">@ReportTitle</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="ClientDto" Placeholder="Search Client" @bind-Value="@SelectedClient"
+                                 SearchFunc="@ClientSearch" ToStringFunc="@ClientDisplayFormat" @ref="_clientSelect"
+                                 ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                 Clearable="true" ShowProgressIndicator="true" Label="Client"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                    <NoItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Please enter your search text
+                        </MudText>
+                    </NoItemsTemplate>
+                </MudAutocomplete>
+            </MudItem>
+            @if (SelectedClient != null && IncludeCatalogues == true)
+            {
+                <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                    <MudSelect T="CatalogueDto" @bind-Value="_selectedCatalogue" Label="Catalogue" Placeholder="Client Catalogues">
+                        <MudSelectItem T="CatalogueDto">All</MudSelectItem>
+                        @foreach (var item in SelectedClient.Catalogues)
+                        {
+                            <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            }
+            
+            <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="OperatorDto" Placeholder="Search CSM" @bind-Value="@SelectedOperator"
+                                 SearchFunc="@OperatorSearch" ToStringFunc="@OperatorDisplayFormat" @ref="_operatorSelect"
+                                 ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                 Clearable="true" ShowProgressIndicator="true" Label="CSM"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                    <NoItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Please enter your search text
+                        </MudText>
+                    </NoItemsTemplate>
+                </MudAutocomplete>
+            </MudItem>
+            <MudItem xs="4" Class="mt-0 mb-0 pt-0 pb-0">
+                <MudSwitch T="bool" Color="Color.Primary" Checked="@IncludeCatalogues" CheckedChanged="OnIncludeCatalogues">Include Catalogues</MudSwitch>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+    <MudCardActions>
+        <div class="d-flex align-content-start justify-center flex-wrap flex-grow-1 gap-4">
+            <MudButton StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Disabled="IsBusy" OnClick="OnRunReportClick">Search</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Clear" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small" OnClick="OnResetClick">Reset</MudButton>
+        </div>
+    </MudCardActions>
+</MudCard>
+<MudSpacer />
+<MudDivider />
+
+@if (IncludeCatalogues)
+{
+    <MudDataGrid @ref="_clientCataloguesGrid" Items="@_clientCataloguesItems" T="ClientCataloguesDetail" @bind-SelectedItem="_selectedClientCatalogueItem"
+              QuickFilter="@ClientCatalogueFilterFunc" SortLabel="Sort By" Virtualize="true" class="mt-4" Dense="true" 
+              Hover="true" Striped="true" Bordered="true" SortMode="SortMode.Single" Groupable="true" GroupExpanded="true" 
+              ColumnResizeMode="ResizeMode.Container" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" ColumnsPanelReordering="true" 
+              HorizontalScrollbar="true" ShowMenuIcon="true" RowClass="cursor-pointer">
+        <ToolBarContent>
+            <MudMenu StartIcon="@Icons.Material.Filled.FileDownload" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                     ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight"
+                     Label="Export" Color="Color.Tertiary" Variant="Variant.Filled" Size="Size.Small" Dense="true">
+                <MudMenuItem Icon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Success" IconSize="Size.Small" OnClick="OnExportToExcelClick">Excel File</MudMenuItem>
+                <MudMenuItem Icon="@Icons.Custom.FileFormats.FileDocument" IconColor="Color.Inherit" IconSize="Size.Small" OnClick="OnExportToCsvClick">CSV File</MudMenuItem>
+            </MudMenu>
+            <MudSpacer/>
+            <MudTextField @bind-Value="SearchText" Placeholder="Search" Label="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0" Immediate="true"/>
+        </ToolBarContent>
+
+        <Columns>
+            <PropertyColumn Title="Client" Property="x => x.ClientName" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Catalogue" Property="x => x.CatalogueName" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Cat. As400 Ref" Property="x => x.CatalogueAs400RefNum" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Grade" Property="x => x.ClientGrade" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Status" Property="x => x.ClientStatus" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Email" Property="x => x.ClientEmail" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Reference" Property="x => x.ClientReference" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Terminated" Property="x => x.ContractTerminated" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Agicoa Client Ref" Property="x => x.AgicoaClientRef" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Auto Renew" Property="x => x.AutoRenew" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Contract Start Date" Property="x => x.ContractCurrentStartDate.ToIsoDateString()" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Contract End Date" Property="x => x.ContractEndDate.ToIsoDateString()" Hideable="true" Groupable="true" />
+            <TemplateColumn Title="Contact" Hideable="true" Groupable="true">
+                <CellTemplate>
+                    @string.Format("{0} {1}", context.Item.ContactFirstName, context.Item.ContactLastName)
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Title="CSM" Property="x => x.AccountManager" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Country" Property="x => x.Country" Hideable="true" Groupable="true" />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="ClientCataloguesDetail" PageSizeOptions="PageSizeOptions"/>
+        </PagerContent>
+    </MudDataGrid>
+}
+else
+{
+    <MudDataGrid @ref="_clientsDataGrid" Items="@_clientDetailsItems" T="ClientDetail" @bind-SelectedItem="_selectedClientDetailItem"
+                 QuickFilter="@ClientFilterFunc" SortLabel="Sort By" Virtualize="true" class="mt-4" Dense="true" 
+                 Hover="true" Striped="true" Bordered="true" SortMode="SortMode.Single" Groupable="true" GroupExpanded="true" 
+                 ColumnResizeMode="ResizeMode.Container" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" ColumnsPanelReordering="true" 
+                 HorizontalScrollbar="true" ShowMenuIcon="true" RowClass="cursor-pointer">
+        <ToolBarContent>
+            <MudMenu StartIcon="@Icons.Material.Filled.FileDownload" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                     ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight"
+                     Label="Export" Color="Color.Tertiary" Variant="Variant.Filled" Size="Size.Small" Dense="true">
+                <MudMenuItem Icon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Success" IconSize="Size.Small" OnClick="OnExportToExcelClick">Excel File</MudMenuItem>
+                <MudMenuItem Icon="@Icons.Custom.FileFormats.FileDocument" IconColor="Color.Inherit" IconSize="Size.Small" OnClick="OnExportToCsvClick">CSV File</MudMenuItem>
+            </MudMenu>
+            <MudSpacer />
+            <MudTextField @bind-Value="SearchText" Placeholder="Search" Label="Filter" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"  Immediate="true" />
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Title="Client" Property="x => x.ClientName" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Grade" Property="x => x.ClientGrade" Hideable="true" Groupable="true"/>
+            <PropertyColumn Title="Status" Property="x => x.ClientStatus" Hideable="true" Groupable="true"/>
+            <PropertyColumn Title="Email" Property="x => x.ClientEmail" Hideable="true" Groupable="true"/>
+            <PropertyColumn Title="Reference" Property="x => x.ClientReference" Hideable="true" Groupable="true"/>
+            <PropertyColumn Title="Terminated" Property="x => x.ContractTerminated" Hideable="true" Groupable="true"/>
+            <PropertyColumn Title="Agicoa Client Ref" Property="x => x.AgicoaClientRef" Hideable="true" Groupable="true"/>
+            <PropertyColumn Title="Auto Renew" Property="x => x.AutoRenew" Hideable="true" Groupable="true"/>
+            <PropertyColumn Title="Contract Start Date" Property="x => x.ContractCurrentStartDate.ToIsoDateString()" Hideable="true" Groupable="true" />
+            <PropertyColumn Title="Contract End Date" Property="x => x.ContractEndDate.ToIsoDateString()" Hideable="true" Groupable="true" />
+            <TemplateColumn Title="Contact" Hideable="true" Groupable="true">
+                <CellTemplate>
+                    @string.Format("{0} {1}", context.Item.ContactFirstName, context.Item.ContactLastName)
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Title="CSM" Property="x => x.AccountManager" Hideable="true" Groupable="true"/>
+            <PropertyColumn Title="Country" Property="x => x.Country" Hideable="true" Groupable="true"/>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="ClientDetail" PageSizeOptions="PageSizeOptions" />
+        </PagerContent>
+    </MudDataGrid>
+}
+
+<EventConsole @ref="Console" />

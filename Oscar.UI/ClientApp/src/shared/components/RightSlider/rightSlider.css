@@ -1,0 +1,14 @@
+.sliderDrawer {
+    height: 100%;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sliderSave {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 150px;
+    border-top: 1px solid lightgray;
+}

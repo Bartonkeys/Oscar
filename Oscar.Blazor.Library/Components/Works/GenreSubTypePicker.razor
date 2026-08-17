@@ -1,0 +1,12 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudSelect value="@Value" For="@For" ValueChanged="@( (int? s) => OnSelectChange(s) )" Label="@Label" Class="@Class" Dense="true">
+    @if (_types != null)
+    {
+        @foreach (GenreSubTypeDto type in _types)
+        {
+            int? typeId = (int?)type.Id;
+            <MudSelectItem Value="@typeId">@type.Name - @type.Description</MudSelectItem>
+        }
+
+    }
+</MudSelect>

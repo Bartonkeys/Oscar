@@ -1,0 +1,8 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<MudTable T="MandateTypeDto" Items="@MandateTypes" Hover="true">
+  	<RowTemplate>
+		<MudCheckBox @bind-Checked="@context.Mandated" Label="@($"{context.Name} - {context.Description}")"></MudCheckBox>
+	</RowTemplate>
+</MudTable>
+

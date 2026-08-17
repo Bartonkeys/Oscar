@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "storage1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/compactdatastorage",
+      "type": "storage.azure",
+      "connectionId": "oscarstorage"
+    },
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/oscar-dev/databases/oscar-staging",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:OscarConnection"
+    }
+  }
+}

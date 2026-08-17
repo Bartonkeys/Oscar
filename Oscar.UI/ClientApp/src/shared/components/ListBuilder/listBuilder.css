@@ -1,0 +1,23 @@
+.builderTitle {
+    color: rgb(100, 100, 100);
+    font-size: 20px;
+    letter-spacing: -1px;
+    border-bottom: 1px solid lightgray;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.builderListItem {
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid lightgray;
+    margin-bottom: 5px;
+    background-color: rgb(230, 230, 230);
+}
+
+.builderListList {
+    max-height: 200px;
+    overflow-y: auto;
+}

@@ -1,0 +1,7 @@
+﻿@page "/importEpisode"
+@using Oscar.Blazor.Library.Components.Imports
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<PageTitle>Import Episodes</PageTitle>
+
+<CreateImportForm Clients="@_clients" OnSubmit="Refresh" ImportWorks="false" Title="New Episodes Import"/>

@@ -1,0 +1,50 @@
+﻿@page "/registrationCreate"
+@*@page "/registrationCreate/{FilterClientID:int}"*@
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@inject ISnackbar Snackbar
+
+<PageTitle>Create Registration</PageTitle>
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6">Works</MudText>
+        <MudGrid>
+            <MudItem xs="4">
+                <MudAutocomplete T="ClientBasicDto" Label="Clients" SearchFunc="@SearchClients" OpenIcon="@Icons.Material.Filled.People"
+                                 ResetValueOnEmptyText="true" ToStringFunc="dto => dto?.ClientName"
+                                 CoerceText="true" CoerceValue="false" @bind-Value="_client"
+                                 For="@(() => _client)" Dense="true" Margin="Margin.Dense" />
+            </MudItem>
+            @if (_client != null)
+            {
+                <MudItem xs="4">
+                    <MudSelect T="CatalogueDto" @bind-Value="_catalogue" HelperText="Optional"
+                               For="@(() => _catalogue)" Label="Select catalogue" OpenIcon="@Icons.Material.Filled.Book" IconSize="Size.Small" AdornmentColor="Color.Primary"
+                               Dense="true" Margin="Margin.Dense">
+                        @foreach (var item in _client.Catalogues)
+                        {
+                            <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            }
+
+            <MudItem xs="2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="onFilterClear">Clear Filter</MudButton>
+            </MudItem>
+            <MudItem xs="12"><MudSpacer /></MudItem>
+            <MudItem xs="4">
+                <MudAutocomplete T="SocietyDto" Label="Societies" SearchFunc="@SearchSocieties" OpenIcon="@Icons.Material.Filled.People"
+                                 ResetValueOnEmptyText="true" ToStringFunc="dto => dto?.Name"
+                                 CoerceText="true" CoerceValue="false" @bind-Value="_society"
+                                 For="@(() => _society)" Dense="true" Margin="Margin.Dense"/>
+            </MudItem>
+            <MudItem xs="2">
+                <MudSwitch @bind-Checked="@_includeAlreadyRegistered" Label="Include previously registered" Color="Color.Primary" />
+            </MudItem>
+            <MudItem xs="2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="SubmitRegistration">Submit Registration</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+</MudGrid>

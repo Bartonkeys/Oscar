@@ -1,0 +1,108 @@
+@page "/clients"
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Blazor.Components
+@using Oscar.Blazor.Library.Components.Clients
+@using Oscar.Blazor.Library.Components.Rights
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.Globalization
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+<PageTitle>Clients</PageTitle>
+
+<MudDrawer @bind-Open="@_openClientDrawer" Height="100%" Width="85%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Persistent" ClipMode="DrawerClipMode.Docked">
+    <ClientForm Id="@ClientId" Open="@_openClientDrawer" onSuccess="@SuccessCallback" RightsType="@_rightsType" Countries="@_countries" />
+</MudDrawer>
+<MudDrawer @bind-Open="@_openRightsDrawer" Height="100%" Width="75%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <RightsGrid Id="@ClientId" Open="@_openRightsDrawer" Loading="true" onSuccess="@SuccessRightsCallback" RightsSource="@RightsSource.Client" RightsType="@_rightsType" Countries="@_countries" />
+</MudDrawer>
+
+<Spinner @ref="@SpinnerControl" SpinnerText="@StatusText" />
+
+<MudText Typo="Typo.h5" Class="mb-2">Clients</MudText>
+<div class="d-flex align-self-stretch">
+    <MudDataGrid T="ClientDto" @ref="@_dataGrid" @bind-SelectedItem="@SelectedItem" Items="@_clients" Loading="@IsBusy" LoadingProgressColor="Color.Primary"
+                 Dense="true" Hover="true" Striped="true" Bordered="true" SortMode="SortMode.Single" Groupable="true" GroupExpanded="true" RowsPerPage="@RowsPerPageSession"
+                 ColumnResizeMode="ResizeMode.Container" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" ColumnsPanelReordering="true"
+                 HorizontalScrollbar="true" QuickFilter="@ClientFilter" ShowMenuIcon="true"
+                 FixedHeader="@_fixedHeader" FixedFooter="@_fixedFooter" Height="@(_fixedHeader || _fixedFooter ?"600px":"")" Virtualize="true">
+        <ToolBarContent>
+            <MudButton StartIcon="@Icons.Material.Filled.PersonAdd" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="@(async () => OpenClientForm(0))">Create Client</MudButton>
+            <MudSpacer />
+            <MudTextField @bind-Value="@SearchText" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0" />
+            @*<MudIconButton Icon="@Icons.Material.Filled.Save" Color="Color.Primary" aria-label="save" OnClick="SaveSettings" Title="Save Settings" />*@
+        </ToolBarContent>
+        <NoRecordsContent>
+            <MudText Color="Color.Default">No records found</MudText>
+        </NoRecordsContent>
+        <Columns>
+            <PropertyColumn Property="x => x.ClientReference" Title="Reference" Hideable="false" />
+            <PropertyColumn Property="x => x.ClientName" Title="Name" Hideable="false" Groupable="false" StickyLeft="_stickClientName" HiddenChanged="@OnColumnStateChanged" />
+            <TemplateColumn Title="Alt Names" Sortable="true" Hideable="true" Groupable="false" HideSmall="true" @bind-Hidden="@HideAltName">
+                <CellTemplate>
+                    @foreach (ClientAltNameDto altName in context.Item.ClientAltNames)
+                    {
+                        <MudText>@altName.AltName</MudText>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.Email" Title="Email" class="removeUpperCasing" Hideable="true" HideSmall="true" @bind-Hidden="@HideEmail" />
+            <TemplateColumn Title="Contract First Start Date" Culture="@CultureInfo.InvariantCulture" Hideable="true" HideSmall="true" @bind-Hidden="@HideContractFirstStartDate">
+                <CellTemplate>
+                    @if (context.Item.Contract != null)
+                    {
+                        @GetFormattedDate(context.Item.Contract.FirstStartDate)
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Contract Current Start Date" Hideable="true" HideSmall="true" @bind-Hidden="@HideContractCurrentStartDate">
+                <CellTemplate>
+                    @if (context.Item.Contract != null)
+                    {
+                        @GetFormattedDate(context.Item.Contract.CurrentStartDate)
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Property="x => x.Contract.EndDate" Title="Contract End Date" Hideable="true" HideSmall="true" @bind-Hidden="@HideContractEndDate">
+                <CellTemplate>
+                    @if (context.Item.Contract != null)
+                    {
+                        @GetFormattedDate(context.Item.Contract.EndDate)
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.LastModified" Title="Modified On" Hideable="true" HideSmall="true" @bind-Hidden="@HideLastModified" />
+            <PropertyColumn Property="x => x.CreationDate" Title="Created On" Hideable="true" HideSmall="true" @bind-Hidden="@HideCreatedDate" />
+            <PropertyColumn Property="x => x.IMaestroClientCode" Title="IMaestro Client Code" Hideable="true" HideSmall="true" @bind-Hidden="@HideIMaestroClientCode" />
+            <PropertyColumn Property="x => x.Status" Title="Status" Hideable="false" />
+            <PropertyColumn Property="x => x.ClientGrade" Title="Grade" Hideable="false" />
+            <PropertyColumn Property="x => x.CustomerServiceManagersFullNames" Title="CSM" Hideable="false" />
+            <TemplateColumn CellClass="d-flex justify-end" Hideable="false" Title="Actions" Sortable="false" Groupable="false" StickyRight="@StickActions" HiddenChanged="@OnColumnStateChanged">
+                <CellTemplate>
+                    <MudContainer Class="d-flex">
+                        <MudIconButton Title="Works" Icon="@Icons.Material.Filled.Link" Color="Color.Inherit" Size="Size.Small" aria-label="works" OnClick="() => LinkWork(context.Item.Id)" />
+                        <MudIconButton Title="Edit" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenClientForm(context.Item.Id)" />
+                        <MudIconButton Title="Rights" Icon="@Icons.Material.Filled.List" Color="Color.Default" Size="Size.Small" aria-label="rights" OnClick="() => OpenRightsForm(context.Item.Id)" />
+                        @*<MudIconButton Icon="@Icons.Filled.CollectionsBookmark" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenCatalogForm(context.Id)"></MudIconButton>*@
+                    </MudContainer>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="ClientDto" PageSizeOptions="@PageSizeOptions" />
+        </PagerContent>
+    </MudDataGrid>
+</div>
+<MudDivider />
+<MudGrid>
+    <MudItem xs="12">
+        <div class="d-flex flex-wrap m-4">
+            <MudSwitch T="bool" Checked="@StickClientName" CheckedChanged="@(() => StickClientName = !StickClientName)" Color="Color.Primary">Pin Name</MudSwitch>
+            <MudSwitch T="bool" Checked="@StickActions" CheckedChanged="@(() => StickActions = !StickActions)" Color="Color.Primary">Pin Actions</MudSwitch>
+            <MudSwitch @bind-Checked="@_fixedHeader" Color="Color.Primary">Fixed Header</MudSwitch>
+            <MudSwitch @bind-Checked="@_fixedFooter" Color="Color.Primary">Fixed Footer</MudSwitch>
+        </div>
+    </MudItem>
+</MudGrid>
+
+<EventConsole @ref="Console" />

@@ -1,0 +1,38 @@
+@page "/WorksDetail"
+@page "/WorksDetail/{Discriminator}/{Id:int}"
+@page "/WorksDetail/{Discriminator}"
+
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@inject ISnackbar Snackbar
+
+<style>
+    html, body {
+        overflow: hidden;
+        height: 100%;
+    }
+</style>
+
+<MudPaper Class="sticky-container">
+    <MudBreadcrumbs Items="Breadcrumbs"></MudBreadcrumbs>
+</MudPaper>
+
+<div class="scrollable-content">
+@switch (_discriminator)
+{
+    case Core.Enums.Discriminator.StandAlone:
+        <StandaloneForm Id="@Id" Open="true" Countries="@_countries" RightsType="@_rightsType"  IsPage="true"/>
+        break;
+    case Core.Enums.Discriminator.Episode:
+        <EpisodeForm Id="@Id" Open="true" OpenParent="@OpenWorksDetail" Countries="@_countries" RightsType="@_rightsType" IsPage="true" />
+        break;
+    case Core.Enums.Discriminator.Season:
+        <SeasonForm Id="@Id" Open="true" OpenParent="@OpenWorksDetail" Countries="@_countries" RightsType="@_rightsType" IsPage="true" />
+        break;
+    case Core.Enums.Discriminator.Series:
+        <SeriesForm Id="@Id" Open="true" OpenParent="@OpenWorksDetail" Countries="@_countries" RightsType="@_rightsType" IsPage="true" />
+        break;
+    default:
+        <span></span>
+        break;
+}
+</div>

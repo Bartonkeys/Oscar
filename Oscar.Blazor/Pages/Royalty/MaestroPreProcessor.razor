@@ -1,0 +1,44 @@
+﻿@page "/maestroPreProcessor"
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Blazor.Components
+
+<PageTitle>@Title</PageTitle>
+
+<Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.Cube" SpinnerText="@StatusText" />
+
+<MudText Typo="Typo.h6">@Title</MudText>
+
+<MudCard>
+    <MudForm>
+        <MudCardContent>
+            <div class="d-flex">
+                <InputFile id="fileInput" OnChange="OnFileChange" hidden />
+
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Small"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="fileInput">
+                    Browse
+                </MudButton>
+                @if (_selectedFile != null)
+                {
+                    <div class="ml-2">
+                        <!-- Add left margin -->
+                        <MudText>File: @_selectedFile.Name</MudText>
+                    </div>
+                }
+            </div>
+        </MudCardContent>
+    </MudForm>
+    <MudRadioGroup T="string" SelectedOption="@_selectedDateFormatOption" SelectedOptionChanged="OnSelectedDateFormatOptionChanged">
+        <MudRadio Option="@("UK-DateFormat")">UK Date Format</MudRadio>
+        <MudRadio Option="@("US-DateFormat")">US Date Format</MudRadio>
+    </MudRadioGroup>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="@(async () => await ConvertAndDownload())" Disabled = "@(_selectedFile == null)" >Convert it</MudButton>
+    </MudCardActions>
+</MudCard>
+
+<EventConsole @ref="Console" />

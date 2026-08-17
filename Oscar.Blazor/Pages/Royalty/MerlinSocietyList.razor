@@ -1,0 +1,189 @@
+﻿@page "/merlinSocietyList"
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Blazor.Components
+
+<PageTitle>@Title</PageTitle>
+
+<Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.Cube" SpinnerText="@StatusText" />
+
+<MudText Typo="Typo.h6">@Title</MudText>
+
+<MudCard>
+    <MudForm>
+        <MudCardContent>
+            <div class="d-flex">
+                <InputFile id="fileInput" OnChange="OnFileChange" hidden />
+
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Small"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="fileInput">
+                    Browse
+                </MudButton>
+                @if (selectedFile != null)
+                {
+                    <div class="ml-2"> <!-- Add left margin -->
+                        <MudText>File: @selectedFile.Name</MudText>
+                    </div>
+                }
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await OnImportFromExcelClick())">Import</MudButton>
+            </div>
+        </MudCardContent>
+    </MudForm>
+</MudCard>
+
+<MudTable Items="@_merlinSocietyItems" T="MerlinSocietyDto"
+          class="mt-4" SortLabel="Sort By" Virtualize="true" Breakpoint="Breakpoint.Sm"
+          RowClass="cursor-pointer" Dense="true" Bordered="true" Hover="true" Striped="true">
+    <ToolBarContent>
+        <MudButton StartIcon="@Icons.Material.Filled.FileDownload" Variant="Variant.Filled" Color="Color.Tertiary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await OnExportToExcelClick())">Export</MudButton>
+        <MudSpacer />
+    </ToolBarContent>
+
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Merlin Code</MudTh>
+        <MudTh>Merlin ChannelName</MudTh>
+        <MudTh>MRIT Code</MudTh>
+        <MudTh>MRIT ChannelName</MudTh>
+        <MudTh>AGICOA Code</MudTh>
+        <MudTh>AGICOA ChannelName</MudTh>
+        <MudTh>AGICOAGmbh Code</MudTh>
+        <MudTh>AGICOAGmbh ChannelName</MudTh>
+        <MudTh>ROVI Code</MudTh>
+        <MudTh>ROVI Name</MudTh>
+        <MudTh>TVCountry</MudTh>
+        <MudTh>Countries CR</MudTh>
+        <MudTh>Countries BT</MudTh>
+        <MudTh>Countries EC</MudTh>
+        <MudTh>FilmJus Code</MudTh>
+        <MudTh>FilmJus ChannelName</MudTh>
+        <MudTh>ScreenRights Code</MudTh>
+        <MudTh>ScreenRights ChannelName</MudTh>
+        <MudTh>PROCIBEL Code</MudTh>
+        <MudTh>PROCIBEL ChannelName</MudTh>
+        <MudTh>EGEDA Code</MudTh>
+        <MudTh>EGEDA ChannelName</MudTh>
+        <MudTh>FILMKOPI Code</MudTh>
+        <MudTh>FILMKOPI ChannelName</MudTh>
+        <MudTh>FRF Code</MudTh>
+        <MudTh>FRF ChannelName</MudTh>
+        <MudTh>PROCIREP Code</MudTh>
+        <MudTh>PROCIREP ChannelName</MudTh>
+        <MudTh>SIAE Code</MudTh>
+        <MudTh>SIAE ChannelName</MudTh>
+        <MudTh>SACEM Code</MudTh>
+        <MudTh>SACEM ChannelName</MudTh>
+        <MudTh>SEKAM Code</MudTh>
+        <MudTh>SEKAM ChannelName</MudTh>
+        <MudTh>SUISSIMAGE Code</MudTh>
+        <MudTh>SUISSIMAGE ChannelName</MudTh>
+        <MudTh>VAM Code</MudTh>
+        <MudTh>VAM ChannelName</MudTh>
+        <MudTh>VGF Code</MudTh>
+        <MudTh>VGF ChannelName</MudTh>
+        <MudTh>VFF Code</MudTh>
+        <MudTh>VFF ChannelName</MudTh>
+        <MudTh>GWFF Code</MudTh>
+        <MudTh>GWFF ChannelName</MudTh>
+        <MudTh>ZAPA Code</MudTh>
+        <MudTh>ZAPA ChannelName</MudTh>
+        <MudTh>NORWACO Code</MudTh>
+        <MudTh>NORWACO ChannelName</MudTh>
+        <MudTh>VIDEMA Code</MudTh>
+        <MudTh>VIDEMA ChannelName</MudTh>
+        <MudTh>ANGOA Code</MudTh>
+        <MudTh>ANGOA ChannelName</MudTh>
+        <MudTh>Gedipe Code</MudTh>
+        <MudTh>Gedipe ChannelName</MudTh>
+        <MudTh>APA Code</MudTh>
+        <MudTh>APA ChannelName</MudTh>
+        <MudTh>Conductor Code</MudTh>
+        <MudTh>Conductor ChannelNAme</MudTh>
+        <MudTh>UPFAR_ARGOA Code</MudTh>
+        <MudTh>UPFAR_ARGOA ChannelName</MudTh>
+        <MudTh>PRD Code</MudTh>
+        <MudTh>PRD ChannelName</MudTh>
+        <MudTh>LITA Code</MudTh>
+        <MudTh>LITA ChannelName</MudTh>
+        <MudTh>CMC Code</MudTh>
+        <MudTh>CMC ChannelName</MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+        <MudTd>@context.MerlinId</MudTd>
+        <MudTd>@context.Merlin_Code</MudTd>
+        <MudTd>@context.Merlin_ChannelName</MudTd>
+        <MudTd>@context.MRIT_Code</MudTd>
+        <MudTd>@context.MRIT_ChannelName</MudTd>
+        <MudTd>@context.AGICOA_Code</MudTd>
+        <MudTd>@context.AGICOA_ChannelName</MudTd>
+        <MudTd>@context.AGICOAGmbh_Code</MudTd>
+        <MudTd>@context.AGICOAGmbh_ChannelName</MudTd>
+        <MudTd>@context.ROVI_Code</MudTd>
+        <MudTd>@context.ROVI_Name</MudTd>
+        <MudTd>@context.TVCountry</MudTd>
+        <MudTd>@context.Countries_CR</MudTd>
+        <MudTd>@context.Countries_BT</MudTd>
+        <MudTd>@context.Countries_EC</MudTd>
+        <MudTd>@context.FilmJus_Code</MudTd>
+        <MudTd>@context.FilmJus_ChannelName</MudTd>
+        <MudTd>@context.ScreenRights_Code</MudTd>
+        <MudTd>@context.ScreenRights_ChannelName</MudTd>
+        <MudTd>@context.PROCIBEL_Code</MudTd>
+        <MudTd>@context.PROCIBEL_ChannelName</MudTd>
+        <MudTd>@context.EGEDA_Code</MudTd>
+        <MudTd>@context.EGEDA_ChannelName</MudTd>
+        <MudTd>@context.FILMKOPI_Code</MudTd>
+        <MudTd>@context.FILMKOPI_ChannelName</MudTd>
+        <MudTd>@context.FRF_Code</MudTd>
+        <MudTd>@context.FRF_ChannelName</MudTd>
+        <MudTd>@context.PROCIREP_Code</MudTd>
+        <MudTd>@context.PROCIREP_ChannelName</MudTd>
+        <MudTd>@context.SIAE_Code</MudTd>
+        <MudTd>@context.SIAE_ChannelName</MudTd>
+        <MudTd>@context.SACEM_Code</MudTd>
+        <MudTd>@context.SACEM_ChannelName</MudTd>
+        <MudTd>@context.SEKAM_Code</MudTd>
+        <MudTd>@context.SEKAM_ChannelName</MudTd>
+        <MudTd>@context.SUISSIMAGE_Code</MudTd>
+        <MudTd>@context.SUISSIMAGE_ChannelName</MudTd>
+        <MudTd>@context.VAM_Code</MudTd>
+        <MudTd>@context.VAM_ChannelName</MudTd>
+        <MudTd>@context.VGF_Code</MudTd>
+        <MudTd>@context.VGF_ChannelName</MudTd>
+        <MudTd>@context.VFF_Code</MudTd>
+        <MudTd>@context.VFF_ChannelName</MudTd>
+        <MudTd>@context.GWFF_Code</MudTd>
+        <MudTd>@context.GWFF_ChannelName</MudTd>
+        <MudTd>@context.ZAPA_Code</MudTd>
+        <MudTd>@context.ZAPA_ChannelName</MudTd>
+        <MudTd>@context.NORWACO_Code</MudTd>
+        <MudTd>@context.NORWACO_ChannelName</MudTd>
+        <MudTd>@context.VIDEMA_Code</MudTd>
+        <MudTd>@context.VIDEMA_ChannelName</MudTd>
+        <MudTd>@context.ANGOA_Code</MudTd>
+        <MudTd>@context.ANGOA_ChannelName</MudTd>
+        <MudTd>@context.Gedipe_Code</MudTd>
+        <MudTd>@context.Gedipe_ChannelName</MudTd>
+        <MudTd>@context.APA_Code</MudTd>
+        <MudTd>@context.APA_ChannelName</MudTd>
+        <MudTd>@context.Conductor_Code</MudTd>
+        <MudTd>@context.Conductor_ChannelName</MudTd>
+        <MudTd>@context.UPFAR_ARGOA_Code</MudTd>
+        <MudTd>@context.UPFAR_ARGOA_ChannelName</MudTd>
+        <MudTd>@context.PRD_Code</MudTd>
+        <MudTd>@context.PRD_ChannelName</MudTd>
+        <MudTd>@context.LITA_Code</MudTd>
+        <MudTd>@context.LITA_ChannelName</MudTd>
+        <MudTd>@context.CMC_Code</MudTd>
+        <MudTd>@context.CMC_ChannelName</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager T="ClientDetail" PageSizeOptions="PageSizeOptions" />
+    </PagerContent>
+</MudTable>
+
+<EventConsole @ref="Console" />

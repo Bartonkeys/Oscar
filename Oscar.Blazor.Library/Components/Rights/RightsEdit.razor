@@ -1,0 +1,47 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+@using Oscar.Blazor.Library.Shared
+
+@if (Loading)
+{
+    <Spinner @ref="@SpinnerControl" SpinnerText="@StatusText" />
+}
+else
+{
+    <MudCard>
+            @*<MudPaper Class="d-flex flex-row" Elevation="0"  Style="@StyleForVisibility(!Works)">
+                <MudAutocomplete T="LightWeightWorksDto" Placeholder="Work" @bind-Value="selectedWork" TextChanged="workDropdownTextChanged"
+                                SearchFunc="@SearchWorks" ToStringFunc="@(e=> e==null?null : $"{e.Title}")" @onblur="onWorkChange" @ref="workSelect">
+                    <MoreItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Only the first 10 items are shown
+                        </MudText>
+                    </MoreItemsTemplate>
+                </MudAutocomplete>
+            </MudPaper>*@
+            <MudPaper Elevation="0">
+                <MudSelect T="RightsTypeDto" ToStringFunc="@converter" Label="Type" @ref="@typeSelect">
+                    @foreach (var rt in _rightsType) 
+                    {
+                        <MudSelectItem T="RightsTypeDto" Value="@rt"/>
+                    }
+                </MudSelect>
+            </MudPaper>
+            <MudPaper Class="d-flex flex-row" Elevation="0">
+                <MudDatePicker DateFormat="dd/MM/yyyy" @bind-Value="_startRight" Label="Start Right" @ref="@startDate"></MudDatePicker>
+                <MudDatePicker DateFormat="dd/MM/yyyy" @bind-Value="_endRight" Label="End Right" @ref="@endDate"></MudDatePicker>
+            </MudPaper>
+            <MudPaper Class="d-flex flex-row" Elevation="0">
+                <MudDatePicker DateFormat="dd/MM/yyyy" @bind-Value="_startValid" Label="Start Validity"  @ref="@startValid"></MudDatePicker>
+                <MudDatePicker DateFormat="dd/MM/yyyy" Clearable=true  @bind-Value="_endValid" Label="End Validity" @ref="@endValid"></MudDatePicker>
+            </MudPaper>
+            <MudPaper Class="d-flex flex-row" Elevation="0">
+                <MudTextField T="string" @bind-Value="_notations" Label="Notations" @ref="@notations"></MudTextField>
+            </MudPaper>
+            <MudPaper Class="d-flex flex-row" Elevation="0">
+                <MudNumericField T="decimal" @bind-Value="_percentage" Label="Percentage" @ref="@percentage"></MudNumericField>
+            </MudPaper>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width:100%" Class="mt-2" OnClick="@CreateRight">Create and add to list</MudButton>
+    </MudCard>
+}

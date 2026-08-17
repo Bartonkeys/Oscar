@@ -1,0 +1,35 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="@Class">
+    <MudCardHeader>Actors</MudCardHeader>
+    <MudPaper Class="d-flex flex-row" Elevation="0">
+        <MudAutocomplete T="ActorDto" Label="New Actor" @bind-Value="_actor" For="@(() => _actor)" Required="false"
+                         SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e.FirstName} {e.LastName}")" @onblur="onChange">
+            <MoreItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Only the first 10 items are shown
+                </MudText>
+            </MoreItemsTemplate>
+        </MudAutocomplete>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-2 mt-2" OnClick="@AddActor">Add</MudButton>
+    </MudPaper>
+   
+    <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true" >
+        <RowTemplate>
+            <MudTd Style="width: 70%;">
+                @context.FirstName @context.LastName
+            </MudTd>
+            <MudTd Style="width: 30%;">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" aria-label="delete" OnClick="@((e) => RemoveActor(context))"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudExpansionPanels>
+        <MudExpansionPanel Text="Create New Actor" MaxHeight="150">
+            <MudPaper Class="d-flex flex-row" Elevation="0">
+                <MudTextField T="String" @bind-Value="_firstName" For="@(() => _firstName)" Label="First Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+                <MudTextField T="String" @bind-Value="_lastName" For="@(() => _lastName)" Label="Last Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            </MudPaper>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width:100%" Class="ml-auto mt-2" OnClick="@CreateActor">Create and add to list</MudButton>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+</MudCard>

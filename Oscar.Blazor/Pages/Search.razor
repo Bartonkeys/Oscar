@@ -1,0 +1,166 @@
+@page "/search"
+@using Oscar.Blazor.Library.Components.Rights
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@inject ISnackbar Snackbar
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<PageTitle>Works</PageTitle>
+
+<MudDrawer @bind-Open="@openWorksDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    @switch (_discriminator)
+    {
+        case Discriminator.StandAlone:
+            <StandaloneForm Id="@worksId" Open="@openWorksDrawer"></StandaloneForm>
+            break;
+        case Discriminator.Episode:
+            <EpisodeForm Id="@worksId" Open="@openWorksDrawer" OpenParent="@OpenWorksDrawer"></EpisodeForm>
+            break;
+        case Discriminator.Season:
+            <SeasonForm Id="@worksId" Open="@openWorksDrawer" OpenParent="@OpenWorksDrawer"></SeasonForm>
+            break;
+        case Discriminator.Series:
+            <SeriesForm Id="@worksId" Open="@openWorksDrawer" OpenParent="@OpenWorksDrawer"></SeriesForm>
+            break;
+        default:
+            <span></span>
+            break;
+    }
+</MudDrawer>
+
+<MudDrawer @bind-Open="@openRightsDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <RightsGrid Id="@worksId" Works=true Open="@openRightsDrawer" onSuccess="@SuccessRightsCallback" RightsSource="@RightsSource.Works"></RightsGrid>
+</MudDrawer>
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6">Works</MudText>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudAutocomplete @ref="_autoComplete" T="WorksTitleResponseDto" Label="Title AutoComplete" ToStringFunc="dto => dto?.Title" ResetValueOnEmptyText="true"
+                                 SearchFunc="@AutoCompleteTitle" ValueChanged="@GetWorks" Variant="Variant.Outlined" Clearable="true" ShowProgressIndicator="true"
+                                 Dense="true" Margin="Margin.Dense"/>
+            </MudItem>
+            <MudItem xs="6"><MudTextField T="string" @bind-Value="searchString" Placeholder="Title" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField></MudItem>
+            <MudItem xs="3">
+                <MudSelect T="Discriminator" Value="@_searchDiscriminator" SelectedValuesChanged="FilterDiscriminator" Label="Type" Dense="true" Margin="Margin.Dense">
+                    <MudSelectItem Value="Discriminator.All"/>
+                    <MudSelectItem Value="Discriminator.Series"/>
+                    <MudSelectItem Value="Discriminator.Season"/>
+                    <MudSelectItem Value="Discriminator.Episode"/>
+                    <MudSelectItem Value="Discriminator.StandAlone"/>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="3">
+                <MudSelect T="WorksStatus" Value="@_statusDiscriminator" SelectedValuesChanged="StatusFilterDiscriminator" Label="Status" Dense="true" Margin="Margin.Dense">
+                    <MudSelectItem Value="WorksStatus.Any" />
+                    <MudSelectItem Value="WorksStatus.Active" />
+                    <MudSelectItem Value="WorksStatus.Incomplete" />
+                    <MudSelectItem Value="WorksStatus.Relinquished" />
+                    <MudSelectItem Value="WorksStatus.Uncontrolled" />
+
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="2">
+                <MudSelect T="SearchDirection" @bind-Value="_searchDirection" Label="Sort" Dense="true" Margin="Margin.Dense">
+                    <MudSelectItem Value="@(SearchDirection.Ascending)">Ascending</MudSelectItem>
+                    <MudSelectItem Value="@(SearchDirection.Descending)">Descending</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="1">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="OnSearch">Search</MudButton>
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="onFilterClear">Clear Filter</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="onExportResults">Export Results</MudButton>
+            </MudItem>
+        </MudGrid>
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<WorksDto>>>(ServerReload))" Hover="true" @ref="_table" Loading="@_loading"
+                  MultiSelection=" true" @bind-SelectedItems="selectedItems" Dense="true" 
+                  RowsPerPageChanged="UpdateRowsPerPageInSession">
+            <HeaderContent>
+                <MudTh>Type</MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<WorksDto, object>(x => x.Titles.Select(t => t.Title))">Title</MudTableSortLabel></MudTh>
+                <MudTh>Compact Ref</MudTh>
+                <MudTh>Production Year</MudTh>
+                <MudTh>First Broadcast Year</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Client</MudTh>
+                <MudTh>Catalogue</MudTh>
+                <MudTd></MudTd>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Id">
+                    @switch (context.Discriminator)
+                    {
+                        case "StandAlone":
+                            <MudIcon Color="Color.Primary" Icon="@Icons.Material.Filled.Man" Size="Size.Small" Title="StandAlone" />
+                            break;
+                        case "Episode":
+                            <MudIcon Color="Color.Warning" Icon="@Icons.Material.Filled.Theaters" Size="Size.Small" Title="Episode" />
+                            break;
+                        case "Season":
+                            <MudIcon Color="Color.Success" Icon="@Icons.Material.Filled.WbSunny" Size="Size.Small" Title="Season" />
+                            break;
+                        case "Series":
+                            <MudIcon Color="Color.Secondary" Icon="@Icons.Material.Filled.AutoAwesomeMotion" Size="Size.Small" Title="Series" />
+                            break;
+                        default:
+                            <span> @context.Discriminator</span>
+                            break;
+                    }
+                </MudTd>
+                <MudTd DataLabel="Title">
+                    @context.Titles.First()?.Title
+                </MudTd>
+                <MudTd DataLabel="CompactRef">@context.CompactRef</MudTd>
+                <MudTd DataLabel="ProductionYear">@context.ProductionYear</MudTd>
+                <MudTd DataLabel="FirstBroadcastYear">@context.FirstBroadcastYear</MudTd>
+                <MudTd DataLabel="WorksStatus">@context.WorksStatus</MudTd>
+                @if (context.Clients.Any())
+                {
+                    <MudTd DataLabel="Client">
+                        @foreach (var client in context.Clients)
+                        {
+                            <div>@client.ClientName</div>
+                        }
+                    </MudTd>
+                }
+                else
+                {
+                    <MudTd DataLabel="Client">Not Set</MudTd>
+                }
+                @if (context.Catalogues.Any())
+                {
+                    <MudTd DataLabel="Catalogue">
+                        @foreach (var cat in context.Catalogues)
+                        {
+                            <div>@cat.Name</div>
+                        }
+                    </MudTd>
+                }
+                else
+                {
+                    <MudTd DataLabel="Catalogue">Not Set</MudTd>
+                }
+                <MudTd DataLabel="Edit">
+                    <MudIconButton Icon="@Icons.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenWorksDrawer(context.Id, (Discriminator)Enum.Parse(typeof(Discriminator), context.Discriminator))"></MudIconButton>
+                </MudTd>
+                <MudTd DataLabel="Rights">
+                    <MudIconButton Icon="@Icons.Filled.List" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenRightsForm(context.Id)"></MudIconButton>
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[] {10, 50, 100 }" />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+    <WorksLegend />
+</MudGrid>

@@ -1,0 +1,54 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Core.Enums
+@using Oscar.Blazor.Library.Components.Common
+
+@if (RegistrationDisplayDto != null)
+{
+    <div Class="d-flex flex-row pb-2">
+        <MudIcon Color="Color.Secondary" Icon="@Icons.Material.Filled.List" Title="Registration" Class="mr-2" />
+        @if (RegistrationDisplayDto.Id < 1)
+        {
+            <MudText> Add Registration</MudText>
+        }
+        else
+        {
+            <MudText> Edit Registration</MudText>
+        }
+    </div>
+    <MudCard Height="90%" Class="overflow-auto pb-4">
+        <MudForm Model="@RegistrationDisplayDto" @ref="@form" Validation="@(registrationsValidator.ValidateValue)">
+            <MudSelect Class="pl-4 pt-2 pr-4" T="int" @bind-Value="RegistrationDisplayDto.SocietyId" For="@(() => RegistrationDisplayDto.SocietyId)" Label="Society" Dense="true" Margin="Margin.Dense">
+                <MudSelectItem Value="0">@string.Empty</MudSelectItem>
+                @foreach (var society in Societies)
+                {
+                    <MudSelectItem Value="@society.Id">@society.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudDatePicker Class="pl-4 pt-2 pr-4" Date="@_dateRegistered" DateChanged="@((DateTime? d) => DateRegisteredChanged(d))" For="@(() => _dateRegistered)" DateFormat="dd-MMM-yyyy" Label="Date Registered"></MudDatePicker>
+        </MudForm>
+
+        <MudCardActions Height="5%">
+            <MudItem xs="6">
+                <MudButton Disabled="@_processing" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await Submit())">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">SAVING</MudText>
+                    }
+                    else
+                    {
+                        <MudText>SAVE REGISTRATION</MudText>
+                    }
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="ml-auto" OnClick="@Cancel">
+                    <MudText>Cancel</MudText>
+                </MudButton>
+            </MudItem>
+        </MudCardActions>
+    </MudCard>
+}
+else
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+}

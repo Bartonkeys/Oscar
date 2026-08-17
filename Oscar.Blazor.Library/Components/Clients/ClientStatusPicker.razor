@@ -1,0 +1,7 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudSelect value="@Value" For="@For" ValueChanged="@( (Status? s) => OnSelectChange(s) )" Label="@Label" Class="@Class" Dense="true" Margin="Margin.Dense">
+    @foreach (Status clientStatus in Enum.GetValues(typeof(Status)))
+    {
+        <MudSelectItem T="Status?" Value="@clientStatus">@clientStatus</MudSelectItem>
+    }
+</MudSelect>

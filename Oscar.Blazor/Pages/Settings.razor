@@ -1,0 +1,23 @@
+﻿@page "/settings"
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<PageTitle>Settings</PageTitle>
+<Spinner @ref="@SpinnerControl" SpinnerStyle="@SelectedSpinner" SpinnerText="@StatusText" />
+
+<MudContainer>
+    <MudText Typo="Typo.h5">Settings</MudText>
+
+    <MudDivider />
+
+    <MudSelect T="SpinnerType" @bind-Value="SelectedSpinner" Label="Busy Indicator" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+        <MudSelectItem Value="SpinnerType.Bounce" Color="Color.Primary">Bounce</MudSelectItem>
+        <MudSelectItem Value="SpinnerType.ChasingDots" Color="Color.Secondary">Chase</MudSelectItem>
+        <MudSelectItem Value="SpinnerType.Cube" Color="Color.Tertiary">Cubes</MudSelectItem>
+        <MudSelectItem Value="SpinnerType.Default" Color="Color.Info">Default</MudSelectItem>
+        <MudSelectItem Value="SpinnerType.FoldingCube" Color="Color.Success">Folding Cube</MudSelectItem>
+        <MudSelectItem Value="SpinnerType.Rotate" Color="Color.Warning">Rotate</MudSelectItem>
+        <MudSelectItem Value="SpinnerType.ThreeDots" Color="Color.Error">Three Dots</MudSelectItem>
+        <MudSelectItem Value="SpinnerType.Wave" Color="Color.Default">Wave</MudSelectItem>
+    </MudSelect>
+
+</MudContainer>

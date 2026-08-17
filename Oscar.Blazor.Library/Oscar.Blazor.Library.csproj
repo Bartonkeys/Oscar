@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.16" />
+    <PackageReference Include="MudBlazor" Version="6.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Oscar.Core\Oscar.Core.csproj" />
+    <ProjectReference Include="..\Oscar.Data\Oscar.Data.csproj" />
+    <ProjectReference Include="..\Oscar.Infrastructure\Oscar.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Components\Works\" />
+    <None Remove="Components\Registration\" />
+    <None Remove="Components\Equivalence\" />
+    <None Remove="Components\Screenrights\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\Equivalence\" />
+    <Folder Include="Components\Screenrights\" />
+  </ItemGroup>
+</Project>

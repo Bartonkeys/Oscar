@@ -1,0 +1,8 @@
+﻿@using MudBlazor
+
+<MudSelect value="@Value" For="@For" ValueChanged="@( (int? s) => OnSelectChange(s) )" Label="@Label" Class="@Class" Dense="true" OpenIcon="@Icons.Material.Filled.DateRange">
+    @foreach (int? y in Years)
+    {
+        <MudSelectItem Value="@y">@y</MudSelectItem>
+    }
+</MudSelect>

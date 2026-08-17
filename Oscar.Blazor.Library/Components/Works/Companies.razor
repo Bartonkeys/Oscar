@@ -1,0 +1,37 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+<MudCard Class="ma-3 pa-5" Elevation="5">
+    @Header
+    <MudPaper Class="d-flex flex-row mb-2" Elevation="0">
+        <MudAutocomplete T="CompanyDto" Label="@ListLabel" @bind-Value="_company" For="@(() => _company)" Required="false"
+                         SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e.Name}")" @onblur="onChange"
+                         Dense="true" Margin="Margin.Dense" DebounceInterval="500">
+            <NoItemsTemplate>
+                <MudText Align="Align.Center" Class="px-4 py-1">
+                    Please enter Company name to search
+                </MudText>
+            </NoItemsTemplate>
+        </MudAutocomplete>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" OnClick="@AddCompany">Add</MudButton>
+    </MudPaper>
+
+    <MudTable Items="@Value" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Class="mb-2" Dense="true">
+        <RowTemplate>
+            <MudTd Style="width: 90%;" Class="grey lighten-3 pa-0 pl-2">
+                @context.Name
+            </MudTd>
+            <MudTd Style="width: 10%;" Class="grey lighten-3 pa-0 pl-2">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="@((e) => RemoveCompany(context))"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudExpansionPanels>
+        <MudExpansionPanel Text="@CreateLabel">
+            <MudPaper Class="d-flex flex-row" Elevation="0">
+                <MudTextField T="String" @bind-Value="_name" For="@(() => _name)" Label="Name" Variant="Variant.Text" Class="pl-4 pr-4"></MudTextField>
+                <MudTextField T="String" @bind-Value="_email" For="@(() => _email)" Label="Email" Variant="Variant.Text" Class="pl-4 pr-4 removeUpperCasing"></MudTextField>
+            </MudPaper>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="width:100%" Class="mt-2" OnClick="@CreateCompany">Create and add to list</MudButton>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+    
+</MudCard>

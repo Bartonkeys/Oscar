@@ -1,0 +1,101 @@
+﻿@page "/reportCreate"
+@page "/reportCreate/{ReportId:int}"
+
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+@inject NavigationManager NavigationManager
+
+
+@if (ReportId > 0)
+{
+    <PageTitle>Update Report</PageTitle>
+}
+else
+{
+<PageTitle>Create a new Report</PageTitle>
+}
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6">Report Details:</MudText>
+    </MudItem>
+    <MudItem xs="6">
+        <MudTextField Required="true" @bind-Value="reportNameString" T="string" Label="Report Name" HelperText="Type a name for this report" HelperTextOnFocus="true" Variant="Variant.Text" />
+    </MudItem>
+    <MudItem xs="6">
+
+        <MudSelect Required="true" @bind-Value="baseEntityNameString" Label="Select a base entity for the report" HelperText="This entity will be the root node of your report" AdornmentColor="Color.Secondary" Dense="true" Margin="Margin.Dense">
+            @foreach (var reportBaseEntity in reportBaseEntities)
+            {
+                <MudSelectItem Value="@reportBaseEntity">@reportBaseEntity</MudSelectItem>
+            }
+
+        </MudSelect>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6">Report Fields:</MudText>
+    </MudItem>
+
+    <MudItem xs="5">
+        <MudSelect T="string" OnBlur="@ResetReportFieldSelect" @bind-Value="reportFieldBaseEntity" Label="Select a base entity for the report field" HelperText="Filter the report fields using a base entity" AdornmentColor="Color.Secondary" Dense="true" Margin="Margin.Dense">
+            @foreach (string reportFieldBaseEntityName in allReportFields.Select(x => x.BaseEntityName).Distinct())
+            {
+                <MudSelectItem T="string" Value="@reportFieldBaseEntityName">@reportFieldBaseEntityName</MudSelectItem>
+            }
+
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="5">
+        <MudSelect @bind-Value="reportField" Label="Select the report field to add" HelperText="Choose a report field to add to the report" AdornmentColor="Color.Secondary" Dense="true" Margin="Margin.Dense">
+            @foreach (var reportField in allReportFields.FindAll(x => x.BaseEntityName == reportFieldBaseEntity))
+            {
+                <MudSelectItem Value="@reportField.ReportFieldName">@(reportField.DisplayName != null ? reportField.DisplayName : reportField.ReportFieldName)</MudSelectItem>
+            }
+
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="2">
+        <MudButton @onclick="AddReportField" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add Field to Report</MudButton>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudTable Dense="true" Items="@selectedReportFields" Hover="true" @ref="table" Loading="@_loading">
+
+            <HeaderContent>
+                <MudTh>Base Entity</MudTh>
+                <MudTh>Field</MudTh>
+                <MudTh></MudTh>
+
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="BaseEntityName">@context.BaseEntityName</MudTd>
+                <MudTd DataLabel="ReportFieldName">@context.ReportFieldName</MudTd>
+                <MudTd DataLabel="ReportActions">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="() => DeleteReportField(context)"></MudIconButton>
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+
+    </MudItem>
+    <MudItem xs="12">
+
+        @if (ReportId > 0)
+        {
+            <MudButton @onclick="CreateUpdateReport" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Update & Run Report</MudButton>
+        }
+        else
+        {
+            <MudButton @onclick="CreateUpdateReport" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Create & Run Report</MudButton>
+        }
+    </MudItem>
+</MudGrid>

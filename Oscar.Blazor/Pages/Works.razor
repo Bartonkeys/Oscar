@@ -1,0 +1,514 @@
+@page "/works"
+@page "/works/{FilterClientID:int}"
+@page "/works/{FilterClientID:int}/{FilterCatalogueID:int}"
+@using Oscar.Blazor.Components
+@using Oscar.Blazor.Library.Components.Rights
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<PageTitle>Works</PageTitle>
+
+<MudDrawer @bind-Open="@openCopyDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <CopyForm WorksToCopy="@selectedItems" WorksSource="WorksSource.WorksSearch" CopyFormComplete="CopyFormComplete"></CopyForm>
+</MudDrawer>
+
+<MudDrawer @bind-Open="@openRightsDrawer" Height="100%" Width="70%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <RightsGrid Id="@worksId" Open="@openRightsDrawer" onSuccess="@SuccessRightsCallback" RightsSource="@RightsSource.Works"></RightsGrid>
+</MudDrawer>
+
+<Spinner @ref="@SpinnerControl" SpinnerStyle="SpinnerType.ThreeDots" SpinnerText="@StatusText" />
+
+<MudGrid Spacing="1">
+    <MudItem xs="12">
+        <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined" Class="m-2">
+            <MudButton StartIcon="@Icons.Material.Filled.Man" OnClick="@(async () => OpenWorksDrawer(0, Discriminator.StandAlone, String.Empty))">Add Standalone</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.AutoAwesomeMotion" OnClick="@(async () => OpenWorksDrawer(0, Discriminator.Series, string.Empty))">Add Series</MudButton>
+        </MudButtonGroup>
+    </MudItem>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h6">Works</MudText>
+        <MudExpansionPanels>
+            <MudExpansionPanel Text="Quick Search" MaxHeight="150">
+                <MudGrid>
+                    <MudItem xs="12" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudAutocomplete @ref="_autoComplete" T="WorksTitleResponseDto" Label="Title AutoComplete" ToStringFunc="dto => dto?.Title"
+                                         SearchFunc="@TitlesSearch" ValueChanged="@GetWorks" Clearable="true" ShowProgressIndicator="true"
+                                         ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                         Dense="true" Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+                    </MudItem>
+                </MudGrid>
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Advanced Search" MaxHeight="500" @ref="_advancedSearchPanel">
+                <MudGrid>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudTextField T="string" @bind-Value="searchString" Label="Title" Placeholder="Search Title" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Immediate="true" OnKeyUp="@Enter" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudSelect T="SearchType" @bind-Value="@_searchTypeDiscriminator" Label="Search Type" Dense="true" Margin="Margin.Dense">
+                            <MudSelectItem Value="SearchType.Contains">Contains</MudSelectItem>
+                            <MudSelectItem Value="SearchType.StartsWith">Starts With</MudSelectItem>
+                            <MudSelectItem Value="SearchType.Equals">Exact</MudSelectItem>
+                            <MudSelectItem Value="SearchType.FreeText">FreeText</MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudSelect T="string" @bind-Value="@_searchDiscriminators" Label="Type" Dense="true" Margin="Margin.Dense" MultiSelection=true @ref=_discriminatorSelector SelectAllText="All" SelectAll="true">
+                            <MudSelectItem Value="Discriminator.Series.ToString()" />
+                            <MudSelectItem Value="Discriminator.Season.ToString()" />
+                            <MudSelectItem Value="Discriminator.Episode.ToString()" />
+                            <MudSelectItem Value="Discriminator.StandAlone.ToString()" />
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudSelect T="PersonType" @bind-Value="_searchPerson" Label="Person Type" Dense="true" Margin="Margin.Dense">
+                            <MudSelectItem Value="PersonType.Actor" />
+                            <MudSelectItem Value="PersonType.Director" />
+                            <MudSelectItem Value="PersonType.Producer" />
+                            <MudSelectItem Value="PersonType.ScreenWriter" />
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudTextField T="string" @bind-Value="@searchStringFirstName" Label="First Name" Placeholder="Forename" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyUp="@Enter" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudTextField T="string" @bind-Value="@searchStringSurname" Label="Last Name" Placeholder="Surname" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyUp="@Enter" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudSelect T="WorksStatus" @bind-Value="@_statusDiscriminator" Label="Status" Placeholder="Status" Dense="true" Margin="Margin.Dense">
+                            <MudSelectItem Value="WorksStatus.Any" />
+                            <MudSelectItem Value="WorksStatus.Active" />
+                            <MudSelectItem Value="WorksStatus.Incomplete" />
+                            <MudSelectItem Value="WorksStatus.Relinquished" />
+                            <MudSelectItem Value="WorksStatus.Uncontrolled" />
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudSelect T="string" @bind-Value="@_sortColumn" Label="Sort" Placeholder="Sort By" Dense="true" Margin="Margin.Dense">
+                            <MudSelectItem Value="@("Id")">Default</MudSelectItem>
+                            <MudSelectItem Value="@("DisplayTitle")">Title</MudSelectItem>
+                            <MudSelectItem Value="@("ProductionYear")">Production Year</MudSelectItem>
+                            <MudSelectItem Value="@("Clients.First().ClientName")">Client Name</MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="ClientDto" Placeholder="Search Client" @bind-Value="@SelectedClient"
+                                         SearchFunc="@ClientSearch" ToStringFunc="@ClientDisplayFormat" @ref="clientSelect"
+                                         ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                         Clearable="true" ShowProgressIndicator="true" Label="Client"
+                                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                            <NoItemsTemplate>
+                                <MudText Align="Align.Center" Class="px-4 py-1">
+                                    Please enter your search text
+                                </MudText>
+                            </NoItemsTemplate>
+                        </MudAutocomplete>
+                    </MudItem>
+                    @if (SelectedClient != null)
+                    {
+                        <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                            <MudSelect T="CatalogueDto" @bind-Value="selectedCatalogue" Label="Catalogue" Placeholder="Client Catalogues">
+                                <MudSelectItem T="CatalogueDto">All</MudSelectItem>
+                                @foreach (var item in SelectedClient.Catalogues)
+                                {
+                                    <MudSelectItem T="CatalogueDto" Value="@item">@item.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                    }
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="CountryDto" Placeholder="Search Country" @bind-Value="SelectedCountry" @ref="_countryAutoComplete"
+                                         SearchFunc="@CountrySearch" ToStringFunc="@CountryDisplayFormat" Clearable="true" ShowProgressIndicator="true"
+                                         ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500" Label="Country"
+                                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                            <NoItemsTemplate>
+                                <MudText Align="Align.Center" Class="px-4 py-1">
+                                    Please enter your search text
+                                </MudText>
+                            </NoItemsTemplate>
+                        </MudAutocomplete>
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudNumericField Class="mt-0 mb-0 pt-0 pb-0" T="int?" MaxLength="4" @bind-Value="@productionYear" Label="Production Year" Placeholder="Production Year" Min="1900" Max="3099" OnKeyUp="@Enter" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <WorksTypePicker @ref="_worksTypePicker" Label="Works Type" @bind-Value="_worksTypeId" Class="mt-0 mb-0 pt-0 pb-0" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudDatePicker DateFormat="dd/MM/yyyy" Clearable="true" @bind-Date="_createFromDate" Label="Created From" @ref="@_createFromPicker" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudDatePicker DateFormat="dd/MM/yyyy" Clearable="true" @bind-Date="_createToDate" Label="Created To" @ref="@_createToPicker" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="CountryDto" Placeholder="Search Rights Country" @bind-Value="SelectedRightsCountry" @ref="_rightsCountryAutoComplete"
+                                         SearchFunc="@CountrySearch" ToStringFunc="@CountryDisplayFormat" Label="Rights Country" Clearable="true" ShowProgressIndicator="true"
+                                         ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                            <NoItemsTemplate>
+                                <MudText Align="Align.Center" Class="px-4 py-1">
+                                    Please enter your search text
+                                </MudText>
+                            </NoItemsTemplate>
+                        </MudAutocomplete>
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudTextField T="string" @bind-Value="@searchStringAgicoaRef" Label="Agicoa Reference" Placeholder="Agicoa Reference" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyUp="@Enter" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudTextField T="string" @bind-Value="@searchStringCompactRef" Label="Compact Reference" Placeholder="Compact Reference" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" De OnKeyUp="@Enter" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudTextField T="string" @bind-Value="@searchStringAS400" Label="AS400 Reference" Placeholder="AS400 Reference" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyUp="@Enter" />
+                    </MudItem>
+                    <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
+                        <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="CompanyDto" Placeholder="Search Production Company" @bind-Value="_productionCompany" @ref="_productionCompanyAutoComplete"
+                                         SearchFunc="@CompanySearch" ToStringFunc="@CompanyDisplayFormat" Label="Production Company" Clearable="true" ShowProgressIndicator="true"
+                                         ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true" DebounceInterval="500"
+                                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary">
+                            <NoItemsTemplate>
+                                <MudText Align="Align.Center" Class="px-4 py-1">
+                                    Please enter your search text
+                                </MudText>
+                            </NoItemsTemplate>
+                        </MudAutocomplete>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudSwitch Class="mt-3" @ref="_noRightsSwitch" T="bool" @bind-Checked="_hasNoRights" Label="Has No rights" Color="Color.Error" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <div class="d-flex align-content-start justify-center flex-wrap flex-grow-1 gap-4">
+                            <MudButton StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Disabled="IsBusy" OnClick="InitiateSearch">Search</MudButton>
+                            <MudButton StartIcon="@Icons.Material.Filled.Clear" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small" OnClick="onFilterClear">Reset</MudButton>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+        <MudItem xs="12">
+            <MudGrid Spacing="2">
+                <MudItem xs="12">
+                    @if (_showInfoBanner)
+                    {
+                        <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center" ShowCloseIcon="true" CloseIconClicked="(() => CloseInfoBanner(true))">
+                            <strong>Did you know?</strong> You can now include / exclude <i>Alternate Titles</i> from the search.
+                        </MudAlert>
+                    }
+                </MudItem>
+                <MudItem xs="6">
+                    <MudButton StartIcon="@Icons.Material.Filled.FileDownload" Variant="Variant.Filled" Color="Color.Tertiary" Size="Size.Medium" Class="ml-auto mt-2" OnClick="onExportResults">Export</MudButton>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudSelect T="WorksListColumn?" Label="Display Columns" MultiSelection="true" Class="removeUpperCasing"
+                               SelectedValues="columnsVisible" SelectedValuesChanged="UpdateWorksColumnsInSession" SelectAll="true"
+                               SelectAllText="Select all columns" Placeholder="Select Columns"
+                               @ref="_worksListColumnSelect">
+                        @foreach (WorksListColumn? value in Enum.GetValues(typeof(WorksListColumn)))
+                        {
+                            <MudSelectItem T="WorksListColumn?" Value="value">
+                                <MudText Class="removeUpperCasing">@value.ToString()</MudText>
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+    </MudItem>
+
+    <MudDivider />
+    <MudItem xs="12">
+        <MudDataGrid T="WorksDto" Items="" ServerData="ServerReload" Hover="true" @ref="_grid" Loading="@IsBusy" T="WorksDto" HorizontalScrollbar="true" Bordered="true"
+                  MultiSelection="true" @bind-SelectedItems="selectedItems" RowsPerPageChanged="UpdateRowsPerPageInSession" Dense="true" OnRowClick="@RowDoubleClicked" RowClass="cursor-pointer"
+                  AllowUnsorted="false" FixedHeader="@_fixedHeader" FixedFooter="@_fixedFooter" Height="@(_fixedHeader || _fixedFooter ?"600px":"")" Virtualize="true" Striped="true">
+            <Columns>
+                <PropertyColumn>
+                    <MudIconButton Icon="@Icons.Material.Filled.CopyAll" Color="Color.Primary" Title="Copy" OnClick="@OpenCopyDrawer">Copy All</MudIconButton>
+                </PropertyColumn>
+                <PropertyColumn>
+                    <MudTableSortLabel SortLabel="Discriminator" SortBy="new Func<WorksDto, object>(x => x.Discriminator)">Type</MudTableSortLabel>
+                </PropertyColumn>
+                <PropertyColumn>
+                    <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="DisplayTitle" SortBy="@SortTitlesByName">Title</MudTableSortLabel>
+                </PropertyColumn>
+                @*<MudTh>
+                <MudTableSortLabel SortLabel="Titles.First(t=> t.TitleType == TitleType.MainAlternative || t.TitleType == TitleType.EpisodeAlternative).Title" SortBy="@SortAltTitlesByName">Alt Title</MudTableSortLabel>
+                </MudTh> *@
+                <PropertyColumn>
+                    <MudTableSortLabel SortLabel="Clients.First().ClientName" SortBy="@SortClientsByName">Client</MudTableSortLabel>
+                </PropertyColumn>
+                <PropertyColumn>
+                    <MudTableSortLabel SortLabel="Catalogues.First().Name" SortBy="@SortCataloguesByName">Catalogue</MudTableSortLabel>
+                </PropertyColumn>
+
+                @if (columnsVisible.Contains(WorksListColumn.As400Ref))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="AS400RefNo" SortBy="new Func<WorksDto, object>(x => x.AS400RefNo)">AS400 Ref</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Actor))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="Actors.FirstOrDefault().FirstName" SortBy="@SortActorsByName">Actor</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Director))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="Directors.FirstOrDefault().FirstName" SortBy="@SortDirectorsByName">Director</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Producer))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="Producers.FirstOrDefault().FirstName" SortBy="@SortProducersByName">Producer</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.ScreenWriter))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="ScreenWriters.FirstOrDefault().FirstName" SortBy="@SortScreenWritersByName">Screen Writer</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.AgicoaRef))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="AgicoaWorksReference" SortBy="new Func<WorksDto, object>(x => x.AgicoaWorksReference)">Agicoa Works Reference</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.ProductionYear))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="ProductionYear" SortBy="new Func<WorksDto, object>(x => x.ProductionYear)">Production Year</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Status))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="WorksStatus" SortBy="new Func<WorksDto, object>(x => x.WorksStatus)">Status</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Nationality))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="Nationality" SortBy="new Func<WorksDto, object>(x => x.Nationality)">Nationality</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.CompactRef))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="CompactRef" SortBy="new Func<WorksDto, object>(x => x.CompactRef)">Compact Ref</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.WorkType))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="WorksTypeId" SortBy="new Func<WorksDto, object>(x => x.WorksTypeId)">Work Type</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.WorksSubType))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="WorksSubTypeId" SortBy="new Func<WorksDto, object>(x => x.WorksSubTypeId)">Works Sub Type</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Duration))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="DurationMinutes" SortBy="new Func<WorksDto, object>(x => x.DurationMinutes)">Duration</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Isan))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="Isan" SortBy="new Func<WorksDto, object>(x => x.Isan)">Isan</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Genre))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="Genre" SortBy="new Func<WorksDto, object>(x => x.Genre)">Genre</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.DateCreated))
+                {
+                    <PropertyColumn>
+                        <MudTableSortLabel SortLabel="CreationDate" SortBy="new Func<WorksDto, object>(x => x.CreationDate)">Date Created</MudTableSortLabel>
+                    </PropertyColumn>
+                }
+                <PropertyColumn>Edit</PropertyColumn>
+                <PropertyColumn StickyRight="true">Rights</PropertyColumn>
+            </Columns>
+            <TemplateColumn>
+                <MudTd DataLabel="Edit">
+                    <MudNavLink Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href="@string.Format("WorksDetail/{0}/{1}", context.Discriminator, context.Id)" Title="@context.Id"></MudNavLink>
+                </MudTd>
+                <MudTd DataLabel="Type">
+                    @switch (context.Discriminator)
+                    {
+                        case "StandAlone":
+                            <MudIcon Color="Color.Primary" Icon="@Icons.Material.Filled.Man" Title="StandAlone" />
+                            break;
+                        case "Episode":
+                            <MudIcon Color="Color.Warning" Icon="@Icons.Material.Filled.Theaters" Title="Episode" />
+                            break;
+                        case "Season":
+                            <MudIcon Color="Color.Success" Icon="@Icons.Material.Filled.WbSunny" Title="Season" />
+                            break;
+                        case "Series":
+                            <MudIcon Color="Color.Secondary" Icon="@Icons.Material.Filled.AutoAwesomeMotion" Title="Series" />
+                            break;
+                        default:
+                            <span> @context.Discriminator</span>
+                            break;
+                    }
+                </MudTd>
+
+                <MudTd DataLabel="Title">
+                    @if (searchString != null && context.DisplayTitle != null)
+                    {
+                        @if (context.DisplayTitleType == TitleType.Main)
+                        {
+                            <strong>@context.DisplayTitle</strong>
+                        }
+                        else
+                        {
+                            @context.DisplayTitle
+                        }       
+                    }
+                    else
+                    {
+                        @context.Titles.FirstOrDefault(t => t.TitleType == TitleType.Main || t.TitleType == TitleType.Episode)?.Title
+                    }
+                </MudTd>
+
+                <MudTd DataLabel="Client">
+                    @string.Join("<br/>", context?.Clients?.Select(c => c.ClientName) ?? new[]{"Not Set"})
+                </MudTd>
+                <MudTd DataLabel="Catalogue">
+                    @string.Join("<br/>", context?.Catalogues?.Select(c => c.Name) ?? new[]{"Not Set"})
+                </MudTd>
+                @if (columnsVisible.Contains(WorksListColumn.As400Ref))
+                {
+                    <MudTd DataLabel="As400Ref">@context.AS400RefNo</MudTd>
+                }
+                @if (!IsBusy)
+                {
+                    @if (columnsVisible.Contains(WorksListColumn.Actor))
+                    {
+                        <MudTd DataLabel="Actor">
+                            @string.Join(", ", context.Actors.Select(a => a.ToString()))
+                        </MudTd>
+                    }
+                    @if (columnsVisible.Contains(WorksListColumn.Director))
+                    {
+                        <MudTd DataLabel="Director">
+                            @string.Join(", ", context.Directors.Select(a => a.ToString()))
+                        </MudTd>
+                    }
+                    @if (columnsVisible.Contains(WorksListColumn.Producer))
+                    {
+                        <MudTd DataLabel="Producer">
+                            @string.Join(", ", context.Producers.Select(a => a.ToString()))
+                        </MudTd>
+                    }
+                    @if (columnsVisible.Contains(WorksListColumn.ScreenWriter))
+                    {
+                        <MudTd DataLabel="ScreenWriter">
+                            @string.Join(", ", context.ScreenWriters.Select(a => a.ToString()))
+                        </MudTd>
+                    }
+                }
+                @if (columnsVisible.Contains(WorksListColumn.AgicoaRef))
+                {
+                    <MudTd DataLabel="AgicoaWorksReference">@context.AgicoaWorksReference</MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.ProductionYear))
+                {
+                    <MudTd DataLabel="ProductionYear">@context.ProductionYear</MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Status))
+                {
+                    <MudTd DataLabel="WorksStatus">@context.WorksStatus</MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Nationality))
+                {
+                    <MudTd DataLabel="Nationality">@context.Nationality</MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.CompactRef))
+                {
+                    <MudTd DataLabel="CompactRef">@context.CompactRef</MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.WorkType))
+                {
+                    <MudTd DataLabel="WorksType">
+                        @if (@context.WorksType != null)
+                        {
+                            @context.WorksType.Name
+                        }
+                    </MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.WorksSubType))
+                {
+                    <MudTd DataLabel="WorksSubType">
+                        @if (@context.WorksSubType != null)
+                        {
+                            @context.WorksSubType.Name
+                        }
+                    </MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Duration))
+                {
+                    <MudTd DataLabel="Duration">
+                        @if (@context.DurationMinutes != null)
+                        {
+                            @context.DurationMinutes
+                        }
+                    </MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Isan))
+                {
+                    <MudTd DataLabel="Isan">@context.Isan</MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.Genre))
+                {
+                    <MudTd DataLabel="Genre">
+                        @if (@context.Genre != null)
+                        {
+                            @context.Genre.Name
+                        }
+                    </MudTd>
+                }
+                @if (columnsVisible.Contains(WorksListColumn.DateCreated))
+                {
+                    <MudTd DataLabel="CreationDate">@context.CreationDate</MudTd>
+                }
+                <MudTd DataLabel="Edit">
+                    <MudNavLink Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href="@string.Format("WorksDetail/{0}/{1}", context.Discriminator, context.Id)"></MudNavLink>
+                    @*<MudIconButton Icon="@Icons.Filled.Edit" Color="Color.Primary" aria-label="edit" OnClick="() => OpenWorksDrawer(context.Id, (Discriminator)Enum.Parse(typeof(Discriminator), context.Discriminator))"></MudIconButton>*@
+                </MudTd>
+                <MudTd DataLabel="Rights">
+                    <MudIconButton Icon="@Icons.Material.Filled.List" Color="Color.Primary" aria-label="edit" OnClick="() => OpenRightsForm(context.Id)"></MudIconButton>
+                </MudTd>
+            </TemplateColumn>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="@PageSizeOptions" />
+            </PagerContent>
+        </MudDataGrid>
+    </MudItem>
+    <MudItem xs="12">
+        <div class="d-flex flex-wrap m-4">
+            <MudSwitch @bind-Checked="@_fixedHeader" Color="Color.Primary">Fixed Header</MudSwitch>
+            <MudSwitch @bind-Checked="@_fixedFooter" Color="Color.Primary">Fixed Footer</MudSwitch>
+        </div>
+    </MudItem>
+    <MudDivider />
+    <WorksLegend />
+</MudGrid>
+<br />
+<EventConsole @ref="Console" />

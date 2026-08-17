@@ -1,0 +1,125 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <SpaRoot>ClientApp\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <SpaProxyServerUrl>http://localhost:44462</SpaProxyServerUrl>
+    <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>4d00568e-a5eb-47a5-b7c8-a2cec7eaceb2</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Azure.Storage.Files.Shares" Version="12.11.0" />
+	  <PackageReference Include="Azure.Storage.Queues" Version="12.11.1" />
+	  <PackageReference Include="EntityFrameworkCore.NCache" Version="5.3.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.WebApiCompatShim" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.8" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
+    <PackageReference Include="Azure.Identity" Version="1.6.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.1" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Azure" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.2" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Content Remove="$(SpaRoot)**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <None Remove="ClientApp\src\pages\" />
+    <None Remove="ClientApp\src\pages\Client\" />
+    <None Remove="ClientApp\src\pages\Client %28copy%29\" />
+    <None Remove="ClientApp\src\pages\Work\BaseWork.js" />
+    <None Remove="ClientApp\src\pages\Work\BaseWork.js" />
+    <None Remove="ClientApp\src\pages\Work\Details.js" />
+    <None Remove="ClientApp\src\pages\Work\Details.js" />
+    <None Remove="ClientApp\src\pages\Work\Season\SeasonDetails.js" />
+    <None Remove="ClientApp\src\pages\Work\Season\SeasonDetails.js" />
+    <None Remove="ClientApp\src\pages\Work\Season\SeasonPage.js" />
+    <None Remove="ClientApp\src\pages\Work\Season\SeasonPage.js" />
+    <None Remove="ClientApp\src\pages\Work\Season\seasonColumns.js" />
+    <None Remove="ClientApp\src\pages\Work\Season\seasonColumns.js" />
+    <None Remove="ClientApp\src\pages\Work\Seasons.js" />
+    <None Remove="ClientApp\src\pages\Work\Seasons.js" />
+    <None Remove="ClientApp\src\pages\Work\Series\SeriesDetails.js" />
+    <None Remove="ClientApp\src\pages\Work\Series\SeriesDetails.js" />
+    <None Remove="ClientApp\src\pages\Work\Series\SeriesPage.js" />
+    <None Remove="ClientApp\src\pages\Work\Series\SeriesPage.js" />
+    <None Remove="ClientApp\src\pages\Work\Series\seriesColumns.js" />
+    <None Remove="ClientApp\src\pages\Work\Series\seriesColumns.js" />
+    <None Remove="ClientApp\src\pages\Work\Titles.js" />
+    <None Remove="ClientApp\src\pages\Work\Titles.js" />
+    <None Remove="ClientApp\src\pages\Work\baseWorkDefault.js" />
+    <None Remove="ClientApp\src\pages\Work\baseWorkDefault.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Oscar.Core\Oscar.Core.csproj" />
+    <ProjectReference Include="..\Oscar.Data\Oscar.Data.csproj" />
+    <ProjectReference Include="..\Oscar.DI\Oscar.DI.csproj" />
+    <ProjectReference Include="..\Oscar.Infrastructure\Oscar.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\src\pages\" />
+    <Folder Include="ClientApp\src\pages\Client\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="client.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="config.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="tls.ncconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)build\**" />
+      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+</Project>

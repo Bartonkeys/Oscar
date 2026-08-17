@@ -1,0 +1,65 @@
+﻿@page "/reportSearch"
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+<PageTitle>Report Search</PageTitle>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="@(async () => OpenCreateReportForm())">Create Report</MudButton>
+
+<MudTable Dense="true" ServerData="@(new Func<TableState, Task<TableData<ReportDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Reports</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(OnSearch)" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="Id" SortBy="new Func<ReportDto, object>(x => x.Id)">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="ReportName" SortBy="new Func<ReportDto, object>(x => x.ReportName)">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="BaseEntityName" SortBy="new Func<ReportDto, object>(x => x.BaseEntityName)">Base Entity</MudTableSortLabel></MudTh>
+        <MudTh>Report Fields</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Date</MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="ReportName">@context.ReportName</MudTd>
+        <MudTd DataLabel="BaseEntityName">@context.BaseEntityName</MudTd>
+        <MudTd DataLabel="ReportFields">@String.Join(", ", context.ReportFields.Select(s => s.ReportFieldName))</MudTd>
+        <MudTd DataLabel="Status">@context.ReportStatus.ToString()</MudTd>
+        <MudTd DataLabel="Status">
+            <MudChip Label="true" Color="@GetColour(context.ReportStatus)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.ReportStatus.ToName()</MudChip>
+        </MudTd>
+        <MudTd DataLabel="Date">@context.LastRunDate</MudTd>
+        <MudTd DataLabel="Link">
+            <MudTd DataLabel="Link">
+                @if (context.ReportStatus == ReportStatus.Ready)
+                {
+                    <MudLink Href="@context.ReportUrl">
+                        @if (!string.IsNullOrEmpty(context.ReportUrl))
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Download" Color="Color.Primary" />
+                        }
+                    </MudLink>
+                }
+            </MudTd>
+        </MudTd>
+        <MudTd DataLabel="ReportActions">
+            <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => RunReport(context)"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => EditReport(context)"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Size="Size.Small" aria-label="delete" OnClick="() => DeleteReport(context)"></MudIconButton>
+        </MudTd>
+
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

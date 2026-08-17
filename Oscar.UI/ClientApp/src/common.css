@@ -1,0 +1,326 @@
+.flexRow {
+    display: flex;
+}
+
+.flexWrap {
+    flex-wrap: wrap;
+}
+
+.flexCol {
+    display: flex;
+    flex-direction: column;
+}
+
+.flexGrow {
+    flex: 1 0 0;
+}
+
+.flexGrow2 {
+    flex: 2 0 0;
+}
+
+.flexCentre {
+    align-items: center;
+}
+
+.flexApart {
+    justify-content: space-between;
+}
+
+.flexMiddle {
+    justify-content: center;
+}
+
+.flexEnd {
+    justify-content: flex-end;
+}
+
+.flexRight {
+    margin-left: auto;
+}
+
+.inputItem {
+    padding-top: 5px;
+    margin-left: 10px;
+    margin-bottom: 15px;
+    flex: 1 0 0;
+    text-align: left;
+}
+
+.inputItem.dateItem {
+     padding-top: 2px;   
+}
+   
+.raisedContainer {
+    display: flex;
+    box-shadow: -5px 5px 15px grey;
+    margin: 15px;
+    margin-bottom: 0;
+    border-radius: 5px;
+    padding: 15px;
+    flex-direction: column;
+    background-color: white;
+}
+
+.raisedContainerSmall {
+    display: flex;
+    box-shadow: -2px 2px 5px grey;
+    border-radius: 4px;
+    flex-direction: column;
+    background-color: white;
+}
+
+h4 {
+    font-size: 16px;
+    font-weight: lighter;
+    color: grey;
+    letter-spacing: -1px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: normal;
+    color: grey;
+    letter-spacing: -1px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 25px;
+    font-weight: lighter;
+    color: grey;
+    letter-spacing: -2px;
+}
+
+.moveRight {
+    margin-left: auto;
+}
+
+.moveLeft {
+    margin-right: auto;
+}
+
+.moveBottom {
+    margin-top: auto;
+}
+
+.warning {
+    font-size: small;
+    color: red;
+}
+
+.h-0 {
+    height: 0;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.anchor {
+    position: relative;
+}
+
+.mt-1 {
+    margin-top: 5px;
+}
+
+.ml-1 {
+    margin-left: 5px;
+}
+
+.ml-2 {
+    margin-left: 10px;
+}
+
+.ml-3 {
+    margin-left: 15px;
+}
+
+.mr-1 {
+    margin-right: 5px;
+}
+
+.mr-2 {
+    margin-right: 10px;
+}
+
+.mr-3 {
+    margin-right: 15px;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.mb-1 {
+    margin-bottom: 5px;
+}
+
+.mb-2 {
+    margin-bottom: 10px;
+}
+
+.mb-3 {
+    margin-bottom: 15px;
+}
+
+.m-1 {
+    margin: 5px;
+}
+
+.m-2 {
+    margin: 10px;
+}
+
+.m-3 {
+    margin: 15px;
+}
+
+.p-1 {
+    padding: 5px;
+}
+
+.p-2 {
+    padding: 10px;
+}
+
+.p-3 {
+    padding: 15px;
+}
+
+.pr-3 {
+    padding-right: 15px;
+}
+
+.pl-3 {
+    padding-left: 15px;
+}
+
+.minorText {
+    font-size: 14px;
+    color: grey;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.absoluteRight {
+    right: 0;
+}
+
+.absoluteLeft {
+    left: 0;
+}
+
+.absoluteVCentre {
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.scrollVertical {
+    overflow-y: auto;
+}
+
+.numberCircle {
+    background-color: blue;
+    border-radius: 50%;
+}
+
+.mritLogo {
+    height: 64px;
+    cursor: pointer;
+}
+
+.textLeft {
+    text-align: left;
+}
+
+.linkText {
+    font-size: 18px;
+    color: rgb(82, 81, 81);
+    letter-spacing: -1px;
+    cursor: pointer;
+}
+
+.justifyText {
+    text-align: justify;
+}
+
+.badge {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}
+
+.badge.green {
+    background-color: green;
+}
+
+.badge.orange {
+    background-color: orange;
+}
+
+.badge.red {
+    background-color: red;
+}
+
+.matchPill {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border: 1px solid grey;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    border-right: none;
+    cursor: default;
+}
+
+.matchPill.complete {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-right: 1px solid grey;
+}
+
+.separator {
+    width: calc(100% - 10px);
+    margin-top: 10px;
+    height: 1px;
+    background-color: lightgray;
+}
+
+.headBlock {
+    width: 300px;
+    height: 200px;
+    margin-top: -15px;
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-bottom: 20px;
+
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.headBlock.affinity {
+    background-color: green;
+}
+
+.headBlock.mrit {
+    background-color: blue;
+}
+
+.headBlock img {
+    height: 50%;
+}

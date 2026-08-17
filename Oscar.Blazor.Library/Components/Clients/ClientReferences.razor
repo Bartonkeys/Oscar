@@ -1,0 +1,10 @@
+﻿@using System.Linq
+@inherits Oscar.Blazor.Library.Common.WorksComponentBase
+
+<MudExpansionPanel Text="Society References">
+    <MudTextField @bind-Value="Client.AgicoaClientRef" For="@(() => Client.AgicoaClientRef)" Label="Agicoa Account Number" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+    <MudTextField @bind-Value="Client.CCCClientsId" For="@(() => Client.CCCClientsId)" Label="CCC Clients Id" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+    <MudTextField @bind-Value="Client.CRCClientsId" For="@(() => Client.CRCClientsId)" Label="CRC Clients Id" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+    <MudTextField @bind-Value="Client.ScreenRightsPortfolioId" For="@(() => Client.ScreenRightsPortfolioId)" Label="Screenrights Portolio Id" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+    <MudTextField @bind-Value="Client.MPAAClaimantsId" For="@(() => Client.MPAAClaimantsId)" Label="MPAA Claimants Id" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+</MudExpansionPanel>

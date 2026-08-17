@@ -1,0 +1,57 @@
+﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+
+@if (WorksToCopy != null)
+{
+    <MudCard>
+        <MudCardContent>
+           <MudTable Items="WorksToCopy"  @ref="table" RowsPerPage="100" Dense="true" >
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">@ActionText</MudText>
+                    <MudSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Type</MudTh>
+                    <MudTh></MudTh>
+                    <MudTh>Production Year</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Id">
+                        @switch (context.Discriminator)
+                        {
+                            case "StandAlone":
+                                <MudIcon Color="Color.Primary"  Icon="@Icons.Material.Filled.Man" Title="StandAlone" />
+                                break;
+                            case "Episode":
+                                <MudIcon  Color="Color.Warning" Icon="@Icons.Material.Filled.Theaters" Title="Episode" />
+                                break;
+                            case "Season":
+                                <MudIcon Color="Color.Success"  Icon="@Icons.Material.Filled.WbSunny" Title="Season" />
+                                break;
+                            case "Series":
+                                <MudIcon  Color="Color.Secondary"  Icon="@Icons.Material.Filled.AutoAwesomeMotion" Title="Series" />
+                                break;
+                            default:
+                                <span> @context.Discriminator</span>
+                                break;
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="Title">@context.Titles.First().Title</MudTd>
+                    <MudTd DataLabel="ProductionYear">@context.ProductionYear</MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText>No matching records found</MudText>
+                </NoRecordsContent>
+                <LoadingContent>
+                    <MudText>Loading...</MudText>
+                </LoadingContent>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        </MudCardContent>
+    </MudCard>
+}
+else
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+}

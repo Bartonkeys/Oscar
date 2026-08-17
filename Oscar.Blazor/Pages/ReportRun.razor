@@ -1,0 +1,120 @@
+﻿@page "/reportRun"
+@page "/reportRun/{ReportId:int?}"
+
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Texnomic.Blazor.JsonViewer
+
+
+<PageTitle>Run a Report</PageTitle>
+
+<MudForm @ref="@form">
+
+    <MudGrid>
+        <MudItem xs="6">
+            <MudSelect @bind-Value="SelectedReport" Label="Choose a report to run:" HelperText="Choose a Report" OpenIcon="@Icons.Material.Filled.Pages" AdornmentColor="Color.Secondary" IconSize="Size.Small" Dense="true" Margin="Margin.Dense">
+                @foreach (var report in ReportList)
+                {
+                    <MudSelectItem Value="@report">@(report.ReportName + " (Base entity: " + report.BaseEntityName + ")") </MudSelectItem>
+
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="4">
+            <MudSelect @bind-Value="SelectedWorksString" Label="Select a type of Works:" HelperText="Choose a Works type" OpenIcon="@Icons.Material.Filled.Work" AdornmentColor="Color.Secondary" IconSize="Size.Small" Dense="true" Margin="Margin.Dense">
+                @foreach (var worksType in WorksTypeStringList)
+                {
+                    <MudSelectItem Value="@worksType">@worksType</MudSelectItem>
+                }
+
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="2">
+            <MudSwitch @bind-Checked="@_showFilters" Label="Show Filters" Color="Color.Primary" />
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid hidden="@(!_showFilters)">
+        <MudItem xs="6">
+            <MudAutocomplete Class="mt-0 mb-0 pt-0 pb-0" T="ClientDto" Placeholder="Client" @bind-Value="@selectedClient" Required="true" RequiredError="Please select a Client"
+                             SearchFunc="@SearchClients" ToStringFunc="@(e => e == null ? null : $"{e.ClientName} ({e.Status})")" @ref="clientSelect">
+                <MoreItemsTemplate>
+                    <MudText Align="Align.Center" Class="px-4 py-1">
+                        Only the first 10 items are shown
+                    </MudText>
+                </MoreItemsTemplate>
+            </MudAutocomplete>
+        </MudItem>
+        <MudItem xs="6">
+            <MudTextField @bind-Value="WorksTitleSearchText" T="string" Label="Works Title" HelperText="Type any part of the works title to filter the report" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudTextField @bind-Value="ActorFirstNameText" T="string" Label="Actor First Name" HelperText="Type any part of the actor first name to filter the report" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudTextField @bind-Value="ActorLastNameText" T="string" Label="Actor Last Name" HelperText="Type any part of the actor last name to filter the repor" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudTextField @bind-Value="DirectorFirstNameText" T="string" Label="Director First Name" HelperText="Type any part of the director first name to filter the report" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudTextField @bind-Value="DirectorLastNameText" T="string" Label="Director Last Name" HelperText="Type any part of the director last name to filter the report" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudTextField @bind-Value="ProducerFirstNameText" T="string" Label="Producer First Name" HelperText="Type any part of the producer first name to filter the report" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudTextField @bind-Value="ProducerLastNameText" T="string" Label="Producer Last Name" HelperText="Type any part of the producer last name to filter the report" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudTextField @bind-Value="ScreenwriterFirstNameText" T="string" Label="Screenwriter First Name" HelperText="Type any part of the screenwriter first name to filter the report" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudTextField @bind-Value="ScreenwriterLastNameText" T="string" Label="Screenwriter Last Name" HelperText="Type any part of the screenwriter last name to filter the report" HelperTextOnFocus="true" Variant="Variant.Text" />
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudSelect ValueChanged="@( (string statusText) => SelectedStatus = (Status)Enum.Parse(typeof(Status), statusText) )" HelperText="Select the Client Status if required" OpenIcon="@Icons.Material.Filled.Check" AdornmentColor="Color.Secondary" IconSize="Size.Small" Dense="true" Margin="Margin.Dense">
+
+                @if (SelectedStatus is null)
+                {
+                    <MudSelectItem T="string" selected disabled>Choose a Status</MudSelectItem>
+                }
+                @foreach (var item in Enum.GetNames(typeof(Status)))
+                {
+                    <MudSelectItem T="string" value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="6">
+            <MudSelect ValueChanged="@( (string gradeText) => SelectedGrade = (ClientGrade)Enum.Parse(typeof(ClientGrade), gradeText) )" HelperText="Select the Client Grade if required" OpenIcon="@Icons.Material.Filled.Grade" AdornmentColor="Color.Secondary" IconSize="Size.Small" Dense="true" Margin="Margin.Dense">
+
+                @if (SelectedGrade is null)
+                {
+                    <MudSelectItem T="string" selected disabled>Choose a Grade</MudSelectItem>
+                }
+                @foreach (var item in Enum.GetNames(typeof(ClientGrade)))
+                {
+                    <MudSelectItem T="string" value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+    </MudGrid>
+
+    <MudButton @onclick="ResetForm" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" disabled=@_isDisabled>Reset Form</MudButton>
+    <MudButton @onclick="HandleValidSubmit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" disabled=@_isDisabled>Run Report</MudButton>
+
+    @if (_loading)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+
+</MudForm>

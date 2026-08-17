@@ -1,0 +1,80 @@
+@inherits Oscar.Blazor.Library.Common.OscarComponentBase
+@using Oscar.Core.Enums
+@using Oscar.Blazor.Library.Components.Clients
+@using Oscar.Blazor.Library.Components.Common
+
+@if (_society != null)
+{
+    <MudText Typo="Typo.h6" Height="5%">
+        <MudIcon Color="Color.Primary" Icon="@Icons.Material.Filled.Man" Title="Create New Client"/>
+        @if (_society.Id == 0)
+        {
+            <MudText> Add New Society</MudText>
+        }
+        else
+        {
+            <MudText> Edit Society</MudText>
+        }
+
+    </MudText>
+
+    <MudCard Height="90%" Class="overflow-auto pb-4">
+        <MudForm Model="@_society" @ref="@form" ValidationDelay="0" OnInvalidSubmit="@HandleInvalidSubmit()">
+
+            <MudTextField @bind-Value="_society.Name" For="@(() => _society.Name)" Label="Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4" Required="true" RequiredError="Society name is required!"></MudTextField>
+            <MudTextField @bind-Value="_society.ExpandedName" For="@(() => _society.ExpandedName)" Label="Expanded Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            <MudTextField @bind-Value="_society.GeneralNotes" For="@(() => _society.GeneralNotes)" Label="General Notes" Lines="5" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            <MudCheckBox @bind-Checked="_society.IsClientRegistration" Label="Is Client Registration?"></MudCheckBox>
+            <MudTextField @bind-Value="_society.ClientRegistrationNotes" For="@(() => _society.ClientRegistrationNotes)" Label="Client Registration Notes" Lines="2" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            <MudCheckBox @bind-Checked="_society.IsWorksRegistration" Label="Is Works Registration?"></MudCheckBox>
+            <MudTextField @bind-Value="_society.WorksRegistrationNotes" For="@(() => _society.WorksRegistrationNotes)" Label="Work Registration Notes" Lines="2" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            <MudTextField @bind-Value="_society.Website" For="@(() => _society.Website)" Label="Website" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+            
+            @if (_society.Id == 0 || !_society.Addresses.Any())
+            {
+                <MudTextField @bind-Value="newAddress.AddressLine1" For="@(() => newAddress.AddressLine1)" Label="Address Line 1" Variant="Variant.Text" Class="pl-4 pt-2 pr-4 removeUpperCasing"></MudTextField>
+                <MudTextField @bind-Value="newAddress.AddressLine2" For="@(() => newAddress.AddressLine2)" Label="Address Line 2" Variant="Variant.Text" Class="pl-4 pt-2 pr-4 removeUpperCasing"></MudTextField>
+                <MudTextField @bind-Value="newAddress.AddressLine3" For="@(() => newAddress.AddressLine3)" Label="Address Line 3" Variant="Variant.Text" Class="pl-4 pt-2 pr-4 removeUpperCasing"></MudTextField>
+                <MudTextField @bind-Value="newAddress.AddressLine4" For="@(() => newAddress.AddressLine4)" Label="Address Line 4" Variant="Variant.Text" Class="pl-4 pt-2 pr-4 removeUpperCasing"></MudTextField>
+                <MudTextField @bind-Value="newAddress.PostZipCode" For="@(() => newAddress.PostZipCode)" Label="Post/Zip Code" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+                <CountryPicker @bind-Value="newAddress.Country" For="@(() => newAddress.Country)" Label="Country" Class="pl-4 pt-2 pr-4"></CountryPicker>
+            }
+            else
+            {
+                @foreach (var address in _society.Addresses)
+                {
+                    <MudTextField @bind-Value="address.AddressLine1" For="@(() => address.AddressLine1)" Label="Address Line 1" Variant="Variant.Text" Class="pl-4 pt-2 pr-4 removeUpperCasing"></MudTextField>
+                    <MudTextField @bind-Value="address.AddressLine2" For="@(() => address.AddressLine2)" Label="Address Line 2" Variant="Variant.Text" Class="pl-4 pt-2 pr-4 removeUpperCasing"></MudTextField>
+                    <MudTextField @bind-Value="address.AddressLine3" For="@(() => address.AddressLine3)" Label="Address Line 3" Variant="Variant.Text" Class="pl-4 pt-2 pr-4 removeUpperCasing"></MudTextField>
+                    <MudTextField @bind-Value="address.AddressLine4" For="@(() => address.AddressLine4)" Label="Address Line 4" Variant="Variant.Text" Class="pl-4 pt-2 pr-4 removeUpperCasing"></MudTextField>
+                    <MudTextField @bind-Value="address.PostZipCode" For="@(() => address.PostZipCode)" Label="Post/Zip Code" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
+                    <CountryPicker @bind-Value="address.Country" For="@(() => address.Country)" Label="Country" Class="pl-4 pt-2 pr-4"></CountryPicker>
+                }
+            }
+            <Contacts Value="_society.Contacts"></Contacts>
+
+        </MudForm>
+    </MudCard>
+
+    <MudCardActions Height="5%">
+    @if (_society != null && _society.Id == 0)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await Create())">
+                    <MudText> Add Society</MudText>
+                </MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@(async () => await Submit())">
+                <MudText> Update Society</MudText>
+                </MudButton>
+            }
+
+    </MudCardActions>
+
+    <Processing IsProcessing="_processing"></Processing>
+}
+else
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true"/>
+}

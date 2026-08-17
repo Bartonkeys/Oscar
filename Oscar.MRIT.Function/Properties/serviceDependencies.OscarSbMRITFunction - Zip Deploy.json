@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "storage2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/compactdatastorage",
+      "type": "storage.azure",
+      "connectionId": "AzureWebJobsStorage"
+    },
+    "storage1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/oscarstoragelive",
+      "type": "storage.azure",
+      "connectionId": "oscarstorage"
+    },
+    "appInsights1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/microsoft.insights/components/OscarSB",
+      "type": "appInsights.azure",
+      "connectionId": "APPLICATIONINSIGHTS_CONNECTION_STRING"
+    }
+  }
+}
