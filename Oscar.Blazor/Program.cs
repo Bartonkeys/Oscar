@@ -12,11 +12,28 @@ using Oscar.Data.Context;
 using Microsoft.AspNetCore.Components;
 using Oscar.Blazor.Library.Shared;
 using Microsoft.AspNetCore.Http.Features;
+using Oscar.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+// Use a mock local authentication scheme in Development so the app can run without
+// access to the Azure AD tenant. Set UseMockAuth=false in appsettings.Development.json
+// to opt back into real Azure AD sign-in locally.
+var useMockAuth = builder.Environment.IsDevelopment()
+    && builder.Configuration.GetValue("UseMockAuth", true);
+
+if (useMockAuth)
+{
+    builder.Services.AddAuthentication(DevAuthenticationHandler.SchemeName)
+        .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, DevAuthenticationHandler>(
+            DevAuthenticationHandler.SchemeName, _ => { });
+}
+else
+{
+    builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+        .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+}
+
 builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = options.DefaultPolicy;

@@ -9,39 +9,43 @@ namespace Oscar.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            const string fullTextCheck = "IF SERVERPROPERTY('IsFullTextInstalled') = 1 BEGIN ";
+
             migrationBuilder.Sql(
-                sql: "CREATE FULLTEXT CATALOG oscarCatalog AS DEFAULT;",
+                sql: fullTextCheck + "CREATE FULLTEXT CATALOG oscarCatalog AS DEFAULT; END",
                 suppressTransaction: true);
 
             migrationBuilder.Sql(
-                sql: "CREATE FULLTEXT INDEX ON WorksTitle(Title) KEY INDEX PK_WorksTitle;",
+                sql: fullTextCheck + "CREATE FULLTEXT INDEX ON WorksTitle(Title) KEY INDEX PK_WorksTitle; END",
                 suppressTransaction: true);
 
             migrationBuilder.Sql(
-                sql: "CREATE FULLTEXT INDEX ON Actor(FirstName, LastName) KEY INDEX PK_Actor;",
+                sql: fullTextCheck + "CREATE FULLTEXT INDEX ON Actor(FirstName, LastName) KEY INDEX PK_Actor; END",
                 suppressTransaction: true);
 
             migrationBuilder.Sql(
-                sql: "CREATE FULLTEXT INDEX ON Director(FirstName, LastName) KEY INDEX PK_Director;",
+                sql: fullTextCheck + "CREATE FULLTEXT INDEX ON Director(FirstName, LastName) KEY INDEX PK_Director; END",
                 suppressTransaction: true);
 
             migrationBuilder.Sql(
-                sql: "CREATE FULLTEXT INDEX ON Producer(FirstName, LastName) KEY INDEX PK_Producer",
+                sql: fullTextCheck + "CREATE FULLTEXT INDEX ON Producer(FirstName, LastName) KEY INDEX PK_Producer; END",
                 suppressTransaction: true);
 
             migrationBuilder.Sql(
-                sql: "CREATE FULLTEXT INDEX ON ScreenWriter(FirstName, LastName) KEY INDEX PK_ScreenWriter;",
+                sql: fullTextCheck + "CREATE FULLTEXT INDEX ON ScreenWriter(FirstName, LastName) KEY INDEX PK_ScreenWriter; END",
                 suppressTransaction: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(sql: "DROP FULLTEXT INDEX ON Director", suppressTransaction: true);
-            migrationBuilder.Sql(sql: "DROP FULLTEXT INDEX ON Producer", suppressTransaction: true);
-            migrationBuilder.Sql(sql: "DROP FULLTEXT INDEX ON ScreenWriter", suppressTransaction: true);
-            migrationBuilder.Sql(sql: "DROP FULLTEXT INDEX ON Actor", suppressTransaction: true);
-            migrationBuilder.Sql(sql: "DROP FULLTEXT INDEX ON WorksTitle", suppressTransaction: true);
-            migrationBuilder.Sql(sql: "DROP FULLTEXT CATALOG oscarCatalog", suppressTransaction: true);
+            const string fullTextCheck = "IF SERVERPROPERTY('IsFullTextInstalled') = 1 BEGIN ";
+
+            migrationBuilder.Sql(sql: fullTextCheck + "DROP FULLTEXT INDEX ON Director; END", suppressTransaction: true);
+            migrationBuilder.Sql(sql: fullTextCheck + "DROP FULLTEXT INDEX ON Producer; END", suppressTransaction: true);
+            migrationBuilder.Sql(sql: fullTextCheck + "DROP FULLTEXT INDEX ON ScreenWriter; END", suppressTransaction: true);
+            migrationBuilder.Sql(sql: fullTextCheck + "DROP FULLTEXT INDEX ON Actor; END", suppressTransaction: true);
+            migrationBuilder.Sql(sql: fullTextCheck + "DROP FULLTEXT INDEX ON WorksTitle; END", suppressTransaction: true);
+            migrationBuilder.Sql(sql: fullTextCheck + "DROP FULLTEXT CATALOG oscarCatalog; END", suppressTransaction: true);
         }
     }
 }
