@@ -155,7 +155,7 @@
                         <MudTextField T="string" @bind-Value="@searchStringAgicoaRef" Label="Agicoa Reference" Placeholder="Agicoa Reference" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyUp="@Enter" />
                     </MudItem>
                     <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
-                        <MudTextField T="string" @bind-Value="@searchStringCompactRef" Label="Compact Reference" Placeholder="Compact Reference" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" De OnKeyUp="@Enter" />
+                        <MudTextField T="string" @bind-Value="@searchStringCompactRef" Label="Compact Reference" Placeholder="Compact Reference" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyUp="@Enter" />
                     </MudItem>
                     <MudItem xs="@_breakSize" Class="mt-0 mb-0 pt-0 pb-0">
                         <MudTextField T="string" @bind-Value="@searchStringAS400" Label="AS400 Reference" Placeholder="AS400 Reference" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" OnKeyUp="@Enter" />
@@ -216,129 +216,130 @@
 
     <MudDivider />
     <MudItem xs="12">
-        <MudDataGrid T="WorksDto" Items="" ServerData="ServerReload" Hover="true" @ref="_grid" Loading="@IsBusy" T="WorksDto" HorizontalScrollbar="true" Bordered="true"
+        <MudTable T="WorksDto" ServerData="@(new Func<TableState, Task<TableData<WorksDto>>>(ServerReload))" Hover="true" @ref="_grid" Loading="@IsBusy" HorizontalScrollbar="true" Bordered="true"
                   MultiSelection="true" @bind-SelectedItems="selectedItems" RowsPerPageChanged="UpdateRowsPerPageInSession" Dense="true" OnRowClick="@RowDoubleClicked" RowClass="cursor-pointer"
                   AllowUnsorted="false" FixedHeader="@_fixedHeader" FixedFooter="@_fixedFooter" Height="@(_fixedHeader || _fixedFooter ?"600px":"")" Virtualize="true" Striped="true">
-            <Columns>
-                <PropertyColumn>
+            <ToolBarContent>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>
                     <MudIconButton Icon="@Icons.Material.Filled.CopyAll" Color="Color.Primary" Title="Copy" OnClick="@OpenCopyDrawer">Copy All</MudIconButton>
-                </PropertyColumn>
-                <PropertyColumn>
+                </MudTh>
+                <MudTh>
                     <MudTableSortLabel SortLabel="Discriminator" SortBy="new Func<WorksDto, object>(x => x.Discriminator)">Type</MudTableSortLabel>
-                </PropertyColumn>
-                <PropertyColumn>
+                </MudTh>
+                <MudTh>
                     <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="DisplayTitle" SortBy="@SortTitlesByName">Title</MudTableSortLabel>
-                </PropertyColumn>
+                </MudTh>
                 @*<MudTh>
                 <MudTableSortLabel SortLabel="Titles.First(t=> t.TitleType == TitleType.MainAlternative || t.TitleType == TitleType.EpisodeAlternative).Title" SortBy="@SortAltTitlesByName">Alt Title</MudTableSortLabel>
                 </MudTh> *@
-                <PropertyColumn>
+                <MudTh>
                     <MudTableSortLabel SortLabel="Clients.First().ClientName" SortBy="@SortClientsByName">Client</MudTableSortLabel>
-                </PropertyColumn>
-                <PropertyColumn>
+                </MudTh>
+                <MudTh>
                     <MudTableSortLabel SortLabel="Catalogues.First().Name" SortBy="@SortCataloguesByName">Catalogue</MudTableSortLabel>
-                </PropertyColumn>
-
+                </MudTh>
                 @if (columnsVisible.Contains(WorksListColumn.As400Ref))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="AS400RefNo" SortBy="new Func<WorksDto, object>(x => x.AS400RefNo)">AS400 Ref</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.Actor))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="Actors.FirstOrDefault().FirstName" SortBy="@SortActorsByName">Actor</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.Director))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="Directors.FirstOrDefault().FirstName" SortBy="@SortDirectorsByName">Director</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.Producer))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="Producers.FirstOrDefault().FirstName" SortBy="@SortProducersByName">Producer</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.ScreenWriter))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="ScreenWriters.FirstOrDefault().FirstName" SortBy="@SortScreenWritersByName">Screen Writer</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.AgicoaRef))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="AgicoaWorksReference" SortBy="new Func<WorksDto, object>(x => x.AgicoaWorksReference)">Agicoa Works Reference</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.ProductionYear))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="ProductionYear" SortBy="new Func<WorksDto, object>(x => x.ProductionYear)">Production Year</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.Status))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="WorksStatus" SortBy="new Func<WorksDto, object>(x => x.WorksStatus)">Status</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.Nationality))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="Nationality" SortBy="new Func<WorksDto, object>(x => x.Nationality)">Nationality</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.CompactRef))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="CompactRef" SortBy="new Func<WorksDto, object>(x => x.CompactRef)">Compact Ref</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.WorkType))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="WorksTypeId" SortBy="new Func<WorksDto, object>(x => x.WorksTypeId)">Work Type</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.WorksSubType))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="WorksSubTypeId" SortBy="new Func<WorksDto, object>(x => x.WorksSubTypeId)">Works Sub Type</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.Duration))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="DurationMinutes" SortBy="new Func<WorksDto, object>(x => x.DurationMinutes)">Duration</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.Isan))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="Isan" SortBy="new Func<WorksDto, object>(x => x.Isan)">Isan</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.Genre))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="Genre" SortBy="new Func<WorksDto, object>(x => x.Genre)">Genre</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
                 @if (columnsVisible.Contains(WorksListColumn.DateCreated))
                 {
-                    <PropertyColumn>
+                    <MudTh>
                         <MudTableSortLabel SortLabel="CreationDate" SortBy="new Func<WorksDto, object>(x => x.CreationDate)">Date Created</MudTableSortLabel>
-                    </PropertyColumn>
+                    </MudTh>
                 }
-                <PropertyColumn>Edit</PropertyColumn>
-                <PropertyColumn StickyRight="true">Rights</PropertyColumn>
-            </Columns>
-            <TemplateColumn>
+                <MudTh>Edit</MudTh>
+                <MudTh>Rights</MudTh>
+            </HeaderContent>
+            <RowTemplate>
                 <MudTd DataLabel="Edit">
                     <MudNavLink Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href="@string.Format("WorksDetail/{0}/{1}", context.Discriminator, context.Id)" Title="@context.Id"></MudNavLink>
                 </MudTd>
@@ -362,7 +363,6 @@
                             break;
                     }
                 </MudTd>
-
                 <MudTd DataLabel="Title">
                     @if (searchString != null && context.DisplayTitle != null)
                     {
@@ -373,14 +373,13 @@
                         else
                         {
                             @context.DisplayTitle
-                        }       
+                        }
                     }
                     else
                     {
                         @context.Titles.FirstOrDefault(t => t.TitleType == TitleType.Main || t.TitleType == TitleType.Episode)?.Title
                     }
                 </MudTd>
-
                 <MudTd DataLabel="Client">
                     @string.Join("<br/>", context?.Clients?.Select(c => c.ClientName) ?? new[]{"Not Set"})
                 </MudTd>
@@ -441,7 +440,7 @@
                 @if (columnsVisible.Contains(WorksListColumn.WorkType))
                 {
                     <MudTd DataLabel="WorksType">
-                        @if (@context.WorksType != null)
+                        @if (context.WorksType != null)
                         {
                             @context.WorksType.Name
                         }
@@ -450,7 +449,7 @@
                 @if (columnsVisible.Contains(WorksListColumn.WorksSubType))
                 {
                     <MudTd DataLabel="WorksSubType">
-                        @if (@context.WorksSubType != null)
+                        @if (context.WorksSubType != null)
                         {
                             @context.WorksSubType.Name
                         }
@@ -459,7 +458,7 @@
                 @if (columnsVisible.Contains(WorksListColumn.Duration))
                 {
                     <MudTd DataLabel="Duration">
-                        @if (@context.DurationMinutes != null)
+                        @if (context.DurationMinutes != null)
                         {
                             @context.DurationMinutes
                         }
@@ -472,7 +471,7 @@
                 @if (columnsVisible.Contains(WorksListColumn.Genre))
                 {
                     <MudTd DataLabel="Genre">
-                        @if (@context.Genre != null)
+                        @if (context.Genre != null)
                         {
                             @context.Genre.Name
                         }
@@ -489,7 +488,7 @@
                 <MudTd DataLabel="Rights">
                     <MudIconButton Icon="@Icons.Material.Filled.List" Color="Color.Primary" aria-label="edit" OnClick="() => OpenRightsForm(context.Id)"></MudIconButton>
                 </MudTd>
-            </TemplateColumn>
+            </RowTemplate>
             <NoRecordsContent>
                 <MudText>No matching records found</MudText>
             </NoRecordsContent>
@@ -499,7 +498,7 @@
             <PagerContent>
                 <MudTablePager PageSizeOptions="@PageSizeOptions" />
             </PagerContent>
-        </MudDataGrid>
+        </MudTable>
     </MudItem>
     <MudItem xs="12">
         <div class="d-flex flex-wrap m-4">

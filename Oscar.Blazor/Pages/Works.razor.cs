@@ -62,7 +62,7 @@ namespace Oscar.Blazor.Pages
         IEntityTable<WorksDto> _worksTable;
         private TableData<WorksDto> _worksData;
         private HashSet<WorksDto> selectedItems = new();
-        private MudTaMudGridble<WorksDto> _grid;
+        private MudTable<WorksDto> _grid;
         private MudSelect<WorksListColumn?> _worksListColumnSelect;
 
         private ClientDto? _selectedClient;
@@ -314,10 +314,10 @@ namespace Oscar.Blazor.Pages
             searchString = string.Empty;
         }
 
-        private async Task<GridData<WorksDto>> ServerReload(GridState <WorksDto> state)
+        private async Task<TableData<WorksDto>> ServerReload(TableState state)
         {
             if (IsBusy || !_userSearch && (!_useStoredQuery && !_autoCompleteSearch && !_searchWorksQuery.IsValid))
-                return new GridData<WorksDto>() { TotalItems = totalItems, Items = RefDataService.Empty<WorksDto>() };
+                return new TableData<WorksDto>() { TotalItems = totalItems, Items = RefDataService.Empty<WorksDto>() };
 
             await SetStatusAsync(true, "Loading");
             try
@@ -338,10 +338,11 @@ namespace Oscar.Blazor.Pages
                                     _worksTable.Records.ToArray().OrderByDynamic(c => $"c.{state.SortLabel}").ToList() :
                                     _worksTable.Records.ToArray().OrderByDescendingDynamic(c => $"c.{state.SortLabel}").ToList();
 
+
                     _pagedData = worksDtos.Skip(state.Page * state.PageSize).Take(state.PageSize);
                 }
 
-                _worksData = new GridData<WorksDto>() { TotalItems = totalItems, Items = _pagedData };
+                _worksData = new TableData<WorksDto>() { TotalItems = totalItems, Items = _pagedData };
                 return _worksData;
             }
             finally
