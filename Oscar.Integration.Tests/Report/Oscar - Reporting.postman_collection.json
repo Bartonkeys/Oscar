@@ -232,7 +232,7 @@
 		},
 		{
 			"key": "Oscar-ClientSecret",
-			"value": "27z8Q~2kq0L4LCUjKWr9R5WFHIQtHGKmhElv~c-C"
+			"value": "<REPLACE_WITH_AAD_CLIENT_SECRET>"
 		}
 	]
 }
