@@ -331,3 +331,13 @@ ASALocalRun/
 Oscar.Blazor/log-files/*
 *.ncconf
 Oscar.UI/log-files/*
+
+# Secrets & sensitive config
+**/secrets.json
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.Production.json
+**/local.settings.json
+**/.env
+**/.env.*
+**/servicePrincipal.json
