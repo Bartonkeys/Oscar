@@ -11,11 +11,6 @@ namespace Oscar.Blazor.Library.Components.Works
     {
         private bool _openSocietyReferencesDrawer;
 
-        public SocietyReferences(bool openSocietyReferencesDrawer)
-        {
-            _openSocietyReferencesDrawer = openSocietyReferencesDrawer;
-        }
-
         private SocietyReferenceDto _societyReference { get; set; }
 
         [Parameter]
