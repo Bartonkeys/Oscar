@@ -3,11 +3,14 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudMenu Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Color="@Color.Info">
+        <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
             <ActivatorContent Context="activator">
-                <MudChip T="string" Icon="@contextUser.Avatar" Color="@Color.Secondary">@contextUser.DisplayName</MudChip>
+                <MudChip T="string" Variant="Variant.Text" Color="Color.Default" Class="ml-1"
+                         Icon="@contextUser.Avatar">@contextUser.DisplayName</MudChip>
             </ActivatorContent>
             <ChildContent>
+                <MudText Typo="Typo.caption" Class="px-4 py-2 mud-text-secondary d-block">@contextUser.EmailAddress</MudText>
+                <MudDivider />
                 <MudMenuItem Icon="@Icons.Material.Rounded.Logout" Href="MicrosoftIdentity/Account/SignOut" Target="_self">Sign Out</MudMenuItem>
             </ChildContent>
         </MudMenu>

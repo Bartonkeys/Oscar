@@ -22,6 +22,30 @@ namespace Oscar.Blazor.Pages
             new ChartSeries<double> { Name = "Works", Data = data }
         };
 
+        protected record StatTile(string Label, string Icon, Color Color, int Count);
+
+        protected IEnumerable<StatTile> Tiles => new[]
+        {
+            new StatTile("Standalone", Icons.Material.Rounded.Movie, Color.Primary, standAloneCount),
+            new StatTile("Series", Icons.Material.Rounded.AutoAwesomeMotion, Color.Secondary, seriesCount),
+            new StatTile("Seasons", Icons.Material.Rounded.CalendarViewMonth, Color.Tertiary, seasonCount),
+            new StatTile("Episodes", Icons.Material.Rounded.Theaters, Color.Warning, episodeCount)
+        };
+
+        protected static string TileIconStyle(Color color) =>
+            $"background-color: rgba(var(--mud-palette-{ColorVariable(color)}-rgb), 0.12);";
+
+        private static string ColorVariable(Color color) => color switch
+        {
+            Color.Primary => "primary",
+            Color.Secondary => "secondary",
+            Color.Tertiary => "tertiary",
+            Color.Warning => "warning",
+            Color.Success => "success",
+            Color.Error => "error",
+            _ => "info"
+        };
+
         protected override async Task OnInitializedAsync() => await LoadWorkCounts();
 
         private async Task LoadWorkCounts()

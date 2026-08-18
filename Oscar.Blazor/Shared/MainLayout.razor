@@ -1,41 +1,54 @@
-﻿@inherits LayoutComponentBase
+﻿@using Oscar.Blazor.Theme
+@inherits LayoutComponentBase
 @inject NavigationManager Navigator
 
-<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
+<MudThemeProvider @ref="@_mudThemeProvider" Theme="@_theme" @bind-IsDarkMode="@_isDarkMode" />
+<MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Color="Color.Primary" Elevation="0" Dense="true">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h6" Color="Color.Error">@(@Navigator.BaseUri.Contains("live") ? "" : "THIS IS TEST SITE")</MudText>
+    <MudAppBar Color="Color.Surface" Elevation="0" Dense="true" Class="oscar-appbar">
+        <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                       Title="Toggle navigation" OnClick="@DrawerToggle" />
+
+        <MudText Typo="Typo.h6" Class="ml-2">Oscar</MudText>
+
+        @if (!IsLiveSite)
+        {
+            <MudChip T="string" Size="Size.Small" Color="Color.Warning" Variant="Variant.Filled"
+                     Icon="@Icons.Material.Rounded.Science" Class="ml-3">TEST</MudChip>
+        }
+
         <MudSpacer />
+
+        <MudTooltip Text="@(_isDarkMode ? "Switch to light mode" : "Switch to dark mode")">
+            <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Rounded.LightMode : Icons.Material.Rounded.DarkMode)"
+                           Color="Color.Inherit" OnClick="@ToggleDarkMode" />
+        </MudTooltip>
+
         <LoginDisplay />
-        <MudToggleIconButton @bind-Value="@_isDarkMode" 
-                             Icon="@Icons.Material.Rounded.DarkMode" Title="Dark Mode" Color="@Color.Default"
-                             ToggledIcon="@Icons.Material.Rounded.LightMode" ToggledTitle="Light Mode" ToggledColor="@Color.Inherit" />
     </MudAppBar>
 
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Oscar @(@Navigator.BaseUri.Contains("live") ? "" : "-TEST")</MudText>
-        </MudDrawerHeader>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="0" ClipMode="DrawerClipMode.Always"
+               Variant="DrawerVariant.Responsive" Class="oscar-drawer">
         <NavMenu />
     </MudDrawer>
+
     <MudMainContent>
-        <MudContainer Class="mt-2 pa-2" MaxWidth="MaxWidth.ExtraLarge">
+        <MudContainer Class="py-6" MaxWidth="MaxWidth.ExtraLarge">
             <ErrorBoundary @ref="_errorBoundary" Context="exception">
                 <ChildContent>
                     @Body
                 </ChildContent>
                 <ErrorContent>
-                    <div id="blazor-error-ui" data-nosnippet>
-                        <span>An unhandled exception occurred.</span>
-                        <p class="error-message">@exception.Message</p>
-                        <button class="btn btn-warning" @onclick="ResetError">Reload</button>
-                        <a href="" class="reload">Reload</a>
-                        <a class="dismiss">🗙</a>
-                    </div>
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Class="my-4">
+                        <MudText Typo="Typo.subtitle1">Something went wrong on this page.</MudText>
+                        <MudText Typo="Typo.body2" Class="error-message">@exception.Message</MudText>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
+                                   StartIcon="@Icons.Material.Rounded.Refresh" Class="mt-2"
+                                   OnClick="@ResetError">Retry</MudButton>
+                    </MudAlert>
                 </ErrorContent>
             </ErrorBoundary>
         </MudContainer>
@@ -43,23 +56,20 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
-    ErrorBoundary? _errorBoundary;
+    private readonly MudTheme _theme = OscarTheme.Build();
 
-    async Task DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-        await Task.Delay(1);
-    }
+    private bool _drawerOpen = true;
+    private bool _isDarkMode;
+    private MudThemeProvider _mudThemeProvider = null!;
+    private ErrorBoundary? _errorBoundary;
 
-    private async Task ResetError()
-    {
-        _errorBoundary?.Recover();
-        await Task.Delay(1);
-    }
+    private bool IsLiveSite => Navigator.BaseUri.Contains("live");
 
-    private bool _isDarkMode = false;
-    private MudThemeProvider _mudThemeProvider;
+    private void DrawerToggle() => _drawerOpen = !_drawerOpen;
+
+    private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+
+    private void ResetError() => _errorBoundary?.Recover();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -68,7 +78,6 @@
             _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
             await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemPreferenceChanged);
             StateHasChanged();
-            await Task.CompletedTask;
         }
     }
 
