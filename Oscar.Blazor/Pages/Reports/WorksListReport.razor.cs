@@ -17,8 +17,8 @@ namespace Oscar.Blazor.Pages.Reports
         private ClientWorkItem? selectedItem = null;
         private string _selectedWorkStatus;
         private string _selectedDiscriminator;
-        private IEnumerable<string> _selectedWorksStatuses = new HashSet<string> { "ACTIVE" };
-        private IEnumerable<string> _selectedDiscriminators = new HashSet<string>();
+        private IReadOnlyCollection<string> _selectedWorksStatuses = new HashSet<string> { "ACTIVE" };
+        private IReadOnlyCollection<string> _selectedDiscriminators = new HashSet<string>();
 
         private readonly string[] _workStatuses = { "ACTIVE", "UNCONTROLLED", "INCOMPLETE", "RELINQUISHED" };
         private readonly string[] _discriminators = { "Episode", "Season", "Series", "StandAlone" };
@@ -34,7 +34,7 @@ namespace Oscar.Blazor.Pages.Reports
                 PopulateClientDetails();
             }
         }
-        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm)
+        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -83,7 +83,7 @@ namespace Oscar.Blazor.Pages.Reports
             _selectedWorkStatus = string.Empty;
             _selectedWorksStatuses = new HashSet<string> { "ACTIVE" };
             _selectedDiscriminators = new HashSet<string>();
-            if (_clientSelect != null) await _clientSelect.Clear();
+            if (_clientSelect != null) await _clientSelect.ClearAsync();
         }
 
         protected override async Task<bool> IsUserConfirmed(string operation)

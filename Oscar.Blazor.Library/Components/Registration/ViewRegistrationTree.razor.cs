@@ -2,6 +2,7 @@
 using LinqKit;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Oscar.Blazor.Library.Common;
 using Oscar.Core.DTOs;
 using Oscar.Infrastructure.Features.Common;
 
@@ -18,6 +19,10 @@ namespace Oscar.Blazor.Library.Components.Registration
         private HashSet<RegistrationWorksDto>? RegistrationWorksCopy = new HashSet<RegistrationWorksDto>();
         private string searchValue = string.Empty;
         private MudTreeView<RegistrationWorksDto>? _registrationWorksTreeView;
+
+        private IReadOnlyCollection<ITreeItemData<RegistrationWorksDto>> RegistrationWorksTree =>
+            OscarTreeItem<RegistrationWorksDto>.From(RegistrationWorks, x => x.Children, x => x.Title);
+
 
         protected override async Task OnParametersSetAsync()
         {
@@ -99,7 +104,7 @@ namespace Oscar.Blazor.Library.Components.Registration
             ResetAllWorksChecked(RegistrationWorksCopy, isChecked);
 
             foreach (var item in _registrationWorksTreeView.Items)
-                AddRemoveRegistration(item, isChecked);
+                AddRemoveRegistration(item.Value, isChecked);
         }
 
         private void ResetAllWorksChecked(HashSet<RegistrationWorksDto> registrationWorks, bool isChecked)

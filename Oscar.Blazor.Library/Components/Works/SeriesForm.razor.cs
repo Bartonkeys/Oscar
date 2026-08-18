@@ -226,11 +226,11 @@ namespace Oscar.Blazor.Library.Components.Works
                     if (duplicates.Count() > 0)
                     {
                         var parameters = new DialogParameters { ["duplicates"] = duplicates };
-                        dialog = DialogService.Show<DuplicateDialog>("Dup detected", parameters);
+                        dialog = await DialogService.ShowAsync<DuplicateDialog>("Dup detected", parameters);
                         dialogResult = await dialog.Result;
                     }
 
-                    if (dialog == null || !dialogResult.Cancelled)
+                    if (dialog == null || !dialogResult.Canceled)
                     {
                         var addSeriesCommand = new AddSeriesCommand
                         {

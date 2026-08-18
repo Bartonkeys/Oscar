@@ -128,7 +128,7 @@ namespace Oscar.Blazor.Library.Components.Rights
             }
         }
 
-        private void EditRight(RightDto right)
+        private async Task EditRight(RightDto right)
         {
             _editMode = true;
             _editRight = right;
@@ -152,7 +152,7 @@ namespace Oscar.Blazor.Library.Components.Rights
             if (right.EndOfValidity != null && right.EndOfValidity != DateTime.MaxValue)
                 endValid.Date = right.EndOfValidity;
 
-            notations.SetText(right.Notations);
+            await notations.SetTextAsync(right.Notations);
 
             // this is horrible, there has to be a way of forcing it to refresh it's value better than this
             percentage.Value = right.Percentage.Value;

@@ -11,7 +11,7 @@
         <MudText Typo="Typo.h6" Color="Color.Error">@(@Navigator.BaseUri.Contains("live") ? "" : "THIS IS TEST SITE")</MudText>
         <MudSpacer />
         <LoginDisplay />
-        <MudToggleIconButton @bind-Toggled="@_isDarkMode" 
+        <MudToggleIconButton @bind-Value="@_isDarkMode" 
                              Icon="@Icons.Material.Rounded.DarkMode" Title="Dark Mode" Color="@Color.Default"
                              ToggledIcon="@Icons.Material.Rounded.LightMode" ToggledTitle="Light Mode" ToggledColor="@Color.Inherit" />
     </MudAppBar>
@@ -65,8 +65,8 @@
     {
         if (firstRender)
         {
-            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
-            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
+            _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+            await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemPreferenceChanged);
             StateHasChanged();
             await Task.CompletedTask;
         }

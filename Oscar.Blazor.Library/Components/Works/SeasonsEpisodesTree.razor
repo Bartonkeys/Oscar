@@ -23,15 +23,15 @@
     <MudText><b>Catalogue</b>: @OwningCatalogue</MudText>
     @if (@_loading == false)
     {
-        <MudTreeView Items="@_treeItems" Dense="true">
+        <MudTreeView T="TreeItemData" Items="@TreeItemsView" Dense="true" ReadOnly="true">
             <ItemTemplate>
-                <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.TreeItems" Value="@context">
+                <MudTreeViewItem T="TreeItemData" @bind-Expanded="@context.Value.IsExpanded" Items="@context.Children" Value="@context.Value">
                     <Content>
-                        <MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
-                        <MudText>@context.Title</MudText>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" Style="@(context.Discriminator == Discriminator.All ? "display:none;" : null)" aria-label="edit" OnClick="@(async () => OpenWorksDrawer(context))"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Size="Size.Small" Color="Color.Error" Style="@(context.Discriminator == Discriminator.All ? "display:none;" : null)" aria-label="delete" OnClick="@(async () => removeItem(context))"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Color="Color.Primary" Style="@(context.Discriminator == Discriminator.All ? "display:none;" : null)"  aria-label="copy" OnClick="@(async () => OpenCopyDrawer(context))"></MudIconButton>
+                        <MudTreeViewItemToggleButton @bind-Expanded="@context.Value.IsExpanded" Visible="@context.Value.HasChild" />
+                        <MudText>@context.Value.Title</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" Style="@(context.Value.Discriminator == Discriminator.All ? "display:none;" : null)" aria-label="edit" OnClick="@(async () => OpenWorksDrawer(context.Value))"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Outlined.Delete" Size="Size.Small" Color="Color.Error" Style="@(context.Value.Discriminator == Discriminator.All ? "display:none;" : null)" aria-label="delete" OnClick="@(async () => removeItem(context.Value))"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Color="Color.Primary" Style="@(context.Value.Discriminator == Discriminator.All ? "display:none;" : null)"  aria-label="copy" OnClick="@(async () => OpenCopyDrawer(context.Value))"></MudIconButton>
                     </Content>
                 </MudTreeViewItem>
             </ItemTemplate>

@@ -37,7 +37,7 @@ namespace Oscar.Blazor.Library.Components.Societies
         {
             if (Id == 0)
             {
-                form.ResetValidation();
+                await form.ResetValidationAsync();
                 _society = new()
                 {
                     Addresses = new List<AddressDto>(),

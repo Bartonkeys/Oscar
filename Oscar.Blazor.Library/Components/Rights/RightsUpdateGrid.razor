@@ -91,7 +91,7 @@
             </MudTd>
             <MudTd DataLabel="RightsDate">
                 <MudDatePicker Label="Start of Rights" @bind-Date="@_startOfRight" DateFormat="dd/MM/yyyy"></MudDatePicker>
-                <MudSwitch @bind-Checked="@_rightsPerpetuity" Label="Perpetuity" Color="Color.Success"></MudSwitch>
+                <MudSwitch @bind-Value="@_rightsPerpetuity" Label="Perpetuity" Color="Color.Success"></MudSwitch>
                 @if (!_rightsPerpetuity)
                 {
                     <MudDatePicker Label="End of Rights" @bind-Date="@_endOfRight" DateFormat="dd-MMM-yyyy"></MudDatePicker>
@@ -99,7 +99,7 @@
             </MudTd>
             <MudTd DataLabel="ValidityDate">
                 <MudDatePicker Label="Start of Validity" @bind-Date="@_startOfValidity" DateFormat="dd/MM/yyyy"></MudDatePicker>
-                <MudSwitch @bind-Checked="@_rightsValidityPerpetuity" Label="Perpetuity" Color="Color.Success"></MudSwitch>
+                <MudSwitch @bind-Value="@_rightsValidityPerpetuity" Label="Perpetuity" Color="Color.Success"></MudSwitch>
                 @if (!_rightsValidityPerpetuity)
                 {
                     <MudDatePicker Label="End of Validity" @bind-Date="@_endOfValidity" DateFormat="dd-MMM-yyyy"></MudDatePicker>

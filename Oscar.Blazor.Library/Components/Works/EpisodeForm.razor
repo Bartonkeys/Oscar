@@ -18,7 +18,7 @@
         }
         @if (IsPage == false)
         {
-            <MudNavLink Icon="@Icons.Filled.Theaters" Color="Color.Primary" Href="@string.Format("WorksDetail/{0}/{1}", _works.Discriminator, _works.Id)">Open as page</MudNavLink>
+            <MudNavLink Icon="@Icons.Material.Filled.Theaters" Color="Color.Primary" Href="@string.Format("WorksDetail/{0}/{1}", _works.Discriminator, _works.Id)">Open as page</MudNavLink>
         }
     </div>
     <MudCard Height="90%" Class="overflow-auto pb-4">
@@ -80,7 +80,7 @@
                     <ReRegistrations @bind-Values="_works.ReRegistrations" ListLabel="Add ReRegistrations"></ReRegistrations>
                 </MudExpansionPanel>
             }
-            <MudExpansionPanel Text="Mandates" MaxHeight="600" IsExpanded="@_showMandatesPanel" IsExpandedChanged="@showHideMandatesPanel">
+            <MudExpansionPanel Text="Mandates" MaxHeight="600" Expanded="@_showMandatesPanel" ExpandedChanged="@showHideMandatesPanel">
                 <Mandates MandateTypes="@_mandateTypes"></Mandates>
             </MudExpansionPanel>
             @if (_works.Id > 0)

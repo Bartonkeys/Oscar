@@ -41,7 +41,7 @@ namespace Oscar.Blazor.Library.Components.Works
             }).ToList();
         }
 
-        private async Task<IEnumerable<ActorDto>> Search(string value)
+        private async Task<IEnumerable<ActorDto>> Search(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
                 return _actors;

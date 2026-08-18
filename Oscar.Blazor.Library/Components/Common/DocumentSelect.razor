@@ -27,7 +27,7 @@
     </RowTemplate>
 </MudTable>
 <MudExpansionPanels>
-    <MudExpansionPanel Text="Upload Document" IsExpanded="@_showCreatePanel" IsExpandedChanged="@showHideCreateForm">
+    <MudExpansionPanel Text="Upload Document" Expanded="@_showCreatePanel" ExpandedChanged="@showHideCreateForm">
         <MudPaper Elevation="0" Class="d-flex" MaxHeight="30px">
 
             <InputFile id="fileInput" OnChange="ChooseFile" hidden />
@@ -36,7 +36,7 @@
                        Variant="Variant.Filled"
                        Color="Color.Primary"
                        Size="Size.Small"
-                       StartIcon="@Icons.Filled.CloudUpload"
+                       StartIcon="@Icons.Material.Filled.CloudUpload"
                        for="fileInput">
                 Choose File
             </MudButton>

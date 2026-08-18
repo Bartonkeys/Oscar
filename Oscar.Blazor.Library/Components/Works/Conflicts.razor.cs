@@ -37,10 +37,10 @@ namespace Oscar.Blazor.Library.Components.Works
 
         private async Task DeleteConflictAsync(ConflictDto conflict)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Delete Conflict?");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete Conflict?");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var result = await Mediator.Send(new DeleteConflictCommand { Id = conflict.Id });
                 if (result.IsSuccess)

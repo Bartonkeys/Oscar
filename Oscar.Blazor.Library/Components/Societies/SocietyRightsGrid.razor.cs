@@ -89,12 +89,12 @@ namespace Oscar.Blazor.Library.Components.Societies
                    || (!string.IsNullOrWhiteSpace(right.RightsType.Description) && right.RightsType.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase));
         }
 
-        private async Task<IEnumerable<RightsTypeDto>> SearchRightsTypes(string value)
+        private async Task<IEnumerable<RightsTypeDto>> SearchRightsTypes(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? _rightsTypes : _rightsTypes.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private async Task<IEnumerable<CountryDto>> SearchCountries(string value)
+        private async Task<IEnumerable<CountryDto>> SearchCountries(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? _countries : _countries.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }

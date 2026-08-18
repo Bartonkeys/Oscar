@@ -14,7 +14,7 @@
     <MudItem xs="6">
     </MudItem>
     <MudItem xs="12">
-        <MudTable Dense="true"  ServerData="@(new Func<TableState, Task<TableData<WorksImportRequestDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading">
+        <MudTable Dense="true"  ServerData="@(new Func<TableState, CancellationToken, Task<TableData<WorksImportRequestDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">New Works</MudText>
                 <MudSpacer/>
@@ -38,7 +38,7 @@
                 <MudTd DataLabel="CreationDate">@context.CreationDate</MudTd>
                 <MudTd DataLabel="LastModified">@context.LastModified</MudTd>
                 <MudTd DataLabel="Status">
-                    <MudChip Label="true" Color="@GetColour(context.Status)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.Status.ToString()</MudChip>
+                    <MudChip T="string" Label="true" Color="@GetColour(context.Status)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.Status.ToString()</MudChip>
                 </MudTd>
                 <MudTd>
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenImportsDrawer(context.Id, context.Status)"></MudIconButton>

@@ -97,7 +97,7 @@
 
     @if (WorksToCopy?.FirstOrDefault()?.Discriminator != Discriminator.Episode.ToString())
     {
-        <MudCheckBox T="bool" Label="Copy Or Move Underlying Works" @ref="copyOrMoveUnderlyingWorks" Checked="true"></MudCheckBox>
+        <MudCheckBox T="bool" Label="Copy Or Move Underlying Works" @ref="copyOrMoveUnderlyingWorks" Value="true"></MudCheckBox>
         <br /><br />
     }
     

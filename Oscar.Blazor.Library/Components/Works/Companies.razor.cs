@@ -50,7 +50,7 @@ namespace Oscar.Blazor.Library.Components.Works
             StateHasChanged();
 
         }
-        private async Task<IEnumerable<CompanyDto>> Search(string value)
+        private async Task<IEnumerable<CompanyDto>> Search(string value, CancellationToken token)
         {
             if (_companies == null)
             {

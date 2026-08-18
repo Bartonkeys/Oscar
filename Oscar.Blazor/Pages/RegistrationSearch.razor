@@ -3,7 +3,7 @@
 
 <PageTitle>Registration Search</PageTitle>
 
-<MudTable ServerData="@(new Func<TableState, Task<TableData<RegistrationDisplayDto>>>(ServerReload))"
+<MudTable ServerData="@(new Func<TableState, CancellationToken, Task<TableData<RegistrationDisplayDto>>>(ServerReload))"
           Hover="true" @ref="table" Loading="@_loading"
           GroupBy="@_groupDefinition"
           GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"

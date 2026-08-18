@@ -62,10 +62,10 @@
                         </MudItem>
                         <MudItem xs="8"><MudSpacer /></MudItem>
                         <MudItem xs="12">
-                            <MudSwitch @bind-Checked="@_allClients" Label="Select all clients" Color="Color.Primary" Disabled="_client != null" />
+                            <MudSwitch @bind-Value="@_allClients" Label="Select all clients" Color="Color.Primary" Disabled="_client != null" />
                         </MudItem>
                         <MudItem xs="4">
-                            <MudSwitch @bind-Checked="@_includeAlreadyRegistered" Label="Include previously registered" Color="Color.Primary" />
+                            <MudSwitch @bind-Value="@_includeAlreadyRegistered" Label="Include previously registered" Color="Color.Primary" />
                         </MudItem>
                         @if (_includeAlreadyRegistered && _society?.Name != "UPFAR ARGOA")
                         {
@@ -82,12 +82,12 @@
                         }
 
                         <MudItem xs="12">
-                        <MudSwitch @bind-Checked="@_doNotRegister" Label="Do not register" Color="Color.Primary" />
+                        <MudSwitch @bind-Value="@_doNotRegister" Label="Do not register" Color="Color.Primary" />
                         </MudItem>
                         @if (_society != null && _society.Name == "AGICOA" && !_allClients)
                         {
                             <MudItem xs="12">
-                            <MudSwitch @bind-Checked="@_includeEpisodes" Label="Include Episodes" Color="Color.Primary" />
+                            <MudSwitch @bind-Value="@_includeEpisodes" Label="Include Episodes" Color="Color.Primary" />
                                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="ShowAll">Select Works</MudButton>
                             </MudItem>
 

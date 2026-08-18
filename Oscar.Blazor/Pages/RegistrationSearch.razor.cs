@@ -45,7 +45,7 @@ namespace Oscar.Blazor.Pages
     };
 
 
-        private async Task<TableData<RegistrationDisplayDto>> ServerReload(TableState state)
+        private async Task<TableData<RegistrationDisplayDto>> ServerReload(TableState state, CancellationToken token)
         {
 
             table.Loading = true;
@@ -82,10 +82,10 @@ namespace Oscar.Blazor.Pages
 
         private async void DeleteRegistration(RegistrationDisplayDto registration)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Delete Registration?");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete Registration?");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var result = await Mediator.Send(new DeleteRegistrationCommand { Id = registration.Id });
                 if (result.IsSuccess)

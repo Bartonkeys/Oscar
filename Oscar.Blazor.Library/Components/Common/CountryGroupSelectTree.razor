@@ -3,20 +3,20 @@
 	@Header
 	<MudPaper Elevation="0">
 		<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@ClearAll">Clear All</MudButton>
-		<MudCheckBox T="bool" Label="Show Selected" @ref = "showSelected" CheckedChanged="@((isChecked) => ShowSelected(isChecked))"></MudCheckBox>
+		<MudCheckBox T="bool" Label="Show Selected" @ref = "showSelected" ValueChanged="@((isChecked) => ShowSelected(isChecked))"></MudCheckBox>
 		
 		<MudPaper Elevation="0">
 			<MudTextField T="string" @bind-Value="searchValue" Label="Search"></MudTextField>
 			<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto" OnClick="@Search">Search</MudButton>
 		</MudPaper>
 
-		<MudTreeView @bind-Items="CountriesGroups" @ref="countriesGroupsTreeView" Height="400px">
+		<MudTreeView T="CountriesGroupsDto" Items="@CountriesGroupsTree" @ref="countriesGroupsTreeView" Height="400px" ReadOnly="true">
 			<ItemTemplate>
-					<MudTreeViewItem @bind-Expanded="@context.IsExpanded" @bind-Items="@context.Children" Activated="true">
+					<MudTreeViewItem T="CountriesGroupsDto" Value="@context.Value" Items="@context.Children" @bind-Expanded="@context.Value.IsExpanded">
 					<Content>
-						<MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
-						<MudCheckBox T="bool?" Checked="@(context.HasPartialChildSelected() ? null : context.IsChecked)" CheckedChanged="@((e) => TreeItemCheckedChanged(context))"></MudCheckBox>
-						<MudText>@context.Name</MudText>
+						<MudTreeViewItemToggleButton @bind-Expanded="@context.Value.IsExpanded" Visible="@context.Value.HasChild" />
+						<MudCheckBox T="bool?" Value="@(context.Value.HasPartialChildSelected() ? null : context.Value.IsChecked)" ValueChanged="@((e) => TreeItemCheckedChanged(context.Value))"></MudCheckBox>
+						<MudText>@context.Value.Name</MudText>
 					</Content>
 				</MudTreeViewItem>
 			</ItemTemplate>

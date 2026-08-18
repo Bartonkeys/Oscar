@@ -112,11 +112,11 @@ namespace Oscar.Blazor.Library.Components.Common
             IDialogReference? dialog = null;
             DialogResult? dialogResult = null;
             
-            dialog = DialogService.Show<ConfirmDialog>("Permanently delete this document?");
+            dialog = await DialogService.ShowAsync<ConfirmDialog>("Permanently delete this document?");
             dialogResult = await dialog.Result;
             
 
-            if (dialog == null || !dialogResult.Cancelled)
+            if (dialog == null || !dialogResult.Canceled)
             {
                 var result = await Mediator.Send(new DeleteDocumentCommand { Id = documentDto.Id });
 

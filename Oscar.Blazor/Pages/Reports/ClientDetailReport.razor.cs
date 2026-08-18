@@ -36,7 +36,7 @@ namespace Oscar.Blazor.Pages.Reports
                 PopulateClientDetails();
             }
         }
-        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm)
+        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -73,7 +73,7 @@ namespace Oscar.Blazor.Pages.Reports
             set => SetProperty(ref _selectedOperator, value);
         }
 
-        protected async Task<IEnumerable<OperatorDto>> OperatorSearch(string searchTerm)
+        protected async Task<IEnumerable<OperatorDto>> OperatorSearch(string searchTerm, CancellationToken token)
         {
             if (_operators == null || !_operators.Any()) { _operators = await RefDataService.GetOperators(); }
             if (string.IsNullOrWhiteSpace(searchTerm))
@@ -122,8 +122,8 @@ namespace Oscar.Blazor.Pages.Reports
             SelectedOperator = null;
             _selectedCatalogue = null;
             _includeCatalogues = false;
-            if (_clientSelect != null) await _clientSelect.Clear();
-            if (_operatorSelect != null) await _operatorSelect.Clear();
+            if (_clientSelect != null) await _clientSelect.ClearAsync();
+            if (_operatorSelect != null) await _operatorSelect.ClearAsync();
             _clientDetailsItems?.Clear();
             _clientCataloguesItems?.Clear();
         }

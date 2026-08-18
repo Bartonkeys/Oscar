@@ -29,7 +29,7 @@ namespace Oscar.Blazor.Pages.Reports
                 PopulateClientDetails();
             }
         }
-        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm)
+        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -74,7 +74,7 @@ namespace Oscar.Blazor.Pages.Reports
         {
             SelectedClient = null;
             _selectedCatalogue = null;
-            if (_clientSelect != null) await _clientSelect.Clear();
+            if (_clientSelect != null) await _clientSelect.ClearAsync();
             _gridItems?.Clear();
             _dataGrid?.ClearFiltersAsync();
         }

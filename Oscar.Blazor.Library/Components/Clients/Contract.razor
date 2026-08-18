@@ -21,8 +21,8 @@
     <MudSelectItem Value="@("AUD")" />
 </MudSelect>
 
-<MudCheckBox @bind-Checked="@Value.Contract.AutoRenew" Label="AutoRenew" Color="Color.Primary" UnCheckedColor="Color.Default" For="@(() => Value.Contract.AutoRenew)"></MudCheckBox>
-@*<MudCheckBox @bind-Checked="@Value.Contract.Terminated" Label="Terminated" Color="Color.Primary" UnCheckedColor="Color.Default" For="@(() => Value.Contract.Terminated)"></MudCheckBox>*@
+<MudCheckBox @bind-Value="@Value.Contract.AutoRenew" Label="AutoRenew" Color="Color.Primary" UncheckedColor="Color.Default" For="@(() => Value.Contract.AutoRenew)"></MudCheckBox>
+@*<MudCheckBox @bind-Value="@Value.Contract.Terminated" Label="Terminated" Color="Color.Primary" UncheckedColor="Color.Default" For="@(() => Value.Contract.Terminated)"></MudCheckBox>*@
 <MudTextField @bind-Value="@Value.Contract.Notes" For="@(() => Value.Contract.Notes)" Label="Contract Notes" Variant="Variant.Text" Lines="5"></MudTextField>
 <MudTextField @bind-Value="@Value.Contract.ParentCompany" For="@(() => Value.Contract.ParentCompany)" Label="Parent Company" Variant="Variant.Text"></MudTextField>
 <MudTextField @bind-Value="@Value.Contract.Email" For="@(() => Value.Contract.Email)" Label="Email" Variant="Variant.Text" Class="removeUpperCasing"></MudTextField>

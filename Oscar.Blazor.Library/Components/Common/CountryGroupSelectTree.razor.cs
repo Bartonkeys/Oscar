@@ -1,6 +1,7 @@
 ﻿using LinqKit;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Oscar.Blazor.Library.Common;
 using Oscar.Core.DTOs;
 using Oscar.Infrastructure.Features.Common;
 
@@ -21,6 +22,10 @@ namespace Oscar.Blazor.Library.Components.Common
         public String Header { get; set; } = "";
 
         private MudTreeView<CountriesGroupsDto>? countriesGroupsTreeView;
+
+        private IReadOnlyCollection<ITreeItemData<CountriesGroupsDto>> CountriesGroupsTree =>
+            OscarTreeItem<CountriesGroupsDto>.From(CountriesGroups, x => x.Children, x => x.Name);
+
         private MudCheckBox<bool>? showSelected;
         private HashSet<CountriesGroupsDto>? CountriesGroupsCopy { get; set; }
         private string searchValue = string.Empty;
@@ -33,7 +38,7 @@ namespace Oscar.Blazor.Library.Components.Common
             Refresh();
             if (showSelected != null)
             {
-                ShowSelected(showSelected.Checked);
+                ShowSelected(showSelected.Value);
             }
 
             await Task.CompletedTask;

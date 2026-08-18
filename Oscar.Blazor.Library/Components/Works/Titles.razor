@@ -1,7 +1,7 @@
 ﻿@inherits Oscar.Blazor.Library.Common.OscarComponentBase
 <MudCardContent Class="@Class">
     <MudExpansionPanels MultiExpansion="true">
-        <MudExpansionPanel Text="Main Title" IsExpanded="true">
+        <MudExpansionPanel Text="Main Title" Expanded="true">
             <MudTable Items="@Values.Where(t => t.TitleType == TitleType.Main || t.TitleType == TitleType.Episode)" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" Dense="true">
                 <RowTemplate>
                     <MudTd>

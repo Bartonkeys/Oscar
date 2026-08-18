@@ -40,7 +40,7 @@ namespace Oscar.Blazor.Library.Components.Clients
             await ValueChanged.InvokeAsync(Value);
         }
 
-        private async Task<IEnumerable<string>> Search(string value)
+        private async Task<IEnumerable<string>> Search(string value, CancellationToken token)
         {
             if (_countries == null)
             {

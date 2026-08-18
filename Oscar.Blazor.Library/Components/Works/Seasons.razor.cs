@@ -43,10 +43,10 @@ namespace Oscar.Blazor.Library.Components.Works
 
         private async void removeSeason(SeasonDto season)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Remove season");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Remove season");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var deleteSeasonCommand = new DeleteSeasonCommand
                 {
@@ -79,10 +79,10 @@ namespace Oscar.Blazor.Library.Components.Works
 
         private async void copySeason(SeasonDto season)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Copy season");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Copy season");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var copySeasonCommand = new CopySeasonCommand
                 {

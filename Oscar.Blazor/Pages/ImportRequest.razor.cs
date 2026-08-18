@@ -29,7 +29,7 @@ namespace Oscar.Blazor.Pages
         private bool openImport;
         private bool isSuccess;
 
-        private async Task<TableData<WorksImportRequestDto>> ServerReload(TableState state)
+        private async Task<TableData<WorksImportRequestDto>> ServerReload(TableState state, CancellationToken token)
         {
             table.Loading = true;
             var importsTable = (await Mediator.Send(new GetWorksImportRequestsQuery
@@ -68,10 +68,10 @@ namespace Oscar.Blazor.Pages
 
         private async Task Rollback(int contextId)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Rollback Import Request");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Rollback Import Request");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var result = await Mediator.Send(new RollbackWorksImportRequestCommand { Id = contextId });
                 if (result.IsSuccess)

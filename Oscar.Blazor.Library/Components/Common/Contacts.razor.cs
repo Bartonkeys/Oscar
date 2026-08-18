@@ -81,7 +81,7 @@ namespace Oscar.Blazor.Library.Components.Common
             openViewDrawer = true;
         }
 
-        //private async Task<IEnumerable<ContactDto>> SearchContact(string value)
+        //private async Task<IEnumerable<ContactDto>> SearchContact(string value, CancellationToken token)
         //{
         //    if (string.IsNullOrEmpty(value))
         //        return ExistingContacts;

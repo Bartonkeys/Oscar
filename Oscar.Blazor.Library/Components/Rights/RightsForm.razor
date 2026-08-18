@@ -46,7 +46,7 @@
             </MudSelect>
             @if (Right.TypeId == 99)
             {
-                <MudCheckBox @bind-Checked="_allRightsType" Label="Same Rights For All Types Matching With Rights Dates, Percentage And Countries?"></MudCheckBox>
+                <MudCheckBox @bind-Value="_allRightsType" Label="Same Rights For All Types Matching With Rights Dates, Percentage And Countries?"></MudCheckBox>
             }
             <MudDatePicker Class="pl-4 pt-2 pr-4" Date="@_startOfRight" DateChanged="@((DateTime? d) => StartDateChanged(d))" For="@(() => _startOfRight)" DateFormat="dd-MMM-yyyy" Label="Start Right"></MudDatePicker>
             <MudText Class="pl-4 pt-2" Style="font-size: small">End Right</MudText>

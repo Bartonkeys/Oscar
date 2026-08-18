@@ -49,12 +49,12 @@ namespace Oscar.Blazor.Pages
             _society = null;
         }
 
-        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value)
+        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? _clients : _clients.Where(x => x.ClientName.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private async Task<IEnumerable<SocietyDto>> SearchSocieties(string value)
+        private async Task<IEnumerable<SocietyDto>> SearchSocieties(string value, CancellationToken token)
         {
             //TODO Bring in other societies once available
             return _societies.Where(s => s.Name == "AGICOA");

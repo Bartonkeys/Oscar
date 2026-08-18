@@ -372,11 +372,5 @@ namespace Oscar.Blazor.Pages
 
         #endregion
 
-        #region - Converters -
-        private MudBlazor.Converter<bool, bool?> InvertedBooleanConverter = new() { SetFunc = value => !value, GetFunc = value => !value ?? true };
-
-        private MudBlazor.Converter<string, DateTime> FormattedDateTimeConverter = new() { GetFunc = value => GetFormattedDate(value), SetFunc = null };
-
-        #endregion
     }
 }

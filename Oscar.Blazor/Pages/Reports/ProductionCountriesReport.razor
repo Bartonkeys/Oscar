@@ -51,10 +51,10 @@
                         </MudText>
                     </NoItemsTemplate>
                 </MudAutocomplete>
-                <MudChipSet AllClosable="true" OnClose="RemoveSelectedCountry">
+                <MudChipSet T="string" AllClosable="true" OnClose="RemoveSelectedCountry">
                     @foreach (var val in _selectedCountries)
                     {
-                        <MudChip Color="Color.Default" Size=Size.Small @key="@GetCountryId(val)" Text="@GetCountryName(val)" />
+                        <MudChip T="string" Color="Color.Default" Size=Size.Small @key="@GetCountryId(val)" Text="@GetCountryName(val)" />
                     }
                 </MudChipSet>
             </MudItem> *@

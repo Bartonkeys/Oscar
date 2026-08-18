@@ -124,22 +124,22 @@ namespace Oscar.Blazor.Library.Components.Match
             }
         }
 
-        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value)
+        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? Clients : Clients.Where(x => x.ClientName.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private async Task<IEnumerable<int?>> SearchYears(string value)
+        private async Task<IEnumerable<int?>> SearchYears(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? Years : Years.Where(x => x.ToString().Contains(value));
         }
 
-        private async Task<IEnumerable<CountryDto>> SearchCountries(string value)
+        private async Task<IEnumerable<CountryDto>> SearchCountries(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? Countries : Countries.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private async Task<IEnumerable<RightsTypeDto>> SearchRightsTypes(string value)
+        private async Task<IEnumerable<RightsTypeDto>> SearchRightsTypes(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? RightsTypes : RightsTypes.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }

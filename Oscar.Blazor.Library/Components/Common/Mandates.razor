@@ -2,7 +2,7 @@
 
 <MudTable T="MandateTypeDto" Items="@MandateTypes" Hover="true">
   	<RowTemplate>
-		<MudCheckBox @bind-Checked="@context.Mandated" Label="@($"{context.Name} - {context.Description}")"></MudCheckBox>
+		<MudCheckBox @bind-Value="@context.Mandated" Label="@($"{context.Name} - {context.Description}")"></MudCheckBox>
 	</RowTemplate>
 </MudTable>
 

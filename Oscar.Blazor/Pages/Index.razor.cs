@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using NuGet.Protocol.Plugins;
 using Oscar.Data.Context;
 
 namespace Oscar.Blazor.Pages
@@ -9,24 +8,32 @@ namespace Oscar.Blazor.Pages
     {
         [Inject] private OscarContext OscarContext { get; set; }
 
-        private static int standAloneCount;
-        private static int seriesCount;
-        private static int seasonCount;
-        private static int episodeCount;
+        private int standAloneCount;
+        private int seriesCount;
+        private int seasonCount;
+        private int episodeCount;
         private bool loading = true;
-        public double[] data = { standAloneCount, seriesCount, seasonCount, episodeCount };
+
+        public double[] data => new double[] { standAloneCount, seriesCount, seasonCount, episodeCount };
         public string[] labels = { "Standalone", "Series", "Season", "Episode" };
 
-        protected override async Task OnInitializedAsync() => await Task.Run(LoadClients);
-
-        private async Task LoadClients()
+        public List<ChartSeries<double>> Series => new()
         {
-            standAloneCount = OscarContext.Works.Count(w => w.Discriminator == "StandAlone");
-            seriesCount = OscarContext.Works.Count(w => w.Discriminator == "Series");
-            seasonCount = OscarContext.Works.Count(w => w.Discriminator == "Season");
-            episodeCount = OscarContext.Works.Count(w => w.Discriminator == "Episode");
+            new ChartSeries<double> { Name = "Works", Data = data }
+        };
+
+        protected override async Task OnInitializedAsync() => await LoadWorkCounts();
+
+        private async Task LoadWorkCounts()
+        {
+            standAloneCount = await CountByDiscriminator("StandAlone");
+            seriesCount = await CountByDiscriminator("Series");
+            seasonCount = await CountByDiscriminator("Season");
+            episodeCount = await CountByDiscriminator("Episode");
             loading = false;
-            await Task.CompletedTask;
         }
+
+        private Task<int> CountByDiscriminator(string discriminator) =>
+            Task.FromResult(OscarContext.Works.Count(w => w.Discriminator == discriminator));
     }
 }

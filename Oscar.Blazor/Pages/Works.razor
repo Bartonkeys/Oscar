@@ -173,7 +173,7 @@
                         </MudAutocomplete>
                     </MudItem>
                     <MudItem xs="2">
-                        <MudSwitch Class="mt-3" @ref="_noRightsSwitch" T="bool" @bind-Checked="_hasNoRights" Label="Has No rights" Color="Color.Error" />
+                        <MudSwitch Class="mt-3" @ref="_noRightsSwitch" T="bool" @bind-Value="_hasNoRights" Label="Has No rights" Color="Color.Error" />
                     </MudItem>
                     <MudItem xs="12">
                         <div class="d-flex align-content-start justify-center flex-wrap flex-grow-1 gap-4">
@@ -216,7 +216,7 @@
 
     <MudDivider />
     <MudItem xs="12">
-        <MudTable T="WorksDto" ServerData="@(new Func<TableState, Task<TableData<WorksDto>>>(ServerReload))" Hover="true" @ref="_grid" Loading="@IsBusy" HorizontalScrollbar="true" Bordered="true"
+        <MudTable T="WorksDto" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<WorksDto>>>(ServerReload))" Hover="true" @ref="_grid" Loading="@IsBusy" HorizontalScrollbar="true" Bordered="true"
                   MultiSelection="true" @bind-SelectedItems="selectedItems" RowsPerPageChanged="UpdateRowsPerPageInSession" Dense="true" OnRowClick="@RowDoubleClicked" RowClass="cursor-pointer"
                   AllowUnsorted="false" FixedHeader="@_fixedHeader" FixedFooter="@_fixedFooter" Height="@(_fixedHeader || _fixedFooter ?"600px":"")" Virtualize="true" Striped="true">
             <ToolBarContent>
@@ -483,7 +483,7 @@
                 }
                 <MudTd DataLabel="Edit">
                     <MudNavLink Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href="@string.Format("WorksDetail/{0}/{1}", context.Discriminator, context.Id)"></MudNavLink>
-                    @*<MudIconButton Icon="@Icons.Filled.Edit" Color="Color.Primary" aria-label="edit" OnClick="() => OpenWorksDrawer(context.Id, (Discriminator)Enum.Parse(typeof(Discriminator), context.Discriminator))"></MudIconButton>*@
+                    @*<MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" aria-label="edit" OnClick="() => OpenWorksDrawer(context.Id, (Discriminator)Enum.Parse(typeof(Discriminator), context.Discriminator))"></MudIconButton>*@
                 </MudTd>
                 <MudTd DataLabel="Rights">
                     <MudIconButton Icon="@Icons.Material.Filled.List" Color="Color.Primary" aria-label="edit" OnClick="() => OpenRightsForm(context.Id)"></MudIconButton>
@@ -502,8 +502,8 @@
     </MudItem>
     <MudItem xs="12">
         <div class="d-flex flex-wrap m-4">
-            <MudSwitch @bind-Checked="@_fixedHeader" Color="Color.Primary">Fixed Header</MudSwitch>
-            <MudSwitch @bind-Checked="@_fixedFooter" Color="Color.Primary">Fixed Footer</MudSwitch>
+            <MudSwitch @bind-Value="@_fixedHeader" Color="Color.Primary">Fixed Header</MudSwitch>
+            <MudSwitch @bind-Value="@_fixedFooter" Color="Color.Primary">Fixed Footer</MudSwitch>
         </div>
     </MudItem>
     <MudDivider />

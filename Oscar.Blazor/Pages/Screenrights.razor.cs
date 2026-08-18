@@ -24,7 +24,7 @@ namespace Oscar.Blazor.Pages
         [Inject]
         ISnackbar Snackbar { get; set; }
 
-        private async Task<TableData<ScreenrightsRequestDto>> ServerReload(TableState state)
+        private async Task<TableData<ScreenrightsRequestDto>> ServerReload(TableState state, CancellationToken token)
         {
             table.Loading = true;
             var tableData = (await Mediator.Send(new GetScreenrightsRequestsQuery

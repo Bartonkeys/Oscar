@@ -17,7 +17,7 @@
     <MudItem xs="6">
     </MudItem>
     <MudItem xs="12">
-        <MudTable Dense="true" ServerData="@(new Func<TableState, Task<TableData<MatchRequestDto>>>(ServerReload))" 
+        <MudTable Dense="true" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<MatchRequestDto>>>(ServerReload))" 
                   Hover="true" @ref="table" Loading="@IsBusy"
                   Filter="new Func<MatchRequestDto, bool>(Filter)">
             <ToolBarContent>
@@ -38,7 +38,7 @@
             <RowTemplate>
                 <MudTd DataLabel="Id">@context.Reference</MudTd>
                 <MudTd DataLabel="Status">
-                    <MudChip Label="true" Color="@GetColour(context.Status)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.Status.ToString()</MudChip>
+                    <MudChip T="string" Label="true" Color="@GetColour(context.Status)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.Status.ToString()</MudChip>
                 </MudTd>
                 <MudTd DataLabel="Rules">@context.Rules.ToString()</MudTd>
                 <MudTd DataLabel="RequestBy">@context.RequestedBy</MudTd>

@@ -54,7 +54,7 @@ namespace Oscar.Blazor.Library.Components.Works
         public async Task Clear()
         {
             Value = null;
-            await _worksTypePicker.Clear();
+            await _worksTypePicker.ClearAsync();
         }
 
     }

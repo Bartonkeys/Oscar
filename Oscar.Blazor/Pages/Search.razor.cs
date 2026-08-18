@@ -106,7 +106,7 @@ namespace Oscar.Blazor.Pages
             _searchTypeDiscriminator = SearchType.Exact;
             _searchDirection = SearchDirection.Ascending;
             _selectedWorks = new() { Title = string.Empty };
-            await _autoComplete.Clear();
+            await _autoComplete.ClearAsync();
             StateHasChanged();
 
             await _table.ReloadServerData();
@@ -172,7 +172,7 @@ namespace Oscar.Blazor.Pages
                    || works.Titles.First().Title.Contains(searchString, StringComparison.OrdinalIgnoreCase);
         }
 
-        private async Task<TableData<WorksDto>> ServerReload(TableState state)
+        private async Task<TableData<WorksDto>> ServerReload(TableState state, CancellationToken token)
         {
             await Task.Delay(1);
 
@@ -272,7 +272,7 @@ namespace Oscar.Blazor.Pages
             await _table.ReloadServerData();
         }
 
-        private async Task<IEnumerable<WorksTitleResponseDto>> AutoCompleteTitle(string title)
+        private async Task<IEnumerable<WorksTitleResponseDto>> AutoCompleteTitle(string title, CancellationToken token)
         {
             if (string.IsNullOrEmpty(title)) 
                 return new List<WorksTitleResponseDto>();

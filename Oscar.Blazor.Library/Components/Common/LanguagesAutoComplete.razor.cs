@@ -27,7 +27,7 @@ namespace Oscar.Blazor.Library.Components.Common
             }
         }
 
-        private async Task<IEnumerable<LanguageDto>> Search(string value)
+        private async Task<IEnumerable<LanguageDto>> Search(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
                 return _allLanguages;

@@ -41,7 +41,7 @@ namespace Oscar.Blazor.Library.Components.Imports
                 table.ReloadServerData();
         }
 
-        protected async Task<TableData<WorksImportDto>> ServerReload(TableState state)
+        protected async Task<TableData<WorksImportDto>> ServerReload(TableState state, CancellationToken token)
         {
             if (!OpenImportDrawer)
                 return new TableData<WorksImportDto>()

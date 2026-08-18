@@ -102,7 +102,7 @@ namespace Oscar.Blazor.Library.Components
             _clients = await RefDataService.GetClients();
         }
 
-        private async Task<IEnumerable<ClientDto>> Search(string value)
+        private async Task<IEnumerable<ClientDto>> Search(string value, CancellationToken token)
         {
             await LoadClients();
             if (string.IsNullOrEmpty(value)) return _clients;
@@ -112,7 +112,7 @@ namespace Oscar.Blazor.Library.Components
             return filteredClients;
         }
 
-        private async Task<IEnumerable<CatalogueDto>> SearchCat(string value)
+        private async Task<IEnumerable<CatalogueDto>> SearchCat(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -128,7 +128,7 @@ namespace Oscar.Blazor.Library.Components
             return _catalogues.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private async Task<IEnumerable<WorksTitleDto>> SearchSeries(string value)
+        private async Task<IEnumerable<WorksTitleDto>> SearchSeries(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -144,7 +144,7 @@ namespace Oscar.Blazor.Library.Components
             return _seriesWorksTitle.Where(x => x.Title.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private async Task<IEnumerable<WorksTitleDto>> SearchSeason(string value)
+        private async Task<IEnumerable<WorksTitleDto>> SearchSeason(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -210,21 +210,21 @@ namespace Oscar.Blazor.Library.Components
             if (selectedCatalogue != null)
                 ActionText += "/" + selectedCatalogue.Name;
 
-            var result = await DialogService.Show<ConfirmDialog>(actionString + " Works").Result;
+            var result = await (await DialogService.ShowAsync<ConfirmDialog>(actionString + " Works")).Result;
 
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 if (WorksSource == WorksSource.WorksDetail)
                 {
                     if (WorksToCopy?.FirstOrDefault()?.Discriminator == Discriminator.Series.ToString())
                     {
                         var selectedSeriesId = WorksToCopy.FirstOrDefault().Id;
-                        CopySeries(relinquish, selectedSeriesId, selectedClient.Id, selectedCatalogue.Id, copyOrMoveUnderlyingWorks.Checked);
+                        CopySeries(relinquish, selectedSeriesId, selectedClient.Id, selectedCatalogue.Id, copyOrMoveUnderlyingWorks.Value);
                     }
                     else if (WorksToCopy?.FirstOrDefault()?.Discriminator == Discriminator.Season.ToString())
                     {
                         var selectedSeasonId = WorksToCopy.FirstOrDefault().Id;
-                        CopySeasons(relinquish, selectedSeries.Id, selectedSeasonId, selectedClient.Id, selectedCatalogue.Id, copyOrMoveUnderlyingWorks.Checked);
+                        CopySeasons(relinquish, selectedSeries.Id, selectedSeasonId, selectedClient.Id, selectedCatalogue.Id, copyOrMoveUnderlyingWorks.Value);
                     }
                     else if (WorksToCopy?.FirstOrDefault()?.Discriminator == Discriminator.Episode.ToString())
                     {
@@ -248,12 +248,12 @@ namespace Oscar.Blazor.Library.Components
                         }
                         else if (workItem.Value.Discriminator == "Series")
                         {
-                            CopySeries(relinquish, work.Id, selectedClientId, selectedCatalogueId, copyOrMoveUnderlyingWorks.Checked);
+                            CopySeries(relinquish, work.Id, selectedClientId, selectedCatalogueId, copyOrMoveUnderlyingWorks.Value);
                         }
                         else if (workItem.Value.Discriminator == "Season")
                         {
                             var season = await Mediator.Send(new GetSeasonByIdQuery { Id = work.Id }); 
-                            CopySeasons(relinquish, season.Value.Series.Id, work.Id, selectedClientId, selectedCatalogueId, copyOrMoveUnderlyingWorks.Checked);
+                            CopySeasons(relinquish, season.Value.Series.Id, work.Id, selectedClientId, selectedCatalogueId, copyOrMoveUnderlyingWorks.Value);
                         }
                         else if (workItem.Value.Discriminator == "Episode")
                         {

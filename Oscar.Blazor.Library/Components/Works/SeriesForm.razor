@@ -18,7 +18,7 @@
             <MudDrawer @bind-Open="@openCopyDrawer" Height="100%" Width="50%" Style="padding: 20px" Anchor="@Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
                 <CopyForm WorksToCopy="@selectedItems" WorksSource="WorksSource.WorksDetail" CopyFormComplete="CopyFormComplete"></CopyForm>
             </MudDrawer>
-            <MudIconButton Icon="@Icons.Filled.ContentCopy" Size="Size.Small" Color="Color.Primary" aria-label="copy" OnClick="@(async () => OpenCopyDrawer(_works))"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Color="Color.Primary" aria-label="copy" OnClick="@(async () => OpenCopyDrawer(_works))"></MudIconButton>
         }
     </div>
     <MudCard Height="90%" Class="overflow-auto pb-4">
@@ -30,7 +30,7 @@
             <StatusPicker Value="@_works.WorksStatus" Label="Status" Class="pl-4 pt-2 pr-4" InvalidStatuses="@(new List<WorksStatus>() {WorksStatus.Any})" StatusChanged="WorkStatusChanged"></StatusPicker>
             @if (ShowUpdateAllStatus)
             {
-                <MudCheckBox @bind-Checked="UpdateAllStatus" Dense="true" Label="Apply Status to all Seasons and all Episodes" Color="Color.Primary"></MudCheckBox>
+                <MudCheckBox @bind-Value="UpdateAllStatus" Dense="true" Label="Apply Status to all Seasons and all Episodes" Color="Color.Primary"></MudCheckBox>
             } 
             @if (_works.WorksStatus == WorksStatus.Uncontrolled)
             {
@@ -84,7 +84,7 @@
                 </MudExpansionPanel>
 
             }
-            <MudExpansionPanel Text="Mandates" MaxHeight="600" IsExpanded="@_showMandatesPanel" IsExpandedChanged="@showHideMandatesPanel">
+            <MudExpansionPanel Text="Mandates" MaxHeight="600" Expanded="@_showMandatesPanel" ExpandedChanged="@showHideMandatesPanel">
                 <Mandates MandateTypes="@_mandateTypes"></Mandates>
             </MudExpansionPanel>
             @if (_works.Id > 0)

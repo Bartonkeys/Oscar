@@ -4,8 +4,8 @@
 <AuthorizeView>
     <Authorized>
         <MudMenu Variant="Variant.Outlined" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Color="@Color.Info">
-            <ActivatorContent>
-                <MudChip Icon="@contextUser.Avatar" Color="@Color.Secondary">@contextUser.DisplayName</MudChip>
+            <ActivatorContent Context="activator">
+                <MudChip T="string" Icon="@contextUser.Avatar" Color="@Color.Secondary">@contextUser.DisplayName</MudChip>
             </ActivatorContent>
             <ChildContent>
                 <MudMenuItem Icon="@Icons.Material.Rounded.Logout" Href="MicrosoftIdentity/Account/SignOut" Target="_self">Sign Out</MudMenuItem>

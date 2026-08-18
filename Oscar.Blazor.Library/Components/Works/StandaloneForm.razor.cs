@@ -202,11 +202,11 @@ namespace Oscar.Blazor.Library.Components.Works
                     DialogResult? dialogResult = null;
                     if (IsDuplicate)
                     {
-                        dialog = DialogService.Show<ConfirmDialog>("This standalone already exists");
+                        dialog = await DialogService.ShowAsync<ConfirmDialog>("This standalone already exists");
                         dialogResult = await dialog.Result;
                     }
 
-                    if (dialog == null || !dialogResult.Cancelled)
+                    if (dialog == null || !dialogResult.Canceled)
                     {
                         var addStandAloneCommand = new AddStandAloneCommand
                         {

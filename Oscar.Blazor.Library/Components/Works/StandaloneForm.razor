@@ -74,7 +74,7 @@
                 </MudExpansionPanel>
 
             }
-            <MudExpansionPanel Text="Mandates" MaxHeight="600" IsExpanded="@_showMandatesPanel" IsExpandedChanged="@showHideMandatesPanel">
+            <MudExpansionPanel Text="Mandates" MaxHeight="600" Expanded="@_showMandatesPanel" ExpandedChanged="@showHideMandatesPanel">
                 <Mandates MandateTypes="@_mandateTypes"></Mandates>
             </MudExpansionPanel>
             @if (_works.Id > 0)

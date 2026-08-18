@@ -57,7 +57,7 @@ namespace Oscar.Blazor.Pages.Royalty
 
         private async Task ImportMerlinSocieties(IBrowserFile file)
         {
-            var confirmResult = await DialogService.Show<ConfirmDialog>("This process will add/update merlin societies").Result;
+            var confirmResult = await (await DialogService.ShowAsync<ConfirmDialog>("This process will add/update merlin societies")).Result;
             if (!confirmResult.Canceled)
             {
                 await SetStatusAsync(true, "Importing File");

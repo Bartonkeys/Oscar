@@ -17,7 +17,7 @@
         }
         @if (IsPage == false)
         {
-            <MudNavLink Icon="@Icons.Filled.WbSunny" Color="Color.Primary" Href="@string.Format("WorksDetail/{0}/{1}", _works.Discriminator, _works.Id)">Open as page</MudNavLink>
+            <MudNavLink Icon="@Icons.Material.Filled.WbSunny" Color="Color.Primary" Href="@string.Format("WorksDetail/{0}/{1}", _works.Discriminator, _works.Id)">Open as page</MudNavLink>
         }
     </div>
     <MudCard Height="90%" Class="overflow-auto pb-4">
@@ -26,7 +26,7 @@
             <StatusPicker Value="@_works.WorksStatus" Label="Status" Class="pl-4 pt-2 pr-4" InvalidStatuses="@(new List<WorksStatus>() {WorksStatus.Any})" StatusChanged="StatusChanged"></StatusPicker>
             @if (ShowUpdateAllStatus)
             {
-                <MudCheckBox @bind-Checked="UpdateAllStatus" Dense="true" Label="Apply Status to Episodes" Color="Color.Primary"></MudCheckBox>
+                <MudCheckBox @bind-Value="UpdateAllStatus" Dense="true" Label="Apply Status to Episodes" Color="Color.Primary"></MudCheckBox>
             } 
             @if (_works.WorksStatus == WorksStatus.Uncontrolled)
             {
@@ -80,7 +80,7 @@
                     <ReRegistrations @bind-Values="_works.ReRegistrations" ListLabel="Add ReRegistrations"></ReRegistrations>
                 </MudExpansionPanel>
             }
-            <MudExpansionPanel Text="Mandates" MaxHeight="600" IsExpanded="@_showMandatesPanel" IsExpandedChanged="@showHideMandatesPanel">
+            <MudExpansionPanel Text="Mandates" MaxHeight="600" Expanded="@_showMandatesPanel" ExpandedChanged="@showHideMandatesPanel">
                 <Mandates MandateTypes="@_mandateTypes"></Mandates>
             </MudExpansionPanel>
             @if (_works.Id > 0)

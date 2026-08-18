@@ -83,7 +83,7 @@
                         <MudIconButton Title="Works" Icon="@Icons.Material.Filled.Link" Color="Color.Inherit" Size="Size.Small" aria-label="works" OnClick="() => LinkWork(context.Item.Id)" />
                         <MudIconButton Title="Edit" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenClientForm(context.Item.Id)" />
                         <MudIconButton Title="Rights" Icon="@Icons.Material.Filled.List" Color="Color.Default" Size="Size.Small" aria-label="rights" OnClick="() => OpenRightsForm(context.Item.Id)" />
-                        @*<MudIconButton Icon="@Icons.Filled.CollectionsBookmark" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenCatalogForm(context.Id)"></MudIconButton>*@
+                        @*<MudIconButton Icon="@Icons.Material.Filled.CollectionsBookmark" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenCatalogForm(context.Id)"></MudIconButton>*@
                     </MudContainer>
                 </CellTemplate>
             </TemplateColumn>
@@ -97,10 +97,10 @@
 <MudGrid>
     <MudItem xs="12">
         <div class="d-flex flex-wrap m-4">
-            <MudSwitch T="bool" Checked="@StickClientName" CheckedChanged="@(() => StickClientName = !StickClientName)" Color="Color.Primary">Pin Name</MudSwitch>
-            <MudSwitch T="bool" Checked="@StickActions" CheckedChanged="@(() => StickActions = !StickActions)" Color="Color.Primary">Pin Actions</MudSwitch>
-            <MudSwitch @bind-Checked="@_fixedHeader" Color="Color.Primary">Fixed Header</MudSwitch>
-            <MudSwitch @bind-Checked="@_fixedFooter" Color="Color.Primary">Fixed Footer</MudSwitch>
+            <MudSwitch T="bool" Value="@StickClientName" ValueChanged="@(() => StickClientName = !StickClientName)" Color="Color.Primary">Pin Name</MudSwitch>
+            <MudSwitch T="bool" Value="@StickActions" ValueChanged="@(() => StickActions = !StickActions)" Color="Color.Primary">Pin Actions</MudSwitch>
+            <MudSwitch @bind-Value="@_fixedHeader" Color="Color.Primary">Fixed Header</MudSwitch>
+            <MudSwitch @bind-Value="@_fixedFooter" Color="Color.Primary">Fixed Footer</MudSwitch>
         </div>
     </MudItem>
 </MudGrid>

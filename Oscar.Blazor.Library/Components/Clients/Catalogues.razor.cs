@@ -56,8 +56,8 @@ namespace Oscar.Blazor.Library.Components.Clients
 
         private async Task RemoveCatalogue(CatalogueDto catalogue)
         {
-            var confirmResult = await DialogService.Show<ConfirmDialog>("Are you sure you wish to permanently delete this Catalogue?").Result;
-            if (!confirmResult.Cancelled)
+            var confirmResult = await (await DialogService.ShowAsync<ConfirmDialog>("Are you sure you wish to permanently delete this Catalogue?")).Result;
+            if (!confirmResult.Canceled)
             {
                 var deleteCatalogueCommand = new DeleteCatalogueCommand()
                 {
