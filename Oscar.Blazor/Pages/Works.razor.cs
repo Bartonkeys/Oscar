@@ -108,7 +108,7 @@ namespace Oscar.Blazor.Pages
         private MudAutocomplete<CountryDto> _rightsCountryAutoComplete;
         private MudAutocomplete<CountryDto> _countryAutoComplete;
         private MudAutocomplete<CompanyDto> _productionCompanyAutoComplete;
-        private IEnumerable<WorksListColumn?> columnsVisible = new HashSet<WorksListColumn?>();
+        private IReadOnlyCollection<WorksListColumn?> columnsVisible = new HashSet<WorksListColumn?>();
         private MudExpansionPanel _advancedSearchPanel;
         private MudSelect<string> _discriminatorSelector = new();
         private SearchWorksQuery _searchWorksQuery = new();
@@ -142,7 +142,7 @@ namespace Oscar.Blazor.Pages
             }
         }
 
-        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm)
+        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -175,7 +175,7 @@ namespace Oscar.Blazor.Pages
             set => _rightsCountryValue = value;
         }
 
-        private async Task<IEnumerable<CountryDto>> CountrySearch(string searchTerm)
+        private async Task<IEnumerable<CountryDto>> CountrySearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -196,7 +196,7 @@ namespace Oscar.Blazor.Pages
 
         #region - Companies -
 
-        private async Task<IEnumerable<CompanyDto>> CompanySearch(string searchTerm)
+        private async Task<IEnumerable<CompanyDto>> CompanySearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -216,7 +216,7 @@ namespace Oscar.Blazor.Pages
 
         #region - Titles Search -
 
-        private async Task<IEnumerable<WorksTitleResponseDto>> TitlesSearch(string searchTerm)
+        private async Task<IEnumerable<WorksTitleResponseDto>> TitlesSearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -314,7 +314,7 @@ namespace Oscar.Blazor.Pages
             searchString = string.Empty;
         }
 
-        private async Task<TableData<WorksDto>> ServerReload(TableState state)
+        private async Task<TableData<WorksDto>> ServerReload(TableState state, CancellationToken token)
         {
             if (IsBusy || !_userSearch && (!_useStoredQuery && !_autoCompleteSearch && !_searchWorksQuery.IsValid))
                 return new TableData<WorksDto>() { TotalItems = totalItems, Items = RefDataService.Empty<WorksDto>() };
@@ -400,7 +400,7 @@ namespace Oscar.Blazor.Pages
             _grid.SortLabel = _searchWorksQuery.SortColumn ?? string.Empty;
 
             _searchDiscriminators = GetDiscriminators(_searchWorksQuery.Discriminators);
-            _discriminatorSelector.SelectedValues = _searchWorksQuery.Discriminators.Select(d => d.ToString());
+            _discriminatorSelector.SelectedValues = _searchWorksQuery.Discriminators.Select(d => d.ToString()).ToList();
 
             if (!string.IsNullOrEmpty(_searchWorksQuery.DirectorFirstName) ||
                 !string.IsNullOrEmpty(_searchWorksQuery.DirectorLastName))
@@ -587,7 +587,7 @@ namespace Oscar.Blazor.Pages
             SetAdditionalColumnsFromSessionState();
         }
 
-        private async void UpdateWorksColumnsInSession(IEnumerable<WorksListColumn?> newWorksListColumn)
+        private async void UpdateWorksColumnsInSession(IReadOnlyCollection<WorksListColumn?> newWorksListColumn)
         {
             columnsVisible = newWorksListColumn;
 
@@ -638,7 +638,8 @@ namespace Oscar.Blazor.Pages
             if (firstRender)
             {
                 await LoadStateAsync();
-                _advancedSearchPanel?.Expand();
+                if (_advancedSearchPanel != null)
+                    await _advancedSearchPanel.ExpandAsync();
             }
         }
 
@@ -672,9 +673,12 @@ namespace Oscar.Blazor.Pages
             FilterCountryID = 0;
             SelectedCountry = null;
             SelectedRightsCountry = null;
-            _rightsCountryAutoComplete?.Clear();
-            _countryAutoComplete?.Clear();
-            _productionCompanyAutoComplete?.Clear();
+            if (_rightsCountryAutoComplete != null)
+                await _rightsCountryAutoComplete.ClearAsync();
+            if (_countryAutoComplete != null)
+                await _countryAutoComplete.ClearAsync();
+            if (_productionCompanyAutoComplete != null)
+                await _productionCompanyAutoComplete.ClearAsync();
 
             searchString = "";
             searchStringDF = "";
@@ -706,19 +710,19 @@ namespace Oscar.Blazor.Pages
             selectedCatalogue = null;
 
             _hasNoRights = false;
-            _noRightsSwitch.Checked = false;
+            _noRightsSwitch.Value = false;
             _worksTypeId = null;
             await _worksTypePicker.Clear();
 
             if (clientSelect != null)
-                await clientSelect.Clear();
+                await clientSelect.ClearAsync();
             _searchTypeDiscriminator = SearchType.Contains;
-            await _autoComplete.Clear();
+            await _autoComplete.ClearAsync();
 
             _createFromDate = null;
             _createToDate = null;
-            _createFromPicker.Clear();
-            _createToPicker.Clear();
+            await _createFromPicker.ClearAsync();
+            await _createToPicker.ClearAsync();
 
             _useStoredQuery = false;
             await ProtectedLocalStore.DeleteAsync("SearchWorksQuery");
@@ -967,7 +971,7 @@ namespace Oscar.Blazor.Pages
             if (string.IsNullOrWhiteSpace(message)) return true;
             var htmlMessage = (MarkupString)$"{message}<br /><b>Please provide search criteria and try again.</b>";
             MessageBoxOptions options = new MessageBoxOptions() { MarkupMessage = htmlMessage, Title = title };
-            await DialogService.ShowMessageBox(options);
+            await DialogService.ShowMessageBoxAsync(options);
             Console?.Log(title, $"Message: {message}");
             return false;
         }

@@ -7,7 +7,7 @@ namespace Oscar.Blazor.Library.Components
     public partial class DuplicateDialog
     {
         [CascadingParameter]
-        MudDialogInstance MudDialog { get; set; }
+        IMudDialogInstance MudDialog { get; set; }
 
         [Parameter]
         public ICollection<DuplicateDto>? Duplicates { get; set; }

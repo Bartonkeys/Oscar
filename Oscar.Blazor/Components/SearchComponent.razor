@@ -30,7 +30,7 @@
         _isBusy = false;
     }
 
-    private Task<IEnumerable<TItem>> HandleSearch(string arg)
+    private Task<IEnumerable<TItem>> HandleSearch(string arg, CancellationToken token)
     {
         // if text is null or empty, don't return values (drop-down will not open)
         if (string.IsNullOrEmpty(arg) || arg.Length < 3) return null!;

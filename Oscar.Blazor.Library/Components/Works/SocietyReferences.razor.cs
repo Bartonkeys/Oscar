@@ -48,10 +48,10 @@ namespace Oscar.Blazor.Library.Components.Works
 
         private async Task DeleteSocietyRefereneAsync(SocietyReferenceDto SocietyReference)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Delete SocietyReference?");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete SocietyReference?");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var result = await Mediator.Send(new DeleteSocietyReferenceCommand { Id = SocietyReference.Id });
                 if (result.IsSuccess)

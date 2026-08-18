@@ -75,7 +75,7 @@
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ml-auto mt-2" OnClick="onExportResults">Export Results</MudButton>
             </MudItem>
         </MudGrid>
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<WorksDto>>>(ServerReload))" Hover="true" @ref="_table" Loading="@_loading"
+        <MudTable ServerData="@(new Func<TableState, CancellationToken, Task<TableData<WorksDto>>>(ServerReload))" Hover="true" @ref="_table" Loading="@_loading"
                   MultiSelection=" true" @bind-SelectedItems="selectedItems" Dense="true" 
                   RowsPerPageChanged="UpdateRowsPerPageInSession">
             <HeaderContent>
@@ -145,10 +145,10 @@
                     <MudTd DataLabel="Catalogue">Not Set</MudTd>
                 }
                 <MudTd DataLabel="Edit">
-                    <MudIconButton Icon="@Icons.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenWorksDrawer(context.Id, (Discriminator)Enum.Parse(typeof(Discriminator), context.Discriminator))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenWorksDrawer(context.Id, (Discriminator)Enum.Parse(typeof(Discriminator), context.Discriminator))"></MudIconButton>
                 </MudTd>
                 <MudTd DataLabel="Rights">
-                    <MudIconButton Icon="@Icons.Filled.List" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenRightsForm(context.Id)"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.List" Color="Color.Primary" Size="Size.Small" aria-label="edit" OnClick="() => OpenRightsForm(context.Id)"></MudIconButton>
                 </MudTd>
             </RowTemplate>
             <NoRecordsContent>

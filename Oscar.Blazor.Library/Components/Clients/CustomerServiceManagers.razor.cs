@@ -45,7 +45,7 @@ namespace Oscar.Blazor.Library.Components.Clients
             _operators.RemoveAll(x => Value.Select(c => c.Id).ToList().Contains(x.Id));
         }
 
-        private async Task<IEnumerable<OperatorDto>> Search(string value)
+        private async Task<IEnumerable<OperatorDto>> Search(string value, CancellationToken token)
         {
             if(_operators == null) await LoadAllOperators();
 

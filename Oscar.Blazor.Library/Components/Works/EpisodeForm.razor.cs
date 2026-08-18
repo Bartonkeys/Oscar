@@ -237,11 +237,11 @@ namespace Oscar.Blazor.Library.Components.Works
                     DialogResult? dialogResult = null;
                     if (IsDuplicate())
                     {
-                        dialog = DialogService.Show<ConfirmDialog>("This episode already exists");
+                        dialog = await DialogService.ShowAsync<ConfirmDialog>("This episode already exists");
                         dialogResult = await dialog.Result;
                     }
 
-                    if (dialog == null || !dialogResult.Cancelled)
+                    if (dialog == null || !dialogResult.Canceled)
                     {
                         var addEpisodeCommand = new AddEpisodeCommand
                         {

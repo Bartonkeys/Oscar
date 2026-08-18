@@ -247,11 +247,11 @@ namespace Oscar.Blazor.Library.Components.Works
                     DialogResult? dialogResult = null;
                     if (IsDuplicate())
                     {
-                        dialog = DialogService.Show<ConfirmDialog>("This season already exists");
+                        dialog = await DialogService.ShowAsync<ConfirmDialog>("This season already exists");
                         dialogResult = await dialog.Result;
                     }
 
-                    if (dialog == null || !dialogResult.Cancelled)
+                    if (dialog == null || !dialogResult.Canceled)
                     {
                         var addSeasonCommand = new AddSeasonCommand
                         {

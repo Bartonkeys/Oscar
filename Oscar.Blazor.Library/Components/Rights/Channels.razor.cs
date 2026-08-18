@@ -43,7 +43,7 @@ namespace Oscar.Blazor.Library.Components.Rights
             StateHasChanged();
         }
 
-        private async Task<IEnumerable<ChannelDto>> Search(string value)
+        private async Task<IEnumerable<ChannelDto>> Search(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
                 return _channels;

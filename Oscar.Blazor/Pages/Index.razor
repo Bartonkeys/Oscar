@@ -1,60 +1,53 @@
 ﻿@page "/"
 @inherits Oscar.Blazor.Library.Common.OscarComponentBase
 
-<PageTitle>Home</PageTitle>
-
+<PageTitle>Dashboard</PageTitle>
 
 <Spinner @ref="@SpinnerControl" SpinnerText="@StatusText" />
 
-<MudText Typo="Typo.h5" Class="mb-2">Dashboard</MudText>
-<div class="d-flex flex-grow-1 gap-4">
-    <MudGrid>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="d-flex flex-row pt-6 pb-4" Elevation="3">
-                <MudIcon Icon="@Icons.Material.Filled.Man" Color="Color.Primary" Class="mx-4" Style="width: 50px; height: 50px;" />
-                <div>
-                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Standalone</MudText>
-                    <MudText Typo="Typo.h6">@string.Format("{0:#,0}", standAloneCount)</MudText>
-                </div>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="d-flex flex-row pt-6 pb-4" Elevation="3">
-                <MudIcon Icon="@Icons.Material.Filled.AutoAwesomeMotion" Color="Color.Secondary" Class="mx-4" Style="width: 50px; height: 50px;" />
-                <div>
-                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Series</MudText>
-                    <MudText Typo="Typo.h6">@string.Format("{0:#,0}", seriesCount)</MudText>
-                </div>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="d-flex flex-row pt-6 pb-4" Elevation="3">
-                <MudIcon Icon="@Icons.Material.Filled.WbSunny" Color="Color.Success" Class="mx-4" Style="width: 50px; height: 50px;" />
-                <div>
-                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Seasons</MudText>
-                    <MudText Typo="Typo.h6">@string.Format("{0:#,0}", seasonCount)</MudText>
-                </div>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="d-flex flex-row pt-6 pb-4" Elevation="3">
-                <MudIcon Icon="@Icons.Material.Filled.Theaters" Color="Color.Warning" Class="mx-4" Style="width: 50px; height: 50px;"></MudIcon>
-                <div>
-                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Episodes</MudText>
-                    <MudText Typo="Typo.h6">@string.Format("{0:#,0}", episodeCount)</MudText>
-                </div>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
+<div class="d-flex align-center justify-space-between mb-6">
+    <div>
+        <MudText Typo="Typo.h5">Dashboard</MudText>
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">Works across the Oscar catalogue</MudText>
+    </div>
+    <MudChip T="string" Variant="Variant.Text" Color="Color.Default" Icon="@Icons.Material.Rounded.Inventory2">
+        @string.Format("{0:#,0}", data.Sum()) total
+    </MudChip>
 </div>
 
-<MudPaper Class="pa-4 mt-2 d-flex justify-center">
-    <MudChart ChartType="ChartType.Donut" Width="350px" Height="350px"
-              InputData="@data" InputLabels="@labels">
-        <CustomGraphics>
-            <text class="donut-inner-text" x="47%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Roboto" font-size="2">Total Works</text>
-            <text class="donut-inner-text" x="47%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Roboto" font-size="5">@string.Format("{0:#,0}", data.Sum())</text>
-        </CustomGraphics>
-    </MudChart>
-</MudPaper>
+<MudGrid Spacing="4">
+    @foreach (var tile in Tiles)
+    {
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="oscar-surface oscar-stat pa-4 d-flex align-center gap-3" Elevation="0">
+                <div class="oscar-stat-icon" style="@TileIconStyle(tile.Color)">
+                    <MudIcon Icon="@tile.Icon" Color="@tile.Color" />
+                </div>
+                <div>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@tile.Label</MudText>
+                    <MudText Typo="Typo.h5">@string.Format("{0:#,0}", tile.Count)</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
 
+<MudPaper Class="oscar-surface pa-6 mt-6" Elevation="0">
+    <MudText Typo="Typo.h6" Class="mb-1">Works by type</MudText>
+    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-4">Share of the catalogue by work type</MudText>
+
+    @if (data.Sum() > 0)
+    {
+        <div class="d-flex justify-center">
+            <MudChart T="double" ChartType="ChartType.Donut" Width="320px" Height="320px"
+                      ChartSeries="@Series" ChartLabels="@labels"
+                      LegendPosition="Position.Bottom" />
+        </div>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Dense="true">
+            No works found yet, so there is nothing to chart.
+        </MudAlert>
+    }
+</MudPaper>

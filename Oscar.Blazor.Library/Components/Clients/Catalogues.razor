@@ -25,7 +25,7 @@
         </RowTemplate>
     </MudTable>
     <MudExpansionPanels>
-        <MudExpansionPanel Text="Create New Catalogue" MaxHeight="150" IsExpanded="@_showCreatePanel" IsExpandedChanged="@showHideCreateForm">
+        <MudExpansionPanel Text="Create New Catalogue" MaxHeight="150" Expanded="@_showCreatePanel" ExpandedChanged="@showHideCreateForm">
             <MudPaper Class="d-flex flex-row" Elevation="0">
                 <MudTextField T="String" @bind-Value="_name" For="@(() => _name)" Label="Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
                 <MudTextField T="String" @bind-Value="_reference" For="@(() => _reference)" Label="Reference" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>

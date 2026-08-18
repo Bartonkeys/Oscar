@@ -33,7 +33,7 @@ namespace Oscar.Blazor.Pages
             _clients = (await Mediator.Send(new GetAllClientsQuery())).Value.ToList();
         }
 
-        private async Task<IEnumerable<ClientDto>> SearchClients(string value)
+        private async Task<IEnumerable<ClientDto>> SearchClients(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -56,7 +56,7 @@ namespace Oscar.Blazor.Pages
 
         private async Task BulkAmendRights()
         {
-            var confirmResult = await DialogService.Show<ConfirmDialog>("This process will update every relevant work associated with this client and catalogue").Result;
+            var confirmResult = await (await DialogService.ShowAsync<ConfirmDialog>("This process will update every relevant work associated with this client and catalogue")).Result;
             if (!confirmResult.Canceled)
             {
                 _processing = true;

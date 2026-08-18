@@ -18,7 +18,7 @@
                            Variant="Variant.Filled"
                            Color="Color.Primary"
                            Size="Size.Small"
-                           StartIcon="@Icons.Filled.CloudUpload"
+                           StartIcon="@Icons.Material.Filled.CloudUpload"
                            for="fileInput">
                     Browse
                 </MudButton>
@@ -32,9 +32,9 @@
             </div>
         </MudCardContent>
     </MudForm>
-    <MudRadioGroup T="string" SelectedOption="@_selectedDateFormatOption" SelectedOptionChanged="OnSelectedDateFormatOptionChanged">
-        <MudRadio Option="@("UK-DateFormat")">UK Date Format</MudRadio>
-        <MudRadio Option="@("US-DateFormat")">US Date Format</MudRadio>
+    <MudRadioGroup T="string" Value="@_selectedDateFormatOption" ValueChanged="OnSelectedDateFormatOptionChanged">
+        <MudRadio Value="@("UK-DateFormat")">UK Date Format</MudRadio>
+        <MudRadio Value="@("US-DateFormat")">US Date Format</MudRadio>
     </MudRadioGroup>
     <MudCardActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="@(async () => await ConvertAndDownload())" Disabled = "@(_selectedFile == null)" >Convert it</MudButton>

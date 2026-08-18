@@ -24,9 +24,9 @@
             <MudTextField @bind-Value="_society.Name" For="@(() => _society.Name)" Label="Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4" Required="true" RequiredError="Society name is required!"></MudTextField>
             <MudTextField @bind-Value="_society.ExpandedName" For="@(() => _society.ExpandedName)" Label="Expanded Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
             <MudTextField @bind-Value="_society.GeneralNotes" For="@(() => _society.GeneralNotes)" Label="General Notes" Lines="5" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
-            <MudCheckBox @bind-Checked="_society.IsClientRegistration" Label="Is Client Registration?"></MudCheckBox>
+            <MudCheckBox @bind-Value="_society.IsClientRegistration" Label="Is Client Registration?"></MudCheckBox>
             <MudTextField @bind-Value="_society.ClientRegistrationNotes" For="@(() => _society.ClientRegistrationNotes)" Label="Client Registration Notes" Lines="2" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
-            <MudCheckBox @bind-Checked="_society.IsWorksRegistration" Label="Is Works Registration?"></MudCheckBox>
+            <MudCheckBox @bind-Value="_society.IsWorksRegistration" Label="Is Works Registration?"></MudCheckBox>
             <MudTextField @bind-Value="_society.WorksRegistrationNotes" For="@(() => _society.WorksRegistrationNotes)" Label="Work Registration Notes" Lines="2" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
             <MudTextField @bind-Value="_society.Website" For="@(() => _society.Website)" Label="Website" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
             

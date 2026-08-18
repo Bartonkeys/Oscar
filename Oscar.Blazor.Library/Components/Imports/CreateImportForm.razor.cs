@@ -132,7 +132,7 @@ namespace Oscar.Blazor.Library.Components.Imports
             }
         }
 
-        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value)
+        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? Clients : Clients.Where(x => x.ClientName.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }

@@ -18,8 +18,8 @@ namespace Oscar.Blazor.Pages.Reports
         private List<ProductionCountryItem>? _gridItems = new();
         private ProductionCountryItem? _selectedItem;
         //private readonly HashSet<CountryDto?> _selectedCountries = new HashSet<CountryDto?>();
-        private IEnumerable<string> _selectedWorksStatuses = new HashSet<string> { "ACTIVE" };
-        private IEnumerable<string> _selectedDiscriminators = new HashSet<string> { "Episode", "Season", "Series", "StandAlone" };
+        private IReadOnlyCollection<string> _selectedWorksStatuses = new HashSet<string> { "ACTIVE" };
+        private IReadOnlyCollection<string> _selectedDiscriminators = new HashSet<string> { "Episode", "Season", "Series", "StandAlone" };
         private List<string> _countries = new List<string>();
         private readonly Dictionary<string, int> _workStatusLookup = new()
         {
@@ -32,7 +32,7 @@ namespace Oscar.Blazor.Pages.Reports
         private readonly string[] _discriminators = { "Episode", "Season", "Series", "StandAlone" };
 
         private string _selectedCountryName = string.Empty;
-        private IEnumerable<string> _selectedCountryNames = new HashSet<string>();
+        private IReadOnlyCollection<string> _selectedCountryNames = new HashSet<string>();
         #endregion
 
         #region - Clients -
@@ -45,7 +45,7 @@ namespace Oscar.Blazor.Pages.Reports
                 PopulateClientDetails();
             }
         }
-        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm)
+        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -81,7 +81,7 @@ namespace Oscar.Blazor.Pages.Reports
             }
         }
 
-        private async Task<IEnumerable<CountryDto>> CountrySearch(string searchTerm)
+        private async Task<IEnumerable<CountryDto>> CountrySearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -95,7 +95,7 @@ namespace Oscar.Blazor.Pages.Reports
             return item != null ? $"{item.Name} ({item.Code})" : "";
         }
 
-        private void RemoveSelectedCountry(MudChip chip)
+        private void RemoveSelectedCountry(MudChip<string> chip)
         {
             _selectedCountries.RemoveWhere(x => GetCountryName(x) == chip.Text);
         }
@@ -146,8 +146,8 @@ namespace Oscar.Blazor.Pages.Reports
             _selectedCatalogue = null;
             _selectedWorksStatuses = new HashSet<string> { "ACTIVE" };
             _selectedDiscriminators = new HashSet<string> { "Episode", "Season", "Series", "StandAlone" };
-            if (_clientSelect != null) { await _clientSelect.Clear(); }
-            if (_countrySelect != null) { await _countrySelect.Clear(); }
+            if (_clientSelect != null) { await _clientSelect.ClearAsync(); }
+            if (_countrySelect != null) { await _countrySelect.ClearAsync(); }
 
             _selectedCountryNames = new HashSet<string>();
             _gridItems?.Clear();

@@ -32,7 +32,7 @@ namespace Oscar.Blazor.Pages
                    || reports.ReportName.Contains(searchString, StringComparison.OrdinalIgnoreCase);
         }
 
-        private async Task<TableData<ReportDto>> ServerReload(TableState state)
+        private async Task<TableData<ReportDto>> ServerReload(TableState state, CancellationToken token)
         {
 
             table.Loading = true;
@@ -67,10 +67,10 @@ namespace Oscar.Blazor.Pages
 
         private async void DeleteReport(ReportDto reportDto)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Delete Report?");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete Report?");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var result = await Mediator.Send(new DeleteReportCommand { Id = reportDto.Id });
                 if (result.IsSuccess)

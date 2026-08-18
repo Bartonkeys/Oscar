@@ -27,7 +27,7 @@ namespace Oscar.Blazor.Library.Components.Clients
             StateHasChanged();
         }
 
-        private async Task<IEnumerable<SocietyDto>> Search(string value)
+        private async Task<IEnumerable<SocietyDto>> Search(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
                 return _societies;

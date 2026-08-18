@@ -46,7 +46,7 @@ namespace Oscar.Blazor.Library.Components.Common
             StateHasChanged();
         }
 
-        private async Task<IEnumerable<CountryDto>> Search(string value)
+        private async Task<IEnumerable<CountryDto>> Search(string value, CancellationToken token)
         {
             if(_countries == null || !_countries.Any())
                 _countries = (await Mediator.Send(new GetAllCountriesQuery())).Value.OrderBy(x => x.Name).ToList();

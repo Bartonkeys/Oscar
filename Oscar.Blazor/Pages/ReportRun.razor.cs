@@ -77,7 +77,7 @@ namespace Oscar.Blazor.Pages
             _isDisabled = false;
         }
 
-        private async Task<IEnumerable<ClientDto>> SearchClients(string value)
+        private async Task<IEnumerable<ClientDto>> SearchClients(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
             {

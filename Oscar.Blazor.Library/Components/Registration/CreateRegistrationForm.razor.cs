@@ -56,10 +56,10 @@ namespace Oscar.Blazor.Library.Components.Registration
         {
             _clients = Clients;
             _societies = Societies;
-            onFilterClear(null);
+            await onFilterClear(null);
         }
 
-        public void onFilterClear(EventArgs args)
+        public async Task onFilterClear(EventArgs args)
         {
             _client = null;
             _catalogue = null;
@@ -68,17 +68,17 @@ namespace Oscar.Blazor.Library.Components.Registration
             _registrationWorks = new();
             _selectedRegistrationItems = new();
             if(_clientAutoComplete != null)
-                _clientAutoComplete.Reset();
+                await _clientAutoComplete.ResetAsync();
             StateHasChanged();
         }
 
 
-        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value)
+        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? _clients : _clients.Where(x => x.ClientName.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private async Task<IEnumerable<SocietyDto>> SearchSocieties(string value)
+        private async Task<IEnumerable<SocietyDto>> SearchSocieties(string value, CancellationToken token)
         {
             //TODO Bring in other societies once available
             return _societies.Where(s => s.Name is "AGICOA" or "SUISSIMAGE" or "SCREENRIGHTS" or "CCC" or "CMC" or "CRC" or "EGEDA" or "GWFF" or "MPA" or "UPFAR ARGOA" or "MPLC");
@@ -124,7 +124,7 @@ namespace Oscar.Blazor.Library.Components.Registration
                 var registrationBatchCreateDto = result.Value;
                 Snackbar.Add($"Registration batch {registrationBatchCreateDto.BatchId}", Severity.Success);
                 await OnSubmit.InvokeAsync();
-                ResetForm();
+                await ResetForm();
             }
             else
             {
@@ -135,9 +135,9 @@ namespace Oscar.Blazor.Library.Components.Registration
             StateHasChanged();
         }
 
-        private async void ResetForm()
+        private async Task ResetForm()
         {
-            onFilterClear(null);
+            await onFilterClear(null);
         }
 
         private async Task ShowAll()

@@ -27,7 +27,7 @@ namespace Oscar.Blazor.Pages
         [Inject]
         ISnackbar Snackbar { get; set; }
 
-        private async Task<TableData<RegistrationBatchDisplayDto>> ServerReload(TableState state)
+        private async Task<TableData<RegistrationBatchDisplayDto>> ServerReload(TableState state, CancellationToken token)
         {
             table.Loading = true;
             var tableData = (await Mediator.Send(new GetRegistrationBatchQuery

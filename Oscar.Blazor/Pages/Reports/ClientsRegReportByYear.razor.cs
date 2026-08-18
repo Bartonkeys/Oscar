@@ -34,7 +34,7 @@ namespace Oscar.Blazor.Pages.Reports
         #endregion
 
         #region - Clients -
-        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm)
+        protected async Task<IEnumerable<ClientDto>> ClientSearch(string searchTerm, CancellationToken token)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -71,7 +71,7 @@ namespace Oscar.Blazor.Pages.Reports
         {
             SelectedClient = null;
             SelectedYear = $"{DateTime.Now.Year}";
-            if (_clientSelect != null) await _clientSelect.Clear();
+            if (_clientSelect != null) await _clientSelect.ClearAsync();
             _gridItems?.Clear();
             await _dataGrid?.ClearFiltersAsync()!;
         }

@@ -40,7 +40,7 @@ namespace Oscar.Blazor.Library.Components.Works
             _societies.RemoveAll(x => Values.Select(c => c.Id).ToList().Contains(x.Id));
         }
 
-        private async Task<IEnumerable<SocietyDto>> Search(string value)
+        private async Task<IEnumerable<SocietyDto>> Search(string value, CancellationToken token)
         {
             if(_societies == null) 
                 await LoadAllSocieties();

@@ -36,7 +36,7 @@ namespace Oscar.Blazor.Library.Components.Works
             }
         }
 
-        private async Task<IEnumerable<ClientReferenceDto>> Search(string value)
+        private async Task<IEnumerable<ClientReferenceDto>> Search(string value, CancellationToken token)
         {
             if (string.IsNullOrEmpty(value))
                 return _clients;

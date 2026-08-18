@@ -163,16 +163,16 @@ namespace Oscar.Blazor.Library.Components.Rights
         //    onCatChange(null);
         //}
 
-        private void ResetAddRightsFields()
+        private async Task ResetAddRightsFields()
         {
             //workSelect.Clear();
-            typeSelect.Clear();
-            startDate.Clear();
-            endDate.Clear();
-            startValid.Clear();
-            endValid.Clear();
-            notations.Clear();
-            percentage.Reset();
+            await typeSelect.ClearAsync();
+            await startDate.ClearAsync();
+            await endDate.ClearAsync();
+            await startValid.ClearAsync();
+            await endValid.ClearAsync();
+            await notations.ClearAsync();
+            await percentage.ResetAsync();
         }
 
         private async void CreateRight()
@@ -250,7 +250,7 @@ namespace Oscar.Blazor.Library.Components.Rights
             var resultRight = await Mediator.Send(addRightCommand);
             await HandleResult<RightDto>(resultRight);
 
-            ResetAddRightsFields();
+            await ResetAddRightsFields();
         }
 
         private async Task HandleResult<T>(Result<RightDto> result) where T : RightDto

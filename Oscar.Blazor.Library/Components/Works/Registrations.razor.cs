@@ -34,10 +34,10 @@ namespace Oscar.Blazor.Library.Components.Works
 
         private async Task DeleteRegistrationAsync(RegistrationDisplayDto registration)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Delete Registration?");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Delete Registration?");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var result = await Mediator.Send(new DeleteRegistrationCommand { Id = registration.Id });
                 if (result.IsSuccess)

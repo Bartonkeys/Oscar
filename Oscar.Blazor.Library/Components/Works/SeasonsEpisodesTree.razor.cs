@@ -2,6 +2,8 @@
 using BartonKeys.Functional;
 using MediatR;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using Oscar.Blazor.Library.Common;
 using Oscar.Core.DTOs;
 using Oscar.Core.Entities;
 using Oscar.Core.Enums;
@@ -21,6 +23,10 @@ namespace Oscar.Blazor.Library.Components.Works
         private int _seasonId;
         private Discriminator _discriminator;
         private HashSet<TreeItemData> _treeItems = new HashSet<TreeItemData>();
+
+        private IReadOnlyCollection<ITreeItemData<TreeItemData>> TreeItemsView =>
+            OscarTreeItem<TreeItemData>.From(_treeItems, x => x.TreeItems, x => x.Title);
+
         private bool _loading = false;
         private HashSet<WorksDto> selectedItems = new();
         private bool openCopyDrawer;
@@ -67,10 +73,10 @@ namespace Oscar.Blazor.Library.Components.Works
             {
                 message += "Episode";
             }
-            var dialog = DialogService.Show<ConfirmDialog>(message);
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>(message);
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 if (item.Discriminator == Discriminator.Season)
                 {

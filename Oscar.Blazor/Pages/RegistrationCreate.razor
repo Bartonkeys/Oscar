@@ -40,7 +40,7 @@
                                  For="@(() => _society)" Dense="true" Margin="Margin.Dense"/>
             </MudItem>
             <MudItem xs="2">
-                <MudSwitch @bind-Checked="@_includeAlreadyRegistered" Label="Include previously registered" Color="Color.Primary" />
+                <MudSwitch @bind-Value="@_includeAlreadyRegistered" Label="Include previously registered" Color="Color.Primary" />
             </MudItem>
             <MudItem xs="2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto mt-2" OnClick="SubmitRegistration">Submit Registration</MudButton>

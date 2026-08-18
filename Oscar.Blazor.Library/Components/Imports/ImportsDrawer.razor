@@ -11,7 +11,7 @@
         }
     </MudDrawerHeader>
     <MudCard>
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<WorksImportDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading" Dense="true">
+        <MudTable ServerData="@(new Func<TableState, CancellationToken, Task<TableData<WorksImportDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading" Dense="true">
             <ToolBarContent>
                 <MudSpacer/>
                 <MudTextField T="string" ValueChanged="@(OnSearch)" Placeholder="Search" Adornment="Adornment.Start"
@@ -31,14 +31,14 @@
                 <MudTd DataLabel="Title">@context.DirectorLastName</MudTd>
                 <MudTd DataLabel="RequestedBy">@context.WorksType</MudTd>
                 <MudTd DataLabel="Status">
-                    <MudChip Label="true" Color="@GetColour(context.PossibleDuplicate)" Size="Size.Small" Class="ml-auto mud-elevation-25">
+                    <MudChip T="string" Label="true" Color="@GetColour(context.PossibleDuplicate)" Size="Size.Small" Class="ml-auto mud-elevation-25">
                         @(context.PossibleDuplicate ? "Duplicate" : "No duplicate")
                     </MudChip>
                 </MudTd>
                 <MudTd>
                     @if (!IsSuccess)
                     {
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.Delete" OnClick="() => DeleteImport(context.Id)"/>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteImport(context.Id)"/>
                     }
                 </MudTd>
             </RowTemplate>

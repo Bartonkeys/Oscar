@@ -80,10 +80,10 @@ namespace Oscar.Blazor.Library.Components.Works
 
         private async void removeEpisode(EpisodeDto episode)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Remove episode");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Remove episode");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var deleteEpisodeCommand = new DeleteEpisodeCommand
                 {
@@ -98,10 +98,10 @@ namespace Oscar.Blazor.Library.Components.Works
 
         private async void copyEpisode(EpisodeDto episode)
         {
-            var dialog = DialogService.Show<ConfirmDialog>("Copy episode");
+            var dialog = await DialogService.ShowAsync<ConfirmDialog>("Copy episode");
             var dialogResult = await dialog.Result;
 
-            if (!dialogResult.Cancelled)
+            if (!dialogResult.Canceled)
             {
                 var copyEpisodeCommand = new CopyEpisodeCommand
                 {

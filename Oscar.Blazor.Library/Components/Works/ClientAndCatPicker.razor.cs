@@ -44,7 +44,7 @@ namespace Oscar.Blazor.Library.Components.Works
             await ReloadCats();
         }
 
-        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value)
+        private async Task<IEnumerable<ClientBasicDto>> SearchClients(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? _clients : _clients.Where(x => x.ClientName.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
@@ -72,7 +72,7 @@ namespace Oscar.Blazor.Library.Components.Works
             await ReloadCats();
         }
 
-        private async Task<IEnumerable<CatalogueDto>> SearchCatalogues(string value)
+        private async Task<IEnumerable<CatalogueDto>> SearchCatalogues(string value, CancellationToken token)
         {
             return string.IsNullOrEmpty(value) ? _catalogues : _catalogues.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }

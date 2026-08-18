@@ -153,7 +153,7 @@ namespace Oscar.Blazor.Pages.Reports
                 MarkupMessage = htmlMessage,
                 CancelText = cancelText, YesText = yesText
             };
-            bool? result = await DialogService.ShowMessageBox(options);
+            bool? result = await DialogService.ShowMessageBoxAsync(options);
             Log("User Confirmation", $"Message: {message}, Confirmed: {result.GetValueOrDefault()}");
             return result.GetValueOrDefault();
         }
@@ -164,7 +164,7 @@ namespace Oscar.Blazor.Pages.Reports
             if (string.IsNullOrWhiteSpace(message)) return true;
             var htmlMessage = (MarkupString)$"{message}<br/>Please provide mandatory fields and try again.";
             MessageBoxOptions options = new MessageBoxOptions() { MarkupMessage = htmlMessage, Title = "Validation", };
-            await DialogService.ShowMessageBox(options);
+            await DialogService.ShowMessageBoxAsync(options);
             return false;
         }
 

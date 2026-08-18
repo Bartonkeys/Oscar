@@ -18,7 +18,7 @@
     <MudItem xs="6">
     </MudItem>
     <MudItem xs="12">
-        <MudTable Dense="true" ServerData="@(new Func<TableState, Task<TableData<ScreenrightsRequestDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading">
+        <MudTable Dense="true" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<ScreenrightsRequestDto>>>(ServerReload))" Hover="true" @ref="table" Loading="@_loading">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Screenrights Works Reference Imports</MudText>
                 <MudSpacer />
@@ -35,7 +35,7 @@
             <RowTemplate>
                 <MudTd DataLabel="Id">@context.RequestID</MudTd>
                 <MudTd DataLabel="Status">
-                    <MudChip Label="true" Color="@GetColour(context.ScreenrightsRequestStatus)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.ScreenrightsRequestStatus.ToName()</MudChip>
+                    <MudChip T="string" Label="true" Color="@GetColour(context.ScreenrightsRequestStatus)" Size="Size.Small" Class="ml-auto mud-elevation-25">@context.ScreenrightsRequestStatus.ToName()</MudChip>
                 </MudTd>
                 <MudTd DataLabel="Requested By">@context.RequestedBy</MudTd>
                 <MudTd DataLabel="Filename">@context.FileName</MudTd>

@@ -1,92 +1,104 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
 #components-reconnect-modal {
     display: none !important;
 }
 
 html, body {
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", "Segoe UI", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 0.95rem;
-    font-weight: 400;
-    line-height: 1.5;
-    /*color: #212529;*/
-    text-align: left;
-    /*background-color: #f3f5f7;*/
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 h1:focus {
     outline: none;
 }
 
-a, .btn-link {
-    color: #0071c1;
+/* Headings sit tighter than MudBlazor's defaults so dense data screens read better. */
+.mud-typography-h4,
+.mud-typography-h5,
+.mud-typography-h6 {
+    font-weight: 600;
+    letter-spacing: -0.015em;
 }
 
-
-a {
-    color: #00b0e8;
-    position: relative;
-    text-decoration: none;
+/* Surfaces: hairline borders instead of heavy drop shadows. */
+.oscar-surface {
+    border: 1px solid var(--mud-palette-divider);
 }
 
-a::before {
-    text-decoration: none;
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    border-radius: 4px;
-    background-color: #e83e8c;
-    bottom: -2px;
-    left: 0;
-    transform-origin: right;
-    transform: scaleX(0);
-    transition: transform .3s ease-in-out;
+.oscar-appbar {
+    border-bottom: 1px solid var(--mud-palette-divider);
+    backdrop-filter: saturate(180%) blur(8px);
 }
 
-a:hover::before {
-    transform-origin: left;
-    transform: scaleX(1);
+.oscar-drawer {
+    border-right: 1px solid var(--mud-palette-divider);
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+/* Nav items sit inset so the rounded active pill reads as a pill.
+   The active colour itself comes from MudNavMenu's Color/Rounded parameters. */
+.mud-navmenu.oscar-nav .mud-nav-link {
+    margin: 2px 8px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-weight: 500;
 }
 
-.content {
-    padding-top: 1.1rem;
+.mud-navmenu.oscar-nav .mud-nav-group .mud-nav-link {
+    font-weight: 400;
+}
+
+/* Stat tiles on the dashboard. */
+.oscar-stat {
+    transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.oscar-stat:hover {
+    transform: translateY(-2px);
+}
+
+.oscar-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tables: lighter header, calmer hover. */
+.mud-table-head .mud-table-cell {
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+    outline: 1px solid var(--mud-palette-success);
 }
 
 .invalid {
-    outline: 1px solid red;
+    outline: 1px solid var(--mud-palette-error);
 }
 
 .validation-message {
-    color: red;
+    color: var(--mud-palette-error);
 }
 
 .error-message {
     background-color: transparent;
-    color: red;
+    color: var(--mud-palette-error);
     margin: 5px;
     padding: 5px;
     border-radius: 5px;
     display: inline-block;
-    outline: 1px solid gray;
+    outline: 1px solid var(--mud-palette-divider);
     width: 100%;
     text-wrap: wrap;
-    font-family: 'Consolas';
+    font-family: Consolas, "SF Mono", Menlo, monospace;
 }
 
 #blazor-error-ui {
-    background: lightyellow;
+    background: var(--mud-palette-warning);
+    color: #1a1a1a;
     bottom: 0;
     box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
     display: none;
@@ -104,17 +116,7 @@ a:hover::before {
         top: 0.5rem;
     }
 
-.blazor-error-boundary {
-    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
-    padding: 1rem 1rem 1rem 3.7rem;
-    color: black;
-}
-
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
-
-* Fix height and enable scrolling */
+/* Fix height and enable scrolling */
 .grid {
     height: 25rem;
     overflow-y: auto;
@@ -128,15 +130,14 @@ a:hover::before {
 ::deep thead {
     position: sticky;
     top: 0;
-    background-color: #d8d8d8;
-    outline: 1px solid gray;
+    background-color: var(--mud-palette-background-grey);
     z-index: 1;
 }
 
 /* For virtualized grids, it's essential that all rows have the same known height */
 ::deep tr {
     height: 30px;
-    border-bottom: 0.5px solid silver;
+    border-bottom: 1px solid var(--mud-palette-table-lines);
 }
 
 ::deep tbody td {
@@ -148,11 +149,6 @@ a:hover::before {
 
 :deep th.country-name {
     width: 14rem;
-}
-
-/* Subtle stripe effect */
-::deep tr:nth-child(even) {
-    background: rgba(255,255,255,0.4);
 }
 
 /* Don't collapse rows even if they are empty */
@@ -171,10 +167,11 @@ a:hover::before {
     padding: 0.25rem 0.5rem;
 }
 
+/* Oscar convention: reference data is entered and displayed in upper case.
+   Opt out with .removeUpperCasing. */
 input, .mud-select-input, .mud-table-body, .mud-list-item-text p {
     text-transform: uppercase !important;
 }
-
 
 .removeUpperCasing input, .mud-list-item-text .removeUpperCasing, .removeUpperCasing {
     text-transform: none !important;

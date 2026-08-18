@@ -16,7 +16,7 @@
 </MudText>
 
 <MudExpansionPanels MultiExpansion="true">
-    <MudExpansionPanel Text="Details" MaxHeight="170" IsExpanded="@_showDetailsPanel" IsExpandedChanged="@showHideDetailsPanel">
+    <MudExpansionPanel Text="Details" MaxHeight="170" Expanded="@_showDetailsPanel" ExpandedChanged="@showHideDetailsPanel">
         <MudPaper Class="d-flex flex-row" Elevation="0">
             <MudTextField T="String" @bind-Value="_name" For="@(() => _name)" Label="Name" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
             <MudTextField T="String" @bind-Value="_iMaestroClientCode" For="@(() => _iMaestroClientCode)" Label="IMaestro Client Code" Variant="Variant.Text" Class="pl-4 pt-2 pr-4"></MudTextField>
@@ -26,7 +26,7 @@
             <MudTextField T="String" @bind-Value="_generalNotes" For="@(() => _generalNotes)" Label="General Notes" Variant="Variant.Text" Lines="3" Class="pl-4 pt-2 pr-4"></MudTextField>
         </MudPaper>
     </MudExpansionPanel>
-    <MudExpansionPanel Class="overflow-scroll" Text="Societies" MaxHeight="150" IsExpanded="@_showSocietiesPanel" IsExpandedChanged="@showHideSocitiesPanel">
+    <MudExpansionPanel Class="overflow-scroll" Text="Societies" MaxHeight="150" Expanded="@_showSocietiesPanel" ExpandedChanged="@showHideSocitiesPanel">
         <MudPaper Class="d-flex flex-row" Elevation="0">
             <MudTable Class="overflow-scroll" Items="@_societies" Hover="true" Dense="true" FixedHeader="true">
                 <RowTemplate>
@@ -35,14 +35,14 @@
             </MudTable>
         </MudPaper>
     </MudExpansionPanel>
-    <MudExpansionPanel Class="overflow-scroll" Text="Rights" MaxHeight="500" IsExpanded="@_showRightsPanel" IsExpandedChanged="@showHideRightsPanel">
+    <MudExpansionPanel Class="overflow-scroll" Text="Rights" MaxHeight="500" Expanded="@_showRightsPanel" ExpandedChanged="@showHideRightsPanel">
         <RightsGrid Id="@_clientId" FilterCatID="@_catalogueId" DisableCatalogSelection="true" IsEditable="true" Open="@_showRightsPanel" onSuccess="@SuccessRightsCallback" RightsSource="@RightsSource.Catalogue"></RightsGrid>
     </MudExpansionPanel>
-    <MudExpansionPanel Text="Other Names" MaxHeight="150" IsExpanded="@_showOtherNamesPanel" IsExpandedChanged="@showHideOtherNamesPanel">
+    <MudExpansionPanel Text="Other Names" MaxHeight="150" Expanded="@_showOtherNamesPanel" ExpandedChanged="@showHideOtherNamesPanel">
         <OtherNames @bind-Value="@_otherNames" CatalogueId="@_catalogueId"></OtherNames>
     </MudExpansionPanel>
 
-    <MudExpansionPanel Text="Mandates" MaxHeight="600" IsExpanded="@_showMandatesPanel" IsExpandedChanged="@showHideMandatesPanel">
+    <MudExpansionPanel Text="Mandates" MaxHeight="600" Expanded="@_showMandatesPanel" ExpandedChanged="@showHideMandatesPanel">
         <Mandates MandateTypes="@_mandateTypes"></Mandates>
     </MudExpansionPanel>
 </MudExpansionPanels>

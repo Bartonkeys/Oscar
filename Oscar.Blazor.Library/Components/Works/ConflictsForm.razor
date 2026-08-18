@@ -17,7 +17,7 @@
     </div>
     <MudCard Height="90%" Class="overflow-auto pb-4">
         <MudForm Model="@ConflictDto" @ref="@form" Validation="@(conflictsValidator.ValidateValue)">
-            <MudCheckBox @bind-Checked="@ConflictDto.Internal" Label="Internal"></MudCheckBox>
+            <MudCheckBox @bind-Value="@ConflictDto.Internal" Label="Internal"></MudCheckBox>
             <MudSelect Class="pl-4 pt-2 pr-4" T="int" @bind-Value="ConflictDto.SocietyId" For="@(() => ConflictDto.SocietyId)" Label="Society" Dense="true" Margin="Margin.Dense">
                 <MudSelectItem Value="0">@string.Empty</MudSelectItem>
                 @foreach (var society in Societies)

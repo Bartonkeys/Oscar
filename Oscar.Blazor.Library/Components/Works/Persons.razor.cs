@@ -85,7 +85,7 @@ namespace Oscar.Blazor.Library.Components.Works
             _persons.RemoveAll(x => Value.Select(c => c.Id).ToList().Contains(x.Id));
         }
 
-        private async Task<IEnumerable<PersonDto>> Search(string value)
+        private async Task<IEnumerable<PersonDto>> Search(string value, CancellationToken token)
         {
             if(_persons == null) 
                 await LoadPersons();

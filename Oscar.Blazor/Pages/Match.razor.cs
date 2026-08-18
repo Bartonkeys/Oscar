@@ -30,7 +30,7 @@ namespace Oscar.Blazor.Pages
         private List<RightsTypeDto> _rightsTypes;
         private string _searchString;
 
-        private async Task<TableData<MatchRequestDto>> ServerReload(TableState state)
+        private async Task<TableData<MatchRequestDto>> ServerReload(TableState state, CancellationToken token)
         {
             try
             {
